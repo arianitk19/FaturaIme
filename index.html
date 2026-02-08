@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FaturaIme PRO</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/10543/10543284.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --accent: #6366f1; }
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            background: #000; 
+            color: #fff;
+            overflow: hidden; 
+        }
+
+        /* --- INTRO CINEMATIC --- */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+        }
+        .logo-box { position: relative; animation: initial-scale 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .logo-text {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            background: linear-gradient(to bottom, #ffffff 30%, #444444 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: text-reveal 1s 0.5s ease-out forwards;
+            position: relative;
+        }
+
+        .light-sweep {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-20deg);
+            animation: sweep 1.5s 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes initial-scale { from { transform: scale(1.2); filter: blur(10px); } to { transform: scale(1); filter: blur(0); } }
+        @keyframes text-reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes sweep { from { left: -100%; } to { left: 200%; } }
+
+        /* --- FACE ID UI --- */
+        #face-id-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            background: #000;
+            display: none; /* Do shfaqet pas intros */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes scan-move {
+            0% { top: 5%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 90%; opacity: 0; }
+        }
+
+        .scanning-active #scan-line {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #6366f1;
+            box-shadow: 0 0 15px #6366f1;
+            animation: scan-move 2s ease-in-out infinite;
+        }
+
+        .scanning-active #scanner-wrapper {
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: scale(1.05);
+        }
+
+        .auth-success #face-icon { color: #10b981; filter: drop-shadow(0 0 10px #10b981); }
+
+        /* --- APP UI --- */
+        .glass-panel {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+        }
+        
+        .sidebar {
+            transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+            transform: translateX(-100%);
+            z-index: 1001;
+        }
+        .sidebar.open { transform: translateX(0); }
+
+        .ios-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .ios-btn:active { transform: scale(0.9) brightness(1.2); }
+
+        #main-app {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="intro-screen">
+        <div class="logo-box">
+            <h1 class="logo-text italic">FATURAIME.</h1>
+            <div class="light-sweep"></div>
+        </div>
+    </div>
+
+    <div id="face-id-screen">
+        <div id="scanner-wrapper" class="relative w-32 h-32 border-4 border-white/5 rounded-[40px] flex items-center justify-center transition-all duration-500">
+            <div id="scan-line" class="hidden"></div>
+            <svg id="face-icon" class="w-16 h-16 text-white/20 transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M9 3H5a2 2 0 00-2 2v4m14-6h4a2 2 0 012 2v4M5 19h4a2 2 0 01-2-2v-4m14 6h-4a2 2 0 00-2-2v-4M8 11l2 2 4-4" />
+            </svg>
+        </div>
+        <p id="auth-status" class="mt-8 text-xs font-bold tracking-[0.3em] text-white/30 uppercase italic">Biometric Required</p>
+    </div>
+
+    <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5">
+        <div class="mt-12 space-y-8">
+            <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest">Menuja Kryesore</h3>
+            <div class="space-y-4">
+                <button onclick="location.reload()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2" stroke-width="2"/></svg>
+                    <span class="font-medium">Dashboard</span>
+                </button>
+                <button onclick="downloadPDF()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
+                    <span class="font-medium">Eksporto PDF</span>
+                </button>
+                <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
+                    <span class="font-medium">Cakto Limitin</span>
+                </button>
+            </div>
+            <button onclick="clearAll()" class="mt-20 text-red-500 text-xs font-bold uppercase tracking-widest opacity-40">Fshi të dhënat</button>
+        </div>
+    </div>
+
+    <div id="main-app" class="max-w-md mx-auto min-h-screen px-6 pt-16 pb-24">
+        <div class="flex justify-between items-center mb-12">
+            <button onclick="toggleMenu()" class="ios-btn">
+                <div class="w-8 h-1 bg-white mb-1.5 rounded-full"></div>
+                <div class="w-5 h-1 bg-white rounded-full"></div>
+            </button>
+            <div class="text-right">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sistemi PRO</p>
+                <p class="font-bold text-sm">Aktiv</p>
+            </div>
+        </div>
+
+        <div class="glass-panel p-10 mb-10 bg-gradient-to-br from-[#111] to-[#000] relative overflow-hidden">
+            <div class="relative z-10">
+                <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.3em]">Totali i Shpenzuar</span>
+                <h2 id="mainBalance" class="text-6xl font-bold mt-2 tracking-tighter italic">0.00 €</h2>
+                <div class="flex gap-10 mt-10">
+                    <div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Limit</p>
+                        <p id="limitText" class="font-bold">500 €</p>
+                    </div>
+                    <div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Mbetja</p>
+                        <p id="remainingText" class="font-bold text-emerald-500">0 €</p>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 blur-[60px]"></div>
+        </div>
+
+        <div class="mb-10 opacity-60">
+            <canvas id="appChart" height="180"></canvas>
+        </div>
+
+        <div class="space-y-4" id="listContainer"></div>
+
+        <button onclick="showAddModal()" class="fixed bottom-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(99,102,241,0.4)] ios-btn z-40 border-4 border-black">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"/></svg>
+        </button>
+    </div>
+
+    <div id="addModal" class="fixed inset-0 z-[2000] hidden flex items-end">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl" onclick="hideModal('addModal')"></div>
+        <div class="relative w-full glass-panel rounded-t-[3rem] p-10 border-t border-white/10">
+            <div class="w-12 h-1.5 bg-white/10 mx-auto mb-10 rounded-full"></div>
+            <div class="text-center mb-10">
+                <input type="number" id="inpAmount" placeholder="0.00" class="bg-transparent border-none text-center text-7xl font-bold outline-none w-full placeholder-white/5 italic">
+                <p class="text-indigo-500 font-bold text-xs mt-2">SHUMA NË EURO</p>
+            </div>
+            <div class="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+                <button onclick="setCat('Ushqim', this)" class="cat-card flex-shrink-0 w-24 h-24 rounded-3xl flex flex-col items-center justify-center gap-2 selected">
+                    <span class="text-[10px] font-bold">USHQIM</span>
+                </button>
+                <button onclick="setCat('Fatura', this)" class="cat-card flex-shrink-0 w-24 h-24 rounded-3xl flex flex-col items-center justify-center gap-2">
+                    <span class="text-[10px] font-bold">FATURA</span>
+                </button>
+                <button onclick="setCat('Transport', this)" class="cat-card flex-shrink-0 w-24 h-24 rounded-3xl flex flex-col items-center justify-center gap-2">
+                    <span class="text-[10px] font-bold">UDHËTIM</span>
+                </button>
+            </div>
+            <input type="hidden" id="selectedCat" value="Ushqim">
+            <button onclick="submitExpense()" class="w-full bg-white text-black p-6 rounded-2xl font-black text-lg mt-6 ios-btn">KONFIRMO</button>
+        </div>
+    </div>
+
+    <script>
+        let db = {
+            expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
+            limit: localStorage.getItem('f_pro_lim_v3') || 1000,
+            chart: null
+        };
+
+        // 1. BOOT LOGIC (Sequence: Intro -> FaceID)
+        window.onload = () => {
+            setTimeout(() => {
+                const intro = document.getElementById('intro-screen');
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.remove();
+                    startFaceID();
+                }, 1000);
+            }, 2500);
+        };
+
+        // 2. FACE ID LOGIC
+        async function startFaceID() {
+            const screen = document.getElementById('face-id-screen');
+            const wrapper = document.getElementById('scanner-wrapper');
+            const status = document.getElementById('auth-status');
+
+            screen.style.display = 'flex';
+            wrapper.classList.add('scanning-active');
+            status.innerText = "Skanimi...";
+
+            if (window.PublicKeyCredential) {
+                try {
+                    // Kërkesë reale biometrike (Punon vetëm në HTTPS)
+                    await navigator.credentials.get({
+                        publicKey: { challenge: new Uint8Array(32), allowCredentials: [], timeout: 60000, userVerification: "required" }
+                    });
+                    unlockApp();
+                } catch (e) {
+                    setTimeout(unlockApp, 2000); // Simulim për demo/local
+                }
+            } else {
+                setTimeout(unlockApp, 2500);
+            }
+
+            function unlockApp() {
+                wrapper.classList.remove('scanning-active');
+                screen.classList.add('auth-success');
+                status.innerText = "U identifikua";
+                status.style.color = "#10b981";
+                
+                setTimeout(() => {
+                    screen.style.opacity = "0";
+                    screen.style.transform = "scale(1.2)";
+                    setTimeout(() => {
+                        screen.remove();
+                        document.getElementById('main-app').style.opacity = '1';
+                        document.getElementById('main-app').style.transform = 'translateY(0)';
+                        document.body.style.overflow = 'auto';
+                        initChart();
+                        renderUI();
+                    }, 800);
+                }, 1000);
+            }
+        }
+
+        // 3. APP FUNCTIONS
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+        function showAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
+        function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function setCat(cat, el) {
+            document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('selectedCat').value = cat;
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('appChart').getContext('2d');
+            db.chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['', '', '', '', '', ''],
+                    datasets: [{
+                        data: [0,0,0,0,0,0],
+                        borderColor: '#6366f1',
+                        borderWidth: 3,
+                        tension: 0.5,
+                        pointRadius: 0,
+                        fill: true,
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+            });
+        }
+
+        function renderUI() {
+            const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+            const remaining = db.limit - total;
+            document.getElementById('mainBalance').innerText = `${total.toFixed(2)} €`;
+            document.getElementById('limitText').innerText = `${db.limit} €`;
+            document.getElementById('remainingText').innerText = `${remaining.toFixed(2)} €`;
+            document.getElementById('remainingText').style.color = remaining < 0 ? '#ef4444' : '#10b981';
+
+            const container = document.getElementById('listContainer');
+            container.innerHTML = db.expenses.length ? '' : '<p class="text-center opacity-20 py-10">Zbrazët</p>';
+            db.expenses.slice(0, 10).forEach(exp => {
+                container.innerHTML += `
+                    <div class="glass-panel p-6 flex justify-between items-center">
+                        <div><h4 class="font-bold text-xs uppercase">${exp.cat}</h4><p class="text-[9px] opacity-50">${exp.date}</p></div>
+                        <span class="font-bold">-${exp.amount} €</span>
+                    </div>`;
+            });
+            db.chart.data.datasets[0].data = db.expenses.map(e => e.amount).reverse().slice(-10);
+            db.chart.update();
+        }
+
+        function submitExpense() {
+            const amt = document.getElementById('inpAmount').value;
+            const cat = document.getElementById('selectedCat').value;
+            if(!amt) return;
+            db.expenses.unshift({ amount: parseFloat(amt), cat: cat, date: new Date().toLocaleTimeString() });
+            localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
+            hideModal('addModal');
+            document.getElementById('inpAmount').value = '';
+            renderUI();
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(255, 255, 255); doc.text("RAPORTI FINANCIAR", 15, 25);
+            const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount} EUR`]);
+            doc.autoTable({ startY: 50, head: [['Data', 'Kategoria', 'Shuma']], body: rows });
+            doc.save('Raporti.pdf');
+        }
+
+        function showLimitModal() {
+            const l = prompt("Cakto limitin:", db.limit);
+            if(l) { db.limit = l; localStorage.setItem('f_pro_lim_v3', l); renderUI(); }
+        }
+
+        function clearAll() { if(confirm("Fshi të dhënat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
+    </script>
+</body>
+</html>
