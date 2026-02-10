@@ -496,6 +496,25 @@
                         </div>
                         <span class="font-bold text-sm">-${exp.amount.toFixed(2)} €</span>
                     </div>`;
+
+function renderUI() {
+    const currentCurrency = localStorage.getItem('app-currency') || '€';
+    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+    
+    // Përditëso Balancën
+    document.getElementById('mainBalance').innerText = `${total.toLocaleString('de-DE', {minimumFractionDigits: 2})} ${currentCurrency}`;
+
+    // Rregullo shfaqjen e Limitit në mënyrë profesionale
+    const limitEl = document.getElementById('limitText');
+    if (db.limit >= 1000000) {
+        // Nëse është 1 milion ose më shumë, shfaqe si "Unlimited" ose "1.0M"
+        limitEl.innerHTML = `Unlimited <span class="text-[10px] text-indigo-500 tracking-normal">${currentCurrency}</span>`;
+    } else {
+        limitEl.innerText = `${db.limit.toLocaleString()} ${currentCurrency}`;
+    }
+}
+
+                
             });
 
             if (db.chart) {
@@ -567,3 +586,4 @@
     </script>
 </body>
 </html>
+
