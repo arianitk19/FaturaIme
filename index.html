@@ -199,14 +199,12 @@
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
                     <span class="font-medium">Eksporto PDF</span>
                 </button>
-
-<button onclick="downloadCSV()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/>
-    </svg>
-    <span class="font-medium">Eksporto Excel</span>
-</button>
-
+                <button onclick="downloadCSV()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
+                    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/>
+                    </svg>
+                    <span class="font-medium">Eksporto Excel (CSV)</span>
+                </button>
                 <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
                     <span class="font-medium">Cakto Limitin</span>
@@ -326,7 +324,7 @@
 
         let db = {
             expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
-            limit: localStorage.getItem('f_pro_lim_v3') || 1000,
+            limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 1000000,
             chart: null
         };
 
@@ -347,22 +345,27 @@
             const screen = document.getElementById('face-id-screen');
             const wrapper = document.getElementById('scanner-wrapper');
             const status = document.getElementById('auth-status');
-
             screen.style.display = 'flex';
             wrapper.classList.add('scanning-active');
-            status.innerText = "Skanimi...";
 
-            setTimeout(unlockApp, 2500);
+            if (window.PublicKeyCredential) {
+                status.innerText = "Verifikimi Biometrik...";
+                setTimeout(unlockApp, 2000);
+            } else {
+                status.innerText = "Skanimi...";
+                setTimeout(unlockApp, 2500);
+            }
 
             function unlockApp() {
                 wrapper.classList.remove('scanning-active');
                 screen.classList.add('auth-success');
-                status.innerText = "U identifikua";
+                status.innerText = "U identifikua me sukses";
                 status.style.color = "#10b981";
-                
+                if(navigator.vibrate) navigator.vibrate([30, 10, 30]);
+
                 setTimeout(() => {
                     screen.style.opacity = "0";
-                    screen.style.transform = "scale(1.2)";
+                    screen.style.transform = "scale(1.1) blur(20px)";
                     setTimeout(() => {
                         screen.remove();
                         document.getElementById('main-app').style.opacity = '1';
@@ -375,7 +378,6 @@
             }
         }
 
-        // AI SCANNER LOGIC
         async function performAIScan(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -384,26 +386,33 @@
             loader.style.display = 'flex';
 
             try {
-                const result = await Tesseract.recognize(file, 'eng+sqi', {
-                    logger: m => console.log(m)
-                });
-
-                const text = result.data.text;
-                // Regex kërkon për shuma si: 10.50, 100,00, 5.20 EUR etj.
+                const result = await Tesseract.recognize(file, 'eng+sqi');
+                const text = result.data.text.toLowerCase();
+                
                 const priceRegex = /\d+[\.,]\d{2}/g;
                 const matches = text.match(priceRegex);
-
                 if (matches) {
-                    // Konvertojmë në numra float dhe gjejmë vlerën maksimale (zakonisht TOTALI)
                     const prices = matches.map(p => parseFloat(p.replace(',', '.')));
-                    const total = Math.max(...prices);
-                    document.getElementById('inpAmount').value = total;
-                } else {
-                    alert("AI nuk gjeti dot një shumë të qartë. Provoni një foto më të afërt.");
+                    document.getElementById('inpAmount').value = Math.max(...prices);
                 }
+
+                const categories = {
+                    'food': ['kfc', 'burger', 'restorant', 'pizza', 'kafe', 'bakery', 'market', 'conad', 'spar', 'supermarket'],
+                    'travel': ['taxi', 'carwash', 'karburant', 'shell', 'kastrati', 'parking', 'bus', 'fuel'],
+                    'bill': ['ujësjellës', 'oshee', 'abissnet', 'vodafone', 'tring', 'internet', 'fature'],
+                    'style': ['zara', 'h&m', 'bershka', 'mango', 'parfumeri', 'shampoo', 'veshje']
+                };
+
+                for (const [key, keywords] of Object.entries(categories)) {
+                    if (keywords.some(word => text.includes(word))) {
+                        const btn = document.querySelector(`[onclick*="'${key}'"]`);
+                        if(btn) btn.click();
+                        break; 
+                    }
+                }
+                if(navigator.vibrate) navigator.vibrate(20);
             } catch (error) {
-                console.error(error);
-                alert("Gabim gjatë skanimit.");
+                alert("Gabim gjatë skanimit AI.");
             } finally {
                 loader.style.display = 'none';
             }
@@ -431,9 +440,9 @@
             db.chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['', '', '', '', '', ''],
+                    labels: ['', '', '', '', '', '', '', '', '', ''],
                     datasets: [{
-                        data: [0,0,0,0,0,0],
+                        data: [0,0,0,0,0,0,0,0,0,0],
                         borderColor: '#6366f1',
                         borderWidth: 3,
                         tension: 0.5,
@@ -442,20 +451,18 @@
                         backgroundColor: 'rgba(99, 102, 241, 0.1)'
                     }]
                 },
-                // Brenda funksionit initChart
-options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { intersect: false },
-    plugins: { legend: { display: false } },
-    scales: {
-        y: { display: false },
-        x: { 
-            grid: { display: false },
-            ticks: { color: 'rgba(255,255,255,0.2)', font: { size: 8 } }
-        }
-    }
-}
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: 'rgba(255,255,255,0.2)', font: { size: 8 } }
+                        }
+                    }
+                }
             });
         }
 
@@ -485,8 +492,12 @@ options: {
                         <span class="font-bold text-sm">-${exp.amount.toFixed(2)} €</span>
                     </div>`;
             });
-            db.chart.data.datasets[0].data = db.expenses.map(e => e.amount).reverse().slice(-10);
-            db.chart.update();
+
+            if (db.chart) {
+                const chartData = db.expenses.map(e => e.amount).reverse().slice(-10);
+                db.chart.data.datasets[0].data = chartData;
+                db.chart.update();
+            }
         }
 
         function submitExpense() {
@@ -516,124 +527,38 @@ options: {
             doc.save('Raporti_FaturaIme.pdf');
         }
 
+        function downloadCSV() {
+            if (db.expenses.length === 0) return alert("Nuk ka të dhëna për eksport.");
+            let csvContent = "Data,Kategoria,Shuma (EUR)\n";
+            db.expenses.forEach(e => {
+                csvContent += `${e.date},${e.cat},${e.amount}\n`;
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Raporti_FaturaIme.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         function showLimitModal() {
             const l = prompt("Cakto limitin e ri:", db.limit);
-            if(l) { db.limit = l; localStorage.setItem('f_pro_lim_v3', l); renderUI(); }
-        }
-
-        function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }  
-
-
-async function performAIScan(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const loader = document.getElementById('ai-loader');
-    loader.style.display = 'flex';
-
-    try {
-        const result = await Tesseract.recognize(file, 'eng+sqi');
-        const text = result.data.text.toLowerCase();
-        
-        // 1. Gjetja e Çmimit (Vlera maksimale)
-        const priceRegex = /\d+[\.,]\d{2}/g;
-        const matches = text.match(priceRegex);
-        if (matches) {
-            const prices = matches.map(p => parseFloat(p.replace(',', '.')));
-            document.getElementById('inpAmount').value = Math.max(...prices);
-        }
-
-        // 2. Inteligjenca e Kategorisë (Fjalët Kyçe)
-        const categories = {
-            'food': ['kfc', 'burger', 'restorant', 'pizza', 'kafe', 'bakery', 'market', 'conad', 'spar'],
-            'travel': ['taxi', 'carwash', 'karburant', 'shell', 'kastrati', 'parking', 'bus'],
-            'bill': ['ujësjellës', 'oshee', 'abissnet', 'vodafone', 'tring', 'internet'],
-            'style': ['zara', 'h&m', 'bershka', 'mango', 'parfumeri', 'shampoo']
-        };
-
-        for (const [key, keywords] of Object.entries(categories)) {
-            if (keywords.some(word => text.includes(word))) {
-                // Gjejmë butonin e kategorisë dhe e simulojmë klikimin
-                const btn = document.querySelector(`[onclick*="'${key}'"]`);
-                if(btn) btn.click();
-                break; 
+            if(l && !isNaN(l)) { 
+                db.limit = parseFloat(l); 
+                localStorage.setItem('f_pro_lim_v3', db.limit); 
+                renderUI(); 
             }
         }
 
-        navigator.vibrate(20); // Feedback fizik që skanimi mbaroi
-    } catch (error) {
-        alert("Gabim gjatë inteligjencës artificiale.");
-    } finally {
-        loader.style.display = 'none';
-    }
-}
-
-
-
-async function startFaceID() {
-    const screen = document.getElementById('face-id-screen');
-    const status = document.getElementById('auth-status');
-    screen.style.display = 'flex';
-
-    // Kontrollojmë nëse pajisja suporton Biometrinë
-    if (window.PublicKeyCredential) {
-        status.innerText = "Verifikimi Biometrik...";
-        
-        // Kjo kërkon një sfidë nga serveri në prodhim, 
-        // por ne mund të simulojmë hapjen e sensorit
-        try {
-            // Shënim: Kjo pjesë aktivizon sensorin real të FaceID/TouchID në HTTPS
-            status.innerText = "Vendosni Fytyrën/Gishtin";
-            
-            // Nëse jemi në Localhost/HTTP, përdorim vonesën tonë klasike
-            setTimeout(unlockApp, 2000);
-        } catch (e) {
-            setTimeout(unlockApp, 2000);
-        }
-    } else {
-        setTimeout(unlockApp, 2500);
-    }
-
-    function unlockApp() {
-        document.getElementById('scanner-wrapper').classList.remove('scanning-active');
-        screen.classList.add('auth-success');
-        status.innerText = "U identifikua me sukses";
-        status.style.color = "#10b981";
-        navigator.vibrate([30, 10, 30]); // Dridhje suksesi
-
-        setTimeout(() => {
-            screen.style.opacity = "0";
-            screen.style.transform = "scale(1.1) blur(20px)";
-            setTimeout(() => {
-                screen.remove();
-                document.getElementById('main-app').style.opacity = '1';
-                document.getElementById('main-app').style.transform = 'translateY(0)';
-                initChart();
-                renderUI();
-            }, 800);
-        }, 1000);
-    }
-}
-
-
-function downloadCSV() {
-    if (db.expenses.length === 0) return alert("Nuk ka të dhëna për eksport.");
-    
-    let csvContent = "data:text/csv;charset=utf-8,Data,Kategoria,Shuma (EUR)\n";
-    db.expenses.forEach(e => {
-        csvContent += `${e.date},${e.cat},${e.amount}\n`;
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "Raporti_FaturaIme.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-
+        function clearAll() { 
+            if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { 
+                db.expenses = []; 
+                localStorage.removeItem('f_pro_v3'); 
+                renderUI(); 
+            } 
+        } 
     </script>
 </body>
 </html>
