@@ -199,12 +199,6 @@
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
                     <span class="font-medium">Eksporto PDF</span>
                 </button>
-                <button onclick="downloadCSV()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-                    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/>
-                    </svg>
-                    <span class="font-medium">Eksporto Excel</span>
-                </button>
                 <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
                     <span class="font-medium">Cakto Limitin</span>
@@ -221,7 +215,7 @@
                 <div class="w-5 h-1 bg-white rounded-full"></div>
             </button>
             <div class="text-right">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sistemi AI</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sistemi</p>
                 <p class="font-bold text-sm">Gati</p>
             </div>
         </div>
@@ -231,15 +225,10 @@
                 <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.3em]">Totali i Shpenzuar</span>
                 <h2 id="mainBalance" class="text-6xl font-bold mt-2 tracking-tighter italic">0.00 €</h2>
                 <div class="flex gap-10 mt-10">
-                  <div class="flex items-center gap-6 mt-10">
-    <div class="flex flex-col">
-        <p class="text-[9px] text-slate-500 font-black uppercase tracking-[0.2em] mb-1">Statusi i Llogarisë</p>
-        <div class="flex items-center gap-2">
-            <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            <p id="limitText" class="font-bold text-xs tracking-wide uppercase">Pa Limit (PRO)</p>
-        </div>
-    </div>
-</div>
+                    <div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Limit</p>
+                        <p id="limitText" class="font-bold">500 €</p>
+                    </div>
                     <div>
                         <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Mbetja</p>
                         <p id="remainingText" class="font-bold text-emerald-500">0 €</p>
@@ -266,7 +255,7 @@
             
             <div id="ai-loader">
                 <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="text-indigo-400 font-bold text-xs uppercase tracking-widest">AI po skanon faturën...</p>
+                <p class="text-indigo-400 font-bold text-xs uppercase tracking-widest">Sistemi po skanon faturën...</p>
             </div>
 
             <div class="w-12 h-1.5 bg-white/10 mx-auto mb-10 rounded-full"></div>
@@ -329,7 +318,7 @@
 
         let db = {
             expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
-            limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 1000,
+            limit: localStorage.getItem('f_pro_lim_v3') || 1000,
             chart: null
         };
 
@@ -350,27 +339,22 @@
             const screen = document.getElementById('face-id-screen');
             const wrapper = document.getElementById('scanner-wrapper');
             const status = document.getElementById('auth-status');
+
             screen.style.display = 'flex';
             wrapper.classList.add('scanning-active');
+            status.innerText = "Skanimi...";
 
-            if (window.PublicKeyCredential) {
-                status.innerText = "Verifikimi Biometrik...";
-                setTimeout(unlockApp, 2000);
-            } else {
-                status.innerText = "Skanimi...";
-                setTimeout(unlockApp, 2500);
-            }
+            setTimeout(unlockApp, 2500);
 
             function unlockApp() {
                 wrapper.classList.remove('scanning-active');
                 screen.classList.add('auth-success');
-                status.innerText = "U identifikua me sukses";
+                status.innerText = "U identifikua";
                 status.style.color = "#10b981";
-                if(navigator.vibrate) navigator.vibrate([30, 10, 30]);
-
+                
                 setTimeout(() => {
                     screen.style.opacity = "0";
-                    screen.style.transform = "scale(1.1) blur(20px)";
+                    screen.style.transform = "scale(1.2)";
                     setTimeout(() => {
                         screen.remove();
                         document.getElementById('main-app').style.opacity = '1';
@@ -383,6 +367,7 @@
             }
         }
 
+        // AI SCANNER LOGIC
         async function performAIScan(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -391,33 +376,26 @@
             loader.style.display = 'flex';
 
             try {
-                const result = await Tesseract.recognize(file, 'eng+sqi');
-                const text = result.data.text.toLowerCase();
-                
+                const result = await Tesseract.recognize(file, 'eng+sqi', {
+                    logger: m => console.log(m)
+                });
+
+                const text = result.data.text;
+                // Regex kërkon për shuma si: 10.50, 100,00, 5.20 EUR etj.
                 const priceRegex = /\d+[\.,]\d{2}/g;
                 const matches = text.match(priceRegex);
+
                 if (matches) {
+                    // Konvertojmë në numra float dhe gjejmë vlerën maksimale (zakonisht TOTALI)
                     const prices = matches.map(p => parseFloat(p.replace(',', '.')));
-                    document.getElementById('inpAmount').value = Math.max(...prices);
+                    const total = Math.max(...prices);
+                    document.getElementById('inpAmount').value = total;
+                } else {
+                    alert("Skaneri nuk gjeti dot një shumë të qartë. Provoni një foto më të afërt.");
                 }
-
-                const categories = {
-                    'food': ['kfc', 'burger', 'restorant', 'pizza', 'kafe', 'bakery', 'market', 'conad', 'spar', 'supermarket'],
-                    'travel': ['taxi', 'carwash', 'karburant', 'shell', 'kastrati', 'parking', 'bus', 'fuel'],
-                    'bill': ['ujësjellës', 'oshee', 'abissnet', 'vodafone', 'tring', 'internet', 'fature'],
-                    'style': ['zara', 'h&m', 'bershka', 'mango', 'parfumeri', 'shampoo', 'veshje']
-                };
-
-                for (const [key, keywords] of Object.entries(categories)) {
-                    if (keywords.some(word => text.includes(word))) {
-                        const btn = document.querySelector(`[onclick*="'${key}'"]`);
-                        if(btn) btn.click();
-                        break; 
-                    }
-                }
-                if(navigator.vibrate) navigator.vibrate(20);
             } catch (error) {
-                alert("Gabim gjatë skanimit AI.");
+                console.error(error);
+                alert("Gabim gjatë skanimit.");
             } finally {
                 loader.style.display = 'none';
             }
@@ -445,9 +423,9 @@
             db.chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['', '', '', '', '', '', '', '', '', ''],
+                    labels: ['', '', '', '', '', ''],
                     datasets: [{
-                        data: [0,0,0,0,0,0,0,0,0,0],
+                        data: [0,0,0,0,0,0],
                         borderColor: '#6366f1',
                         borderWidth: 3,
                         tension: 0.5,
@@ -456,18 +434,7 @@
                         backgroundColor: 'rgba(99, 102, 241, 0.1)'
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { display: false },
-                        x: { 
-                            grid: { display: false },
-                            ticks: { color: 'rgba(255,255,255,0.2)', font: { size: 8 } }
-                        }
-                    }
-                }
+                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
             });
         }
 
@@ -496,32 +463,9 @@
                         </div>
                         <span class="font-bold text-sm">-${exp.amount.toFixed(2)} €</span>
                     </div>`;
-
-function renderUI() {
-    const currentCurrency = localStorage.getItem('app-currency') || '€';
-    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-    
-    // Përditëso Balancën
-    document.getElementById('mainBalance').innerText = `${total.toLocaleString('de-DE', {minimumFractionDigits: 2})} ${currentCurrency}`;
-
-    // Rregullo shfaqjen e Limitit në mënyrë profesionale
-    const limitEl = document.getElementById('limitText');
-    if (db.limit >= 1000000) {
-        // Nëse është 1 milion ose më shumë, shfaqe si "Unlimited" ose "1.0M"
-        limitEl.innerHTML = `Unlimited <span class="text-[10px] text-indigo-500 tracking-normal">${currentCurrency}</span>`;
-    } else {
-        limitEl.innerText = `${db.limit.toLocaleString()} ${currentCurrency}`;
-    }
-}
-
-                
             });
-
-            if (db.chart) {
-                const chartData = db.expenses.map(e => e.amount).reverse().slice(-10);
-                db.chart.data.datasets[0].data = chartData;
-                db.chart.update();
-            }
+            db.chart.data.datasets[0].data = db.expenses.map(e => e.amount).reverse().slice(-10);
+            db.chart.update();
         }
 
         function submitExpense() {
@@ -551,39 +495,12 @@ function renderUI() {
             doc.save('Raporti_FaturaIme.pdf');
         }
 
-        function downloadCSV() {
-            if (db.expenses.length === 0) return alert("Nuk ka të dhëna për eksport.");
-            let csvContent = "Data,Kategoria,Shuma (EUR)\n";
-            db.expenses.forEach(e => {
-                csvContent += `${e.date},${e.cat},${e.amount}\n`;
-            });
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", "Raporti_FaturaIme.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
         function showLimitModal() {
             const l = prompt("Cakto limitin e ri:", db.limit);
-            if(l && !isNaN(l)) { 
-                db.limit = parseFloat(l); 
-                localStorage.setItem('f_pro_lim_v3', db.limit); 
-                renderUI(); 
-            }
+            if(l) { db.limit = l; localStorage.setItem('f_pro_lim_v3', l); renderUI(); }
         }
 
-        function clearAll() { 
-            if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { 
-                db.expenses = []; 
-                localStorage.removeItem('f_pro_v3'); 
-                renderUI(); 
-            } 
-        } 
+        function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
     </script>
 </body>
 </html>
-
