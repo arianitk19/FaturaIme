@@ -203,7 +203,7 @@
                     <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/>
                     </svg>
-                    <span class="font-medium">Eksporto Excel </span>
+                    <span class="font-medium">Eksporto Excel</span>
                 </button>
                 <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
@@ -231,9 +231,18 @@
                 <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.3em]">Totali i Shpenzuar</span>
                 <h2 id="mainBalance" class="text-6xl font-bold mt-2 tracking-tighter italic">0.00 €</h2>
                 <div class="flex gap-10 mt-10">
+                  <div class="flex items-center gap-6 mt-10">
+    <div class="flex flex-col">
+        <p class="text-[9px] text-slate-500 font-black uppercase tracking-[0.2em] mb-1">Statusi i Llogarisë</p>
+        <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+            <p id="limitText" class="font-bold text-xs tracking-wide uppercase">Pa Limit (PRO)</p>
+        </div>
+    </div>
+</div>
                     <div>
-                        <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Limit</p>
-                        <p id="limitText" class="font-bold">€</p>
+                        <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Mbetja</p>
+                        <p id="remainingText" class="font-bold text-emerald-500">0 €</p>
                     </div>
                 </div>
             </div>
@@ -320,7 +329,7 @@
 
         let db = {
             expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
-            limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 1000000,
+            limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 1000,
             chart: null
         };
 
@@ -558,4 +567,3 @@
     </script>
 </body>
 </html>
-
