@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>FaturaIme NEURAL PRO</title>
+    <title>FaturaIme PRO AI</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency-systems-filled/512/FFFFFF/wallet.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
-        :root { --accent: #6366f1; --neon: #00f2ff; }
+        :root { --accent: #6366f1; }
         body { 
             font-family: 'Space Grotesk', sans-serif; 
             background: #000; 
             color: #fff;
             overflow-x: hidden; 
-            -webkit-tap-highlight-color: transparent;
         }
 
         /* --- INTRO CINEMATIC --- */
@@ -86,8 +91,8 @@
             position: absolute;
             width: 100%;
             height: 2px;
-            background: var(--accent);
-            box-shadow: 0 0 15px var(--accent);
+            background: #6366f1;
+            box-shadow: 0 0 15px #6366f1;
             animation: scan-move 2s ease-in-out infinite;
         }
 
@@ -147,40 +152,17 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
-        /* AI Neural Loading */
+        /* AI Scanner Loading Overlay */
         #ai-loader {
             display: none;
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.8);
             border-radius: 32px;
-            z-index: 100;
+            z-index: 50;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .neural-pulse {
-            width: 80px; height: 80px;
-            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: pulse-ring 1.5s ease-out infinite;
-        }
-
-        @keyframes pulse-ring {
-            0% { transform: scale(0.5); opacity: 0.8; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-
-        .success-glow {
-            animation: neon-glow 1s ease-in-out;
-        }
-
-        @keyframes neon-glow {
-            0% { text-shadow: 0 0 0px var(--accent); transform: scale(1); }
-            50% { text-shadow: 0 0 30px var(--accent); transform: scale(1.1); }
-            100% { text-shadow: 0 0 0px var(--accent); transform: scale(1); }
         }
     </style>
 </head>
@@ -207,7 +189,7 @@
 
     <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5">
         <div class="mt-12 space-y-8">
-            <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest">Sistemi Inteligjent</h3>
+            <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest">Menuja Kryesore</h3>
             <div class="space-y-4">
                 <button onclick="location.reload()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2" stroke-width="2"/></svg>
@@ -222,7 +204,7 @@
                     <span class="font-medium">Cakto Limitin</span>
                 </button>
             </div>
-            <button onclick="clearAll()" class="mt-20 text-red-500 text-xs font-bold uppercase tracking-widest opacity-40">Reset Sistemin</button>
+            <button onclick="clearAll()" class="mt-20 text-red-500 text-xs font-bold uppercase tracking-widest opacity-40">Fshi të dhënat</button>
         </div>
     </div>
 
@@ -233,8 +215,8 @@
                 <div class="w-5 h-1 bg-white rounded-full"></div>
             </button>
             <div class="text-right">
-                <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Neural Network</p>
-                <p class="font-bold text-sm">Aktiv</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sistemi AI</p>
+                <p class="font-bold text-sm">Gati</p>
             </div>
         </div>
 
@@ -272,44 +254,45 @@
         <div class="relative w-full glass-panel rounded-t-[3rem] p-10 border-t border-white/10">
             
             <div id="ai-loader">
-                <div class="neural-pulse"></div>
-                <div class="mt-4 text-center">
-                    <p class="text-indigo-400 font-bold text-xs uppercase tracking-widest animate-pulse">Neural Scan v2.0</p>
-                    <p id="ai-step" class="text-white/40 text-[9px] mt-1 font-medium italic">Duke identifikuar tekstin...</p>
-                </div>
+                <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p class="text-indigo-400 font-bold text-xs uppercase tracking-widest">AI po skanon faturën...</p>
             </div>
 
             <div class="w-12 h-1.5 bg-white/10 mx-auto mb-10 rounded-full"></div>
             
             <div class="flex justify-between items-center mb-6">
-                <p class="text-indigo-500 font-bold text-xs uppercase tracking-widest">Shuma e Zbuluar</p>
-                <button onclick="document.getElementById('ai-camera-input').click()" class="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-full ios-btn shadow-lg shadow-white/5">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 9a3 3 0 100 6 3 3 0 000-6zm8.18 3l1.82 1.82V20a2 2 0 01-2 2H4a2 2 0 01-2-2v-5.18l1.82-1.82A3.001 3.001 0 0112 15a3 3 0 018.18-3z"/></svg>
-                    <span class="text-[10px] font-black uppercase tracking-tighter">Skanim Inteligjent</span>
+                <p class="text-indigo-500 font-bold text-xs uppercase">Shuma në Euro</p>
+                <button onclick="document.getElementById('ai-camera-input').click()" class="flex items-center gap-2 bg-indigo-600/20 px-4 py-2 rounded-full border border-indigo-500/30 ios-btn">
+                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-width="2"/><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/></svg>
+                    <span class="text-[10px] font-bold text-indigo-400 uppercase">Skano Faturën</span>
                 </button>
-                <input type="file" id="ai-camera-input" accept="image/*" capture="camera" class="hidden" onchange="runNeuralScan(event)">
+                <input type="file" id="ai-camera-input" accept="image/*" capture="camera" class="hidden" onchange="performAIScan(event)">
             </div>
 
             <div class="text-center mb-10">
-                <input type="number" id="inpAmount" placeholder="0.00" class="bg-transparent border-none text-center text-7xl font-bold outline-none w-full placeholder-white/5 italic transition-all duration-500">
+                <input type="number" id="inpAmount" placeholder="0.00" class="bg-transparent border-none text-center text-7xl font-bold outline-none w-full placeholder-white/5 italic">
             </div>
             
-            <div class="flex gap-4 overflow-x-auto pb-6 no-scrollbar" id="cat-scroll">
-                <button onclick="setCat('Ushqim', 'food', this)" id="cat-food" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5 selected">
+            <div class="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+                <button onclick="setCat('Ushqim', 'food', this)" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5 selected">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>
                     <span class="text-[8px] font-black tracking-widest uppercase">Ushqim</span>
                 </button>
-                <button onclick="setCat('Transport', 'travel', this)" id="cat-travel" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5">
+                <button onclick="setCat('Transport', 'travel', this)" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                    <span class="text-[8px] font-black tracking-widest uppercase">Transport</span>
+                    <span class="text-[8px] font-black tracking-widest uppercase">Udhëtim</span>
                 </button>
-                <button onclick="setCat('Fatura', 'bill', this)" id="cat-bill" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5">
+                <button onclick="setCat('Fatura', 'bill', this)" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>
                     <span class="text-[8px] font-black tracking-widest uppercase">Fatura</span>
                 </button>
                 <button onclick="setCat('Shopping', 'style', this)" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>
                     <span class="text-[8px] font-black tracking-widest uppercase">Stili</span>
+                </button>
+                <button onclick="setCat('Shendet', 'health', this)" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    <span class="text-[8px] font-black tracking-widest uppercase">Shëndet</span>
                 </button>
                 <button onclick="setCat('Investim', 'assets', this)" class="cat-card flex-shrink-0 w-24 h-32 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 bg-white/5">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>
@@ -318,16 +301,18 @@
             </div>
             <input type="hidden" id="selectedCat" value="Ushqim">
             <input type="hidden" id="selectedIcon" value="food">
-            <button onclick="submitExpense()" class="w-full bg-white text-black p-6 rounded-2xl font-black text-lg mt-6 ios-btn uppercase">Autorizo Transaksionin</button>
+            <button onclick="submitExpense()" class="w-full bg-white text-black p-6 rounded-2xl font-black text-lg mt-6 ios-btn uppercase">Konfirmo</button>
         </div>
     </div>
 
     <script>
+        // REGJISTRI I IKONAVE PER DASHBOARD
         const iconMap = {
             food: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
             travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
             bill: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
             style: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
+            health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
             assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
         };
 
@@ -342,7 +327,10 @@
                 const intro = document.getElementById('intro-screen');
                 if(intro) {
                     intro.style.opacity = '0';
-                    setTimeout(() => { intro.remove(); startFaceID(); }, 1000);
+                    setTimeout(() => {
+                        intro.remove();
+                        startFaceID();
+                    }, 1000);
                 }
             }, 2500);
         };
@@ -351,15 +339,19 @@
             const screen = document.getElementById('face-id-screen');
             const wrapper = document.getElementById('scanner-wrapper');
             const status = document.getElementById('auth-status');
+
             screen.style.display = 'flex';
             wrapper.classList.add('scanning-active');
             status.innerText = "Skanimi...";
+
             setTimeout(unlockApp, 2500);
+
             function unlockApp() {
                 wrapper.classList.remove('scanning-active');
                 screen.classList.add('auth-success');
                 status.innerText = "U identifikua";
                 status.style.color = "#10b981";
+                
                 setTimeout(() => {
                     screen.style.opacity = "0";
                     screen.style.transform = "scale(1.2)";
@@ -367,55 +359,43 @@
                         screen.remove();
                         document.getElementById('main-app').style.opacity = '1';
                         document.getElementById('main-app').style.transform = 'translateY(0)';
-                        initChart(); renderUI();
+                        document.body.style.overflow = 'auto';
+                        initChart();
+                        renderUI();
                     }, 800);
                 }, 1000);
             }
         }
 
-        // NEURAL AI SCANNER LOGIC
-        async function runNeuralScan(event) {
+        // AI SCANNER LOGIC
+        async function performAIScan(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const loader = document.getElementById('ai-loader');
-            const stepText = document.getElementById('ai-step');
             loader.style.display = 'flex';
-            stepText.innerText = "Analiza e strukturës...";
 
             try {
-                const result = await Tesseract.recognize(file, 'eng+sqi');
-                const text = result.data.text.toLowerCase();
-                
-                stepText.innerText = "Duke kërkuar shumat...";
-                
-                // Gjetja e çmimit
+                const result = await Tesseract.recognize(file, 'eng+sqi', {
+                    logger: m => console.log(m)
+                });
+
+                const text = result.data.text;
+                // Regex kërkon për shuma si: 10.50, 100,00, 5.20 EUR etj.
                 const priceRegex = /\d+[\.,]\d{2}/g;
                 const matches = text.match(priceRegex);
 
                 if (matches) {
+                    // Konvertojmë në numra float dhe gjejmë vlerën maksimale (zakonisht TOTALI)
                     const prices = matches.map(p => parseFloat(p.replace(',', '.')));
                     const total = Math.max(...prices);
-                    
-                    const inp = document.getElementById('inpAmount');
-                    inp.value = total;
-                    inp.classList.add('success-glow');
-                    setTimeout(() => inp.classList.remove('success-glow'), 1000);
-
-                    // SMART CATEGORY DETECTION
-                    stepText.innerText = "Kategorizimi inteligjent...";
-                    if (text.includes("rest") || text.includes("kafe") || text.includes("burger") || text.includes("pije") || text.includes("market")) {
-                        setCat('Ushqim', 'food', document.getElementById('cat-food'));
-                    } else if (text.includes("taxi") || text.includes("fuel") || text.includes("derivat") || text.includes("bus")) {
-                        setCat('Transport', 'travel', document.getElementById('cat-travel'));
-                    } else if (text.includes("ujesjelles") || text.includes("rryma") || text.includes("internet")) {
-                        setCat('Fatura', 'bill', document.getElementById('cat-bill'));
-                    }
+                    document.getElementById('inpAmount').value = total;
                 } else {
-                    alert("Shuma nuk u lexua dot. Provoni një foto më të qartë.");
+                    alert("AI nuk gjeti dot një shumë të qartë. Provoni një foto më të afërt.");
                 }
             } catch (error) {
-                alert("Gabim në rrjetin neural.");
+                console.error(error);
+                alert("Gabim gjatë skanimit.");
             } finally {
                 loader.style.display = 'none';
             }
@@ -436,8 +416,6 @@
             el.classList.add('selected');
             document.getElementById('selectedCat').value = cat;
             document.getElementById('selectedIcon').value = icon;
-            // Auto scroll to category
-            el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
         function initChart() {
@@ -492,11 +470,13 @@
 
         function submitExpense() {
             const amt = document.getElementById('inpAmount').value;
+            const cat = document.getElementById('selectedCat').value;
+            const icon = document.getElementById('selectedIcon').value;
             if(!amt) return;
             db.expenses.unshift({ 
                 amount: parseFloat(amt), 
-                cat: document.getElementById('selectedCat').value, 
-                icon: document.getElementById('selectedIcon').value,
+                cat: cat, 
+                icon: icon,
                 date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
             });
             localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
@@ -508,17 +488,19 @@
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text("RAPORTI FINANCIAR", 15, 25);
-            doc.autoTable({ startY: 50, head: [['Data', 'Kategoria', 'Shuma']], body: db.expenses.map(e => [e.date, e.cat, `${e.amount} EUR`]) });
-            doc.save('Raporti.pdf');
+            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(255, 255, 255); doc.text("RAPORTI FINANCIAR PRO", 15, 25);
+            const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount} EUR`]);
+            doc.autoTable({ startY: 50, head: [['Data', 'Kategoria', 'Shuma']], body: rows });
+            doc.save('Raporti_FaturaIme.pdf');
         }
 
         function showLimitModal() {
-            const l = prompt("Cakto limitin:", db.limit);
+            const l = prompt("Cakto limitin e ri:", db.limit);
             if(l) { db.limit = l; localStorage.setItem('f_pro_lim_v3', l); renderUI(); }
         }
 
-        function clearAll() { if(confirm("Fshini të dhënat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
+        function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
     </script>
 </body>
 </html>
