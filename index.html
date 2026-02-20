@@ -335,37 +335,68 @@
             }, 2500);
         };
 
-        async function startFaceID() {
-            const screen = document.getElementById('face-id-screen');
-            const wrapper = document.getElementById('scanner-wrapper');
-            const status = document.getElementById('auth-status');
+      async function startFaceID() {
+    const screen = document.getElementById('face-id-screen');
+    const wrapper = document.getElementById('scanner-wrapper');
+    const status = document.getElementById('auth-status');
 
-            screen.style.display = 'flex';
+    screen.style.display = 'flex';
+
+    // Kontrollojmë nëse pajisja mbështet biometrinë
+    if (window.PublicKeyCredential) {
+        try {
+            // Animacioni fillon
             wrapper.classList.add('scanning-active');
-            status.innerText = "Skanimi...";
+            status.innerText = "Kërkohet Biometria...";
 
-            setTimeout(unlockApp, 2500);
+            // Kjo kërkon autentikimin real nga sistemi operativ
+            // Për thjeshtësi në frontend, përdorim një "challenge" fiktiv
+            const credential = await navigator.credentials.get({
+                publicKey: {
+                    challenge: new Uint8Array([1, 2, 3, 4]), // Duhet të jetë unike nga serveri në prodhim
+                    authenticatorSelection: { userVerification: "required" },
+                    timeout: 60000
+                }
+            });
 
-            function unlockApp() {
-                wrapper.classList.remove('scanning-active');
-                screen.classList.add('auth-success');
-                status.innerText = "U identifikua";
-                status.style.color = "#10b981";
-                
-                setTimeout(() => {
-                    screen.style.opacity = "0";
-                    screen.style.transform = "scale(1.2)";
-                    setTimeout(() => {
-                        screen.remove();
-                        document.getElementById('main-app').style.opacity = '1';
-                        document.getElementById('main-app').style.transform = 'translateY(0)';
-                        document.body.style.overflow = 'auto';
-                        initChart();
-                        renderUI();
-                    }, 800);
-                }, 1000);
+            if (credential) {
+                unlockApp();
             }
+        } catch (err) {
+            console.error("Autentikimi dështoi:", err);
+            status.innerText = "Dështoi! Provo përsëri.";
+            status.style.color = "#ef4444";
+            wrapper.classList.remove('scanning-active');
+            
+            // Opsionale: Shto butonin "Provo Përsëri"
+            status.onclick = () => startFaceID();
         }
+    } else {
+        // Fallback nëse pajisja nuk ka FaceID/Fingerprint
+        status.innerText = "Biometria nuk mbështetet.";
+        setTimeout(unlockApp, 2000); 
+    }
+
+    function unlockApp() {
+        wrapper.classList.remove('scanning-active');
+        screen.classList.add('auth-success');
+        status.innerText = "U identifikua";
+        status.style.color = "#10b981";
+        
+        setTimeout(() => {
+            screen.style.opacity = "0";
+            screen.style.transform = "scale(1.2)";
+            setTimeout(() => {
+                screen.remove();
+                document.getElementById('main-app').style.opacity = '1';
+                document.getElementById('main-app').style.transform = 'translateY(0)';
+                document.body.style.overflow = 'auto';
+                initChart();
+                renderUI();
+            }, 800);
+        }, 1000);
+    }
+}
 
         // AI SCANNER LOGIC
         async function performAIScan(event) {
@@ -504,6 +535,7 @@
     </script>
 </body>
 </html>
+
 
 
 
