@@ -335,49 +335,50 @@
             }, 2500);
         };
 
-      async function startFaceID() {
+     async function startFaceID() {
     const screen = document.getElementById('face-id-screen');
     const wrapper = document.getElementById('scanner-wrapper');
     const status = document.getElementById('auth-status');
 
     screen.style.display = 'flex';
 
-    // Kontrollojmë nëse pajisja mbështet biometrinë
-    if (window.PublicKeyCredential) {
-        try {
-            // Animacioni fillon
-            wrapper.classList.add('scanning-active');
-            status.innerText = "Kërkohet Biometria...";
+    // 1. Kontrollojmë nëse pajisja mbështet autentikimin biometrik
+    const isBiometricAvailable = await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable();
 
-            // Kjo kërkon autentikimin real nga sistemi operativ
-            // Për thjeshtësi në frontend, përdorim një "challenge" fiktiv
-            const credential = await navigator.credentials.get({
-                publicKey: {
-                    challenge: new Uint8Array([1, 2, 3, 4]), // Duhet të jetë unike nga serveri në prodhim
-                    authenticatorSelection: { userVerification: "required" },
-                    timeout: 60000
+    if (isBiometricAvailable) {
+        status.innerText = "Prekni për të skanuar";
+        
+        // Shto një event listener që FaceID të nisë me interaksion (rregull sigurie i browser-ave)
+        wrapper.onclick = async () => {
+            try {
+                wrapper.classList.add('scanning-active');
+                status.innerText = "Duke verifikuar...";
+
+                // Thirrja e FaceID/TouchID real të pajisjes
+                const credential = await navigator.credentials.get({
+                    publicKey: {
+                        challenge: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]), // Duhet të jetë random
+                        authenticatorSelection: { userVerification: "required" },
+                        timeout: 60000
+                    }
+                });
+
+                if (credential) {
+                    executeUnlock();
                 }
-            });
-
-            if (credential) {
-                unlockApp();
+            } catch (err) {
+                console.error("Gabim në FaceID:", err);
+                status.innerText = "Dështoi! Provo përsëri.";
+                wrapper.classList.remove('scanning-active');
             }
-        } catch (err) {
-            console.error("Autentikimi dështoi:", err);
-            status.innerText = "Dështoi! Provo përsëri.";
-            status.style.color = "#ef4444";
-            wrapper.classList.remove('scanning-active');
-            
-            // Opsionale: Shto butonin "Provo Përsëri"
-            status.onclick = () => startFaceID();
-        }
+        };
     } else {
-        // Fallback nëse pajisja nuk ka FaceID/Fingerprint
-        status.innerText = "Biometria nuk mbështetet.";
-        setTimeout(unlockApp, 2000); 
+        // Fallback nëse pajisja nuk ka biometri
+        status.innerText = "Biometria nuk mbështetet";
+        setTimeout(executeUnlock, 2000);
     }
 
-    function unlockApp() {
+    function executeUnlock() {
         wrapper.classList.remove('scanning-active');
         screen.classList.add('auth-success');
         status.innerText = "U identifikua";
@@ -391,13 +392,12 @@
                 document.getElementById('main-app').style.opacity = '1';
                 document.getElementById('main-app').style.transform = 'translateY(0)';
                 document.body.style.overflow = 'auto';
-                initChart();
+                if(typeof initChart === 'function') initChart();
                 renderUI();
             }, 800);
         }, 1000);
     }
 }
-
         // AI SCANNER LOGIC
         async function performAIScan(event) {
             const file = event.target.files[0];
@@ -535,6 +535,7 @@
     </script>
 </body>
 </html>
+
 
 
 
