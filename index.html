@@ -227,7 +227,7 @@
                 <div class="flex gap-10 mt-10">
                     <div>
                         <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Limit</p>
-                        <p id="limitText" class="font-bold">500 €</p>
+                       <p id="limitText" class="font-bold">0 €</p>
                     </div>
                     <div>
                         <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Mbetja</p>
@@ -316,11 +316,12 @@
             assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
         };
 
-        let db = {
-            expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
-            limit: localStorage.getItem('f_pro_lim_v3') || 1000,
-            chart: null
-        };
+       let db = {
+    expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
+    // Tani e merr nga memoria, nese s'ka asgje e nis nga 0 (jo 1000)
+    limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 0, 
+    chart: null
+};
 
         window.onload = () => {
             setTimeout(() => {
@@ -465,15 +466,28 @@ async function startFaceID() { const screen = document.getElementById('face-id-s
             doc.save('Raporti_FaturaIme.pdf');
         }
 
-        function showLimitModal() {
-            const l = prompt("Cakto limitin e ri:", db.limit);
-            if(l) { db.limit = l; localStorage.setItem('f_pro_lim_v3', l); renderUI(); }
+       function showLimitModal() {
+    let l = prompt("Sa dëshiron ta kesh limitin tënd mujor?", db.limit);
+    
+    // Nëse përdoruesi shkruan diçka dhe shtyp OK
+    if (l !== null && l !== "") {
+        let shumaere = parseFloat(l);
+        
+        if (!isNaN(shumaere)) {
+            db.limit = shumaere;
+            localStorage.setItem('f_pro_lim_v3', shumaere);
+            renderUI(); // Kjo e përditëson Dashboard-in menjëherë
+        } else {
+            alert("Ju lutem shkruani një numër të vlefshëm!");
         }
-
+    }
+}
+        
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
     </script>
 </body>
 </html>
+
 
 
 
