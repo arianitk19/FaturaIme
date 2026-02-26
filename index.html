@@ -460,237 +460,224 @@ function handleManualAuth() {
         </div>
     </div>
 <script>
-    /**
-     * FATURA IME PRO - CORE ENGINE v4.0
-     * Optimizuar për performancë maksimale dhe UI interaktive.
-     */
+   /**
+ * FATURA IME PRO - CORE ENGINE v4.5 (COMPLETE VERSION)
+ */
 
-    // 1. KONFIGURIMI I IKONAVE (SVG PATHS OPTIMIZED)
-    const iconMap = {
-        food:   `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
-        travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
-        bill:   `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
-        style:  `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
-        health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
-        assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
-    };
+// 1. KONFIGURIMI I IKONAVE
+const iconMap = {
+    food:   `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
+    travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
+    bill:   `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
+    style:  `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
+    health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
+    assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
+};
 
-    // 2. STATE MANAGEMENT (CENTRALIZED)
-    const db = {
-        expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
-        limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 0,
-        userName: localStorage.getItem('f_pro_user_name') || "",
-        userPhoto: localStorage.getItem('f_pro_user_photo') || null,
-        charts: {
-            line: null,
-            donut: null
-        }
-    };
+// 2. STATE MANAGEMENT
+const db = {
+    expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
+    limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 0,
+    userName: localStorage.getItem('f_pro_user_name') || "",
+    userPhoto: localStorage.getItem('f_pro_user_photo') || null,
+    charts: { line: null, donut: null }
+};
 
-    // 3. LIFECYCLE INITIALIZATION
-    window.addEventListener('load', () => {
-        const intro = document.getElementById('intro-screen');
-        
-        // Sekuenca e startimit me vonesë për efekt premium
-        setTimeout(() => {
-            if (intro) {
-                intro.style.opacity = '0';
-                intro.style.pointerEvents = 'none';
-                
-                setTimeout(() => {
-                    intro.remove();
-                    handleNavigationFlow();
-                }, 800);
-            }
-        }, 2200);
-    });
-
-    function handleNavigationFlow() {
-        const faceScreen = document.getElementById('face-id-screen');
-        const authOverlay = document.getElementById('auth-overlay');
-
-        if (db.userName && db.userName !== "") {
-            // Nëse përdoruesi ekziston, kalo direkt te Skanimi FaceID ose Dashboard
-            if (faceScreen) {
-                startFaceID();
-            } else {
-                if (authOverlay) authOverlay.remove();
-                initApp();
-            }
-        } else {
-            // Nëse nuk ka emër, mbajmë Auth Overlay hapur (pjesa që ndërtuam më parë)
-            if (authOverlay) authOverlay.classList.remove('hidden');
-        }
-    }
-
-    // 4. FACE ID AUTHENTICATION (ANIMATED)
-    async function startFaceID() {
-        const screen = document.getElementById('face-id-screen');
-        const wrapper = document.getElementById('scanner-wrapper');
-        const status = document.getElementById('auth-status');
-
-        if (!screen) return (initApp()); // Fallback nese mungon elementi
-
-        screen.style.display = 'flex';
-        wrapper.classList.add('scanning-active');
-        status.innerText = "Duke verifikuar tiparet...";
-
-        // Simulim i procesimit biometrik
-        setTimeout(() => {
-            wrapper.classList.remove('scanning-active');
-            screen.classList.add('auth-success');
-            status.innerText = "Identiteti u konfirmua";
-            status.style.color = "#10b981";
-
-            setTimeout(() => {
-                screen.style.opacity = "0";
-                screen.style.transform = "scale(1.1) translateY(-20px)";
-                setTimeout(() => {
-                    screen.remove();
-                    initApp();
-                }, 600);
-            }, 1200);
-        }, 2800);
-    }
-
-    // 5. INICIALIZIMI I DASHBOARD-IT
-    function initApp() {
-        const mainApp = document.getElementById('main-app');
-        if (mainApp) {
-            mainApp.style.display = 'block';
-            setTimeout(() => {
-                mainApp.style.opacity = '1';
-                mainApp.style.transform = 'translateY(0)';
-            }, 50);
-        }
-
-        // Përditëso UI me të dhënat e ruajtura (Emri & Foto)
-        const greeting = document.getElementById('userGreeting');
-        const dashPhoto = document.getElementById('dashboardUserPhoto');
-        
-        if (greeting && db.userName) greeting.innerText = `Përshëndetje, ${db.userName}`;
-        if (dashPhoto && db.userPhoto) dashPhoto.src = db.userPhoto;
-
-        document.body.style.overflow = 'auto';
-        
-        // Startimi i moduleve grafike
-        initCharts();
-        renderUI();
-    }
-
-    // 6. AI SCANNING MODULE (TESSERACT ENGINE)
-    async function performAIScan(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const loader = document.getElementById('ai-loader');
-        if (loader) loader.style.display = 'flex';
-
-        try {
-            const result = await Tesseract.recognize(file, 'eng+sqi');
-            const text = result.data.text;
-            
-            // Regjeks më i avancuar për gjetjen e çmimit Total
-            const prices = text.match(/\d+[\.,]\d{2}/g);
-
-            if (prices) {
-                const numericPrices = prices.map(p => parseFloat(p.replace(',', '.')));
-                const totalAmount = Math.max(...numericPrices);
-                document.getElementById('inpAmount').value = totalAmount;
-                
-                // Feedback haptik/vizual
-                console.log("AI gjeti shumën:", totalAmount);
-            } else {
-                alert("Skanimi nuk arriti të lexojë një shumë. Provoni dritë më të mirë.");
-            }
-        } catch (error) {
-            console.error("AI Scan Error:", error);
-        } finally {
-            if (loader) loader.style.display = 'none';
-        }
-    }
-
-    // 7. CHART ENGINE (CHART.JS INTEGRATION)
-    function initCharts() {
-        // Line Chart - Trendi i shpenzimeve
-        const lineCtx = document.getElementById('appChart')?.getContext('2d');
-        if (lineCtx) {
-            db.charts.line = new Chart(lineCtx, {
-                type: 'line',
-                data: {
-                    labels: ['', '', '', '', '', ''],
-                    datasets: [{
-                        data: [0, 0, 0, 0, 0, 0],
-                        borderColor: '#6366f1',
-                        borderWidth: 4,
-                        tension: 0.5,
-                        pointRadius: 0,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.08)'
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }, 
-                    scales: { x: { display: false }, y: { display: false } } 
-                }
-            });
-        }
-    }
-
-    // 8. DATA RENDERING ENGINE (THE BRAIN)
-    function renderUI() {
-        const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-        const remaining = db.limit - total;
-
-        // Update Balances
-        const els = {
-            bal: document.getElementById('mainBalance'),
-            lim: document.getElementById('limitText'),
-            rem: document.getElementById('remainingText')
-        };
-
-        if (els.bal) els.bal.innerText = `${total.toFixed(2)} €`;
-        if (els.lim) els.lim.innerText = `${db.limit.toFixed(2)} €`;
-        if (els.rem) {
-            els.rem.innerText = `${remaining.toFixed(2)} €`;
-            els.rem.style.color = remaining < 0 ? '#ef4444' : '#10b981';
-        }
-
-
-function updateSidebarUI() {
-    // 1. Emri dhe Fotoja
-    const nameEl = document.getElementById('sidebarUserName');
-    const photoEl = document.getElementById('sidebarUserPhoto');
+// 3. LIFECYCLE INITIALIZATION
+window.addEventListener('load', () => {
+    applySavedTheme();
+    const intro = document.getElementById('intro-screen');
     
-    if (db.userName) nameEl.innerText = db.userName;
-    if (db.userPhoto) photoEl.src = db.userPhoto;
+    setTimeout(() => {
+        if (intro) {
+            intro.style.opacity = '0';
+            intro.style.pointerEvents = 'none';
+            setTimeout(() => {
+                intro.remove();
+                handleNavigationFlow();
+            }, 800);
+        }
+    }, 2200);
+});
 
-    // 2. Kalkulimi i Limitit për Bar-in
+function handleNavigationFlow() {
+    const authOverlay = document.getElementById('auth-overlay');
+    if (db.userName && db.userName !== "") {
+        if (document.getElementById('face-id-screen')) {
+            startFaceID();
+        } else {
+            if (authOverlay) authOverlay.remove();
+            initApp();
+        }
+    } else {
+        if (authOverlay) authOverlay.classList.remove('hidden');
+    }
+}
+
+// 4. AUTHENTICATION LOGIC (FIXED)
+function completeAuth() {
+    const nameInput = document.getElementById('userNameInput');
+    const photoInput = document.getElementById('userPhotoInput');
+    
+    if (!nameInput.value.trim()) {
+        alert("Ju lutem shkruani emrin tuaj!");
+        return;
+    }
+
+    db.userName = nameInput.value.trim();
+    localStorage.setItem('f_pro_user_name', db.userName);
+
+    if (photoInput && photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            db.userPhoto = e.target.result;
+            localStorage.setItem('f_pro_user_photo', db.userPhoto);
+            finishAuthFlow();
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        finishAuthFlow();
+    }
+}
+
+function finishAuthFlow() {
+    const authOverlay = document.getElementById('auth-overlay');
+    if (authOverlay) {
+        authOverlay.style.opacity = '0';
+        setTimeout(() => {
+            authOverlay.remove();
+            if (document.getElementById('face-id-screen')) startFaceID();
+            else initApp();
+        }, 500);
+    }
+}
+
+// 5. FACE ID & INITIALIZATION
+async function startFaceID() {
+    const screen = document.getElementById('face-id-screen');
+    const wrapper = document.getElementById('scanner-wrapper');
+    const status = document.getElementById('auth-status');
+
+    if (!screen) return initApp();
+
+    screen.style.display = 'flex';
+    wrapper.classList.add('scanning-active');
+    status.innerText = "Duke verifikuar tiparet...";
+
+    setTimeout(() => {
+        wrapper.classList.remove('scanning-active');
+        screen.classList.add('auth-success');
+        status.innerText = "Identiteti u konfirmua";
+        status.style.color = "#10b981";
+
+        setTimeout(() => {
+            screen.style.opacity = "0";
+            screen.style.transform = "scale(1.1) translateY(-20px)";
+            setTimeout(() => { screen.remove(); initApp(); }, 600);
+        }, 1200);
+    }, 2800);
+}
+
+function initApp() {
+    const mainApp = document.getElementById('main-app');
+    if (mainApp) {
+        mainApp.style.display = 'block';
+        setTimeout(() => {
+            mainApp.style.opacity = '1';
+            mainApp.style.transform = 'translateY(0)';
+        }, 50);
+    }
+    
+    if (db.userName) {
+        const greeting = document.getElementById('userGreeting');
+        if (greeting) greeting.innerText = `Përshëndetje, ${db.userName}`;
+    }
+    
+    updateDashboardPhotos();
+    initCharts();
+    renderUI();
+}
+
+function updateDashboardPhotos() {
+    const dashPhoto = document.getElementById('dashboardUserPhoto');
+    const sidePhoto = document.getElementById('sidebarUserPhoto');
+    if (dashPhoto && db.userPhoto) dashPhoto.src = db.userPhoto;
+    if (sidePhoto && db.userPhoto) sidePhoto.src = db.userPhoto;
+}
+
+// 6. RENDERING ENGINE
+function renderUI() {
+    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+    const remaining = db.limit - total;
+
+    // Balancat
+    const bEl = document.getElementById('mainBalance');
+    if (bEl) bEl.innerText = `${total.toFixed(2)} €`;
+    
+    const lEl = document.getElementById('limitText');
+    if (lEl) lEl.innerText = `${db.limit.toFixed(2)} €`;
+
+    const rEl = document.getElementById('remainingText');
+    if (rEl) {
+        rEl.innerText = `${remaining.toFixed(2)} €`;
+        rEl.style.color = remaining < 0 ? '#ef4444' : '#10b981';
+    }
+
+    // Lista
+    const container = document.getElementById('listContainer');
+    if (container) {
+        if (db.expenses.length === 0) {
+            container.innerHTML = `<div class="py-12 text-center opacity-20 italic">Nuk ka të dhëna</div>`;
+        } else {
+            container.innerHTML = db.expenses.slice(0, 15).map(exp => `
+                <div class="glass-panel p-5 flex justify-between items-center mb-4 transition-all hover:bg-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center">
+                            ${iconMap[exp.icon] || iconMap.food}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[11px] uppercase text-white/90">${exp.cat}</h4>
+                            <p class="text-[9px] opacity-40 font-medium">${exp.date}</p>
+                        </div>
+                    </div>
+                    <span class="font-bold text-sm text-white">-${exp.amount.toFixed(2)} €</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    if (db.charts.line) {
+        db.charts.line.data.datasets[0].data = db.expenses.slice(0, 6).map(e => e.amount).reverse();
+        db.charts.line.update();
+    }
+    
+    updateFinancialIntelligence();
+    updateSidebarUI();
+}
+
+// 7. SIDEBAR & THEME
+function updateSidebarUI() {
+    const nameEl = document.getElementById('sidebarUserName');
+    if (nameEl && db.userName) nameEl.innerText = db.userName;
+    
     const total = db.expenses.reduce((s, a) => s + a.amount, 0);
     const percent = db.limit > 0 ? Math.min((total / db.limit) * 100, 100) : 0;
     
     const bar = document.getElementById('sidebarLimitBar');
-    const percentText = document.getElementById('sidebarLimitPercent');
+    const pText = document.getElementById('sidebarLimitPercent');
     
     if (bar) bar.style.width = `${percent}%`;
-    if (percentText) percentText.innerText = `${Math.round(percent)}%`;
-
-    // Ngjyra dinamike e bar-it
-    if (percent > 85) bar.style.background = "linear-gradient(to r, #ef4444, #b91c1c)";
-    else bar.style.background = "linear-gradient(to r, #6366f1, #a855f7)";
+    if (pText) pText.innerText = `${Math.round(percent)}%`;
 }
 
-// Modifiko toggleMenu() që të përditësojë Sidebar sa herë hapet
 function toggleMenu() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('menu-overlay');
-    
+    if (!sidebar) return;
+
     const isOpen = sidebar.classList.contains('open');
-    
     if (!isOpen) {
-        updateSidebarUI(); // Përditëso të dhënat para se të shfaqet
+        updateSidebarUI();
         sidebar.classList.add('open');
         sidebar.style.transform = "translateX(0)";
         overlay?.classList.add('active');
@@ -701,230 +688,108 @@ function toggleMenu() {
     }
 }
 
-        
-        // Render List
-        const container = document.getElementById('listContainer');
-        if (container) {
-            if (db.expenses.length === 0) {
-                container.innerHTML = `<div class="py-12 text-center opacity-20 italic">Nuk ka të dhëna për këtë muaj</div>`;
-            } else {
-                container.innerHTML = db.expenses.slice(0, 15).map(exp => `
-                    <div class="glass-panel p-5 flex justify-between items-center mb-4 transition-all hover:bg-white/5">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center">
-                                ${iconMap[exp.icon] || iconMap.food}
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-[11px] uppercase tracking-tighter text-white/90">${exp.cat}</h4>
-                                <p class="text-[9px] opacity-40 font-medium">${exp.date}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-bold text-sm text-white">-${exp.amount.toFixed(2)} €</span>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        // Update Charts
-        if (db.charts.line) {
-            db.charts.line.data.datasets[0].data = db.expenses.slice(0, 6).map(e => e.amount).reverse();
-            db.charts.line.update();
-        }
-        
-        updateFinancialIntelligence();
-    }
-
-    // 9. FINANCIAL LOGIC (SUBMIT / LIMIT / CLEAR)
-    function submitExpense() {
-        const amtInput = document.getElementById('inpAmount');
-        const val = parseFloat(amtInput.value);
-        const cat = document.getElementById('selectedCat').value || "Tjera";
-        const icon = document.getElementById('selectedIcon').value || "food";
-        
-        if (isNaN(val) || val <= 0) {
-            alert("Shuma nuk është e vlefshme!");
-            return;
-        }
-
-        db.expenses.unshift({
-            amount: val,
-            cat: cat,
-            icon: icon,
-            date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        });
-
-        saveAndSync();
-        hideModal('addModal');
-        amtInput.value = '';
-        renderUI();
-    }
-
-    function saveAndSync() {
-        localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
-        localStorage.setItem('f_pro_lim_v3', db.limit.toString());
-    }
-
-    function showLimitModal() {
-        const newLimit = prompt("Cakto limitin tënd mujor (€):", db.limit);
-        if (newLimit !== null && !isNaN(parseFloat(newLimit))) {
-            db.limit = parseFloat(newLimit);
-            saveAndSync();
-            renderUI();
-        }
-    }
-
-    // 10. AI FINANCIAL INTELLIGENCE
-    function updateFinancialIntelligence() {
-        const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-        const usage = db.limit > 0 ? (total / db.limit) * 100 : 0;
-        const statusEl = document.getElementById('auth-status-main');
-
-        let msg = "Cakto limitin";
-        let color = "#64748b";
-
-        if (db.limit > 0) {
-            if (usage < 50) { msg = "Gjendje e Shkëlqyer"; color = "#10b981"; }
-            else if (usage < 85) { msg = "Kujdes me shpenzimet"; color = "#f59e0b"; }
-            else { msg = "Kritike: Rishiko Buxhetin!"; color = "#ef4444"; }
-        }
-
-        if (statusEl) {
-            statusEl.innerText = msg;
-            statusEl.style.color = color;
-        }
-
-        updateCategoryDonut();
-    }
-
-    function updateCategoryDonut() {
-        const canvas = document.getElementById('categoryChart');
-        if (!canvas) return;
-
-        const summary = {};
-        db.expenses.forEach(ex => summary[ex.cat] = (summary[ex.cat] || 0) + ex.amount);
-
-        if (db.charts.donut) db.charts.donut.destroy();
-
-        db.charts.donut = new Chart(canvas.getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(summary),
-                datasets: [{
-                    data: Object.values(summary),
-                    backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'],
-                    borderWidth: 0,
-                    hoverOffset: 15
-                }]
-            },
-            options: { cutout: '82%', plugins: { legend: { display: false } } }
-        });
-    }
-
-    // 11. PDF GENERATION (PROFESSIONAL REPORT)
-    function downloadPDF() {
-        if (typeof window.jspdf === 'undefined') return alert("Sistemi PDF po ngarkohet...");
-        
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        // Header i raportit
-        doc.setFillColor(30, 41, 59);
-        doc.rect(0, 0, 210, 50, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(22);
-        doc.text("FATURA IME PRO", 15, 25);
-        doc.setFontSize(10);
-        doc.text(`Gjeneruar për: ${db.userName || 'Përdorues'}`, 15, 35);
-        doc.text(`Data: ${new Date().toLocaleDateString()}`, 15, 42);
-
-        // Tabela e të dhënave
-        const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount.toFixed(2)} €`]);
-        doc.autoTable({
-            startY: 60,
-            head: [['Ora', 'Kategoria', 'Shuma (€)']],
-            body: rows,
-            theme: 'grid',
-            headStyles: { fillColor: [99, 102, 241] }
-        });
-
-        doc.save(`Raporti_${db.userName || 'Financiar'}.pdf`);
-    }
-
-    // UTILS
-    function toggleMenu() {
-        document.getElementById('sidebar')?.classList.toggle('open');
-        document.getElementById('menu-overlay')?.classList.toggle('active');
-    }
-
-    function hideModal(id) { document.getElementById(id)?.classList.add('hidden'); }
-    
-    function setCat(cat, icon, el) {
-        document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected', 'border-indigo-500'));
-        el.classList.add('selected', 'border-indigo-500');
-        document.getElementById('selectedCat').value = cat;
-        document.getElementById('selectedIcon').value = icon;
-    }
-
-
-// --- THEME ENGINE v1.0 ---
-
 function toggleTheme() {
     const isLight = document.getElementById('theme-toggle').checked;
-    const body = document.body;
-    const sunIcon = document.getElementById('sun-icon');
-    const moonIcon = document.getElementById('moon-icon');
-    const themeIconBox = document.getElementById('theme-icon-container');
-
     if (isLight) {
-        // AKTIVIZO LIGHT MODE
-        body.classList.add('light-theme');
+        document.body.classList.add('light-theme');
         localStorage.setItem('f_pro_theme', 'light');
-        sunIcon.classList.remove('hidden');
-        moonIcon.classList.add('hidden');
-        themeIconBox.classList.replace('bg-indigo-500/20', 'bg-amber-500/20');
-        themeIconBox.classList.replace('text-indigo-400', 'text-amber-600');
     } else {
-        // AKTIVIZO DARK MODE
-        body.classList.remove('light-theme');
+        document.body.classList.remove('light-theme');
         localStorage.setItem('f_pro_theme', 'dark');
-        sunIcon.classList.add('hidden');
-        moonIcon.classList.remove('hidden');
-        themeIconBox.classList.replace('bg-amber-500/20', 'bg-indigo-500/20');
-        themeIconBox.classList.replace('text-amber-600', 'text-indigo-400');
     }
-    
-    // Përditëso grafikët që të përshtaten me temën e re
-    updateChartTheme(isLight);
 }
 
-function updateChartTheme(isLight) {
-    if (!db.charts.line) return;
-
-    const textColor = isLight ? '#1e293b' : '#ffffff';
-    const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
-
-    // Përditëso konfigurimin e Chart.js
-    db.charts.line.options.scales.x.ticks.color = textColor;
-    db.charts.line.options.scales.y.ticks.color = textColor;
-    db.charts.line.update();
-}
-
-// THIRRE KËTË TE window.onload
 function applySavedTheme() {
-    const savedTheme = localStorage.getItem('f_pro_theme');
+    const saved = localStorage.getItem('f_pro_theme');
     const toggle = document.getElementById('theme-toggle');
-    
-    if (savedTheme === 'light') {
-        if (toggle) toggle.checked = true;
-        toggleTheme();
+    if (saved === 'light' && toggle) {
+        toggle.checked = true;
+        document.body.classList.add('light-theme');
     }
 }
-    
-</script>
+
+// 8. DATA OPERATIONS
+function submitExpense() {
+    const amtInp = document.getElementById('inpAmount');
+    const val = parseFloat(amtInp.value);
+    if (isNaN(val) || val <= 0) return alert("Shuma e pavlefshme");
+
+    db.expenses.unshift({
+        amount: val,
+        cat: document.getElementById('selectedCat').value || "Tjera",
+        icon: document.getElementById('selectedIcon').value || "food",
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    });
+
+    saveAndSync();
+    hideModal('addModal');
+    amtInp.value = '';
+    renderUI();
+}
+
+function saveAndSync() {
+    localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
+    localStorage.setItem('f_pro_lim_v3', db.limit.toString());
+}
+
+function showLimitModal() {
+    const n = prompt("Cakto limitin (€):", db.limit);
+    if (n !== null && !isNaN(parseFloat(n))) {
+        db.limit = parseFloat(n);
+        saveAndSync();
+        renderUI();
+    }
+}
+
+function clearAll() {
+    if(confirm("A jeni i sigurt? Të gjitha të dhënat do fshihen.")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+// 9. AI & CHARTS INITIALIZATION (Siç i kishe)
+function initCharts() {
+    const ctx = document.getElementById('appChart')?.getContext('2d');
+    if (!ctx) return;
+    db.charts.line = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['', '', '', '', '', ''],
+            datasets: [{
+                data: [0,0,0,0,0,0],
+                borderColor: '#6366f1',
+                borderWidth: 4,
+                tension: 0.5,
+                fill: true,
+                backgroundColor: 'rgba(99, 102, 241, 0.05)'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+    });
+}
+
+function updateFinancialIntelligence() {
+    const statusEl = document.getElementById('auth-status-main');
+    if (!statusEl) return;
+    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+    const usage = db.limit > 0 ? (total / db.limit) * 100 : 0;
+    if (usage < 50) { statusEl.innerText = "Gjendje e Shkëlqyer"; statusEl.style.color = "#10b981"; }
+    else if (usage < 85) { statusEl.innerText = "Kujdes me shpenzimet"; statusEl.style.color = "#f59e0b"; }
+    else { statusEl.innerText = "Kritike!"; statusEl.style.color = "#ef4444"; }
+}
+
+function hideModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+function setCat(c, i, el) {
+    document.querySelectorAll('.cat-card').forEach(x => x.classList.remove('border-indigo-500'));
+    el.classList.add('border-indigo-500');
+    document.getElementById('selectedCat').value = c;
+    document.getElementById('selectedIcon').value = i;
+}         
+    </script>           
 </body>
 </html>
+
 
 
 
