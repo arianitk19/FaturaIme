@@ -484,7 +484,71 @@ async function startFaceID() { const screen = document.getElementById('face-id-s
 }
         
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
+
+
+
+function updateFinancialIntelligence() {
+    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+    const limit = db.limit;
+    const usagePercent = limit > 0 ? (total / limit) * 100 : 0;
+    
+    // Krijo tekstin e Inteligjencës Artificiale
+    let healthStatus = "";
+    let healthColor = "";
+    
+    if (usagePercent < 50) {
+        healthStatus = "Stabilitet i Plotë";
+        healthColor = "#10b981"; // jeshile
+    } else if (usagePercent < 85) {
+        healthStatus = "Kujdes, limitit po i afroheni";
+        healthColor = "#f59e0b"; // portokalli
+    } else {
+        healthStatus = "Kritike: Rishikoni shpenzimet!";
+        healthColor = "#ef4444"; // kuqe
+    }
+
+    // Përditëso UI-në me animacion
+    const statusEl = document.getElementById('auth-status-main'); // Duhet ta shtosh këtë ID në HTML
+    if(statusEl) {
+        statusEl.innerText = healthStatus;
+        statusEl.style.color = healthColor;
+    }
+    
+    updateCategoryDonut(); // Funksioni i ri për grafikun rrethor
+}
+
+function updateCategoryDonut() {
+    const categories = {};
+    db.expenses.forEach(ex => {
+        categories[ex.cat] = (categories[ex.cat] || 0) + ex.amount;
+    });
+
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    if (window.catChart) window.catChart.destroy();
+
+    window.catChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(categories),
+            datasets: [{
+                data: Object.values(categories),
+                backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'],
+                borderWidth: 0,
+                hoverOffset: 20
+            }]
+        },
+        options: {
+            cutout: '80%',
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+        
+        
     </script>
 </body>
 </html>
+
 
