@@ -370,118 +370,171 @@
             <button onclick="submitExpense()" class="w-full bg-white text-black p-6 rounded-2xl font-black text-lg mt-6 ios-btn uppercase">Konfirmo</button>
         </div>
     </div>
+<script>
+    // 1. REGJISTRI I IKONAVE PER DASHBOARD
+    const iconMap = {
+        food: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
+        travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
+        bill: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
+        style: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
+        health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
+        assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
+    };
 
-    <script>
-        // REGJISTRI I IKONAVE PER DASHBOARD
-        const iconMap = {
-            food: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
-            travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
-            bill: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
-            style: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
-            health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
-            assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
-        };
+    // 2. DATABASE DHE SHTETI FILLESTAR
+    let db = {
+        expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
+        limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 0,
+        chart: null,
+        catChart: null
+    };
 
-       let db = {
-    expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
-    // Tani e merr nga memoria, nese s'ka asgje e nis nga 0 (jo 1000)
-    limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 0, 
-    chart: null
-};
-
-        window.onload = () => {
-            setTimeout(() => {
-                const intro = document.getElementById('intro-screen');
-                if(intro) {
-                    intro.style.opacity = '0';
-                    setTimeout(() => {
-                        intro.remove();
+    // 3. MENAXHIMI I NGARKIMIT (WINDOW ONLOAD)
+    window.onload = () => {
+        setTimeout(() => {
+            const intro = document.getElementById('intro-screen');
+            if (intro) {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.remove();
+                    // Kontrollojmë nëse kemi FaceID screen, përndryshe nisim direkt app-in
+                    const faceScreen = document.getElementById('face-id-screen');
+                    if (faceScreen) {
                         startFaceID();
-                    }, 1000);
-                }
-            }, 2500);
-        };
-
-async function startFaceID() { const screen = document.getElementById('face-id-screen'); const wrapper = document.getElementById('scanner-wrapper'); const status = document.getElementById('auth-status'); screen.style.display = 'flex'; wrapper.classList.add('scanning-active'); status.innerText = "Skanimi..."; setTimeout(unlockApp, 2500); function unlockApp() { wrapper.classList.remove('scanning-active'); screen.classList.add('auth-success'); status.innerText = "U identifikua"; status.style.color = "#10b981"; setTimeout(() => { screen.style.opacity = "0"; screen.style.transform = "scale(1.2)"; setTimeout(() => { screen.remove(); document.getElementById('main-app').style.opacity = '1'; document.getElementById('main-app').style.transform = 'translateY(0)'; document.body.style.overflow = 'auto'; initChart(); renderUI(); }, 800); }, 1000); } }
-        
-       
-            const loader = document.getElementById('ai-loader');
-            loader.style.display = 'flex';
-
-            try {
-                const result = await Tesseract.recognize(file, 'eng+sqi', {
-                    logger: m => console.log(m)
-                });
-
-                const text = result.data.text;
-                // Regex kërkon për shuma si: 10.50, 100,00, 5.20 EUR etj.
-                const priceRegex = /\d+[\.,]\d{2}/g;
-                const matches = text.match(priceRegex);
-
-                if (matches) {
-                    // Konvertojmë në numra float dhe gjejmë vlerën maksimale (zakonisht TOTALI)
-                    const prices = matches.map(p => parseFloat(p.replace(',', '.')));
-                    const total = Math.max(...prices);
-                    document.getElementById('inpAmount').value = total;
-                } else {
-                    alert("Skaneri nuk gjeti dot një shumë të qartë. Provoni një foto më të afërt.");
-                }
-            } catch (error) {
-                console.error(error);
-                alert("Gabim gjatë skanimit.");
-            } finally {
-                loader.style.display = 'none';
+                    } else {
+                        initApp();
+                    }
+                }, 1000);
             }
+        }, 2500);
+    };
+
+    // 4. AUTENTIKIMI FACE ID
+    async function startFaceID() {
+        const screen = document.getElementById('face-id-screen');
+        const wrapper = document.getElementById('scanner-wrapper');
+        const status = document.getElementById('auth-status');
+
+        if (!screen) return;
+        screen.style.display = 'flex';
+        wrapper.classList.add('scanning-active');
+        status.innerText = "Skanimi...";
+
+        setTimeout(() => {
+            wrapper.classList.remove('scanning-active');
+            screen.classList.add('auth-success');
+            status.innerText = "U identifikua";
+            status.style.color = "#10b981";
+
+            setTimeout(() => {
+                screen.style.opacity = "0";
+                screen.style.transform = "scale(1.2)";
+                setTimeout(() => {
+                    screen.remove();
+                    initApp();
+                }, 800);
+            }, 1000);
+        }, 2500);
+    }
+
+    // 5. INICIALIZIMI I APLIKACIONIT
+    function initApp() {
+        const mainApp = document.getElementById('main-app');
+        if (mainApp) {
+            mainApp.style.opacity = '1';
+            mainApp.style.transform = 'translateY(0)';
         }
+        document.body.style.overflow = 'auto';
+        initChart();
+        renderUI();
+    }
 
-        function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('menu-overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-        }
+    // 6. SKANIMI AI (TESSERACT)
+    async function performAIScan(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-        function showAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
-        function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+        const loader = document.getElementById('ai-loader');
+        if (loader) loader.style.display = 'flex';
 
-        function setCat(cat, icon, el) {
-            document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
-            document.getElementById('selectedCat').value = cat;
-            document.getElementById('selectedIcon').value = icon;
-        }
-
-        function initChart() {
-            const ctx = document.getElementById('appChart').getContext('2d');
-            db.chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['', '', '', '', '', ''],
-                    datasets: [{
-                        data: [0,0,0,0,0,0],
-                        borderColor: '#6366f1',
-                        borderWidth: 3,
-                        tension: 0.5,
-                        pointRadius: 0,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                    }]
-                },
-                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        try {
+            const result = await Tesseract.recognize(file, 'eng+sqi', {
+                logger: m => console.log(m)
             });
+
+            const text = result.data.text;
+            const priceRegex = /\d+[\.,]\d{2}/g;
+            const matches = text.match(priceRegex);
+
+            if (matches) {
+                const prices = matches.map(p => parseFloat(p.replace(',', '.')));
+                const total = Math.max(...prices);
+                document.getElementById('inpAmount').value = total;
+            } else {
+                alert("Skaneri nuk gjeti dot një shumë të qartë. Provoni një foto më të afërt.");
+            }
+        } catch (error) {
+            console.error("Gabim gjatë skanimit:", error);
+            alert("Gabim gjatë skanimit.");
+        } finally {
+            if (loader) loader.style.display = 'none';
         }
+    }
 
-        function renderUI() {
-            const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-            const remaining = db.limit - total;
-            document.getElementById('mainBalance').innerText = `${total.toFixed(2)} €`;
-            document.getElementById('limitText').innerText = `${db.limit} €`;
-            document.getElementById('remainingText').innerText = `${remaining.toFixed(2)} €`;
-            document.getElementById('remainingText').style.color = remaining < 0 ? '#ef4444' : '#10b981';
+    // 7. FUNKSIONET E UI (MODAL, MENU)
+    function toggleMenu() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('menu-overlay');
+        if (sidebar) sidebar.classList.toggle('open');
+        if (overlay) overlay.classList.toggle('active');
+    }
 
-            const container = document.getElementById('listContainer');
+    function showAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
+    function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function setCat(cat, icon, el) {
+        document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('selectedCat').value = cat;
+        document.getElementById('selectedIcon').value = icon;
+    }
+
+    // 8. GRAFIKET (CHART.JS)
+    function initChart() {
+        const chartEl = document.getElementById('appChart');
+        if (!chartEl) return;
+        const ctx = chartEl.getContext('2d');
+        db.chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['', '', '', '', '', ''],
+                datasets: [{
+                    data: [0, 0, 0, 0, 0, 0],
+                    borderColor: '#6366f1',
+                    borderWidth: 3,
+                    tension: 0.5,
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)'
+                }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        });
+    }
+
+    // 9. RENDERIMI KRYESOR
+    function renderUI() {
+        const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+        const remaining = db.limit - total;
+
+        document.getElementById('mainBalance').innerText = `${total.toFixed(2)} €`;
+        document.getElementById('limitText').innerText = `${db.limit.toFixed(2)} €`;
+        document.getElementById('remainingText').innerText = `${remaining.toFixed(2)} €`;
+        document.getElementById('remainingText').style.color = remaining < 0 ? '#ef4444' : '#10b981';
+
+        const container = document.getElementById('listContainer');
+        if (container) {
             container.innerHTML = db.expenses.length ? '' : '<p class="text-center opacity-20 py-10">Zbrazët</p>';
-            
             db.expenses.slice(0, 10).forEach(exp => {
                 container.innerHTML += `
                     <div class="glass-panel p-6 flex justify-between items-center mb-4">
@@ -497,121 +550,151 @@ async function startFaceID() { const screen = document.getElementById('face-id-s
                         <span class="font-bold text-sm">-${exp.amount.toFixed(2)} €</span>
                     </div>`;
             });
-            db.chart.data.datasets[0].data = db.expenses.map(e => e.amount).reverse().slice(-10);
+        }
+
+        if (db.chart) {
+            db.chart.data.datasets[0].data = db.expenses.slice(0, 6).map(e => e.amount).reverse();
             db.chart.update();
         }
-
-        function submitExpense() {
-            const amt = document.getElementById('inpAmount').value;
-            const cat = document.getElementById('selectedCat').value;
-            const icon = document.getElementById('selectedIcon').value;
-            if(!amt) return;
-            db.expenses.unshift({ 
-                amount: parseFloat(amt), 
-                cat: cat, 
-                icon: icon,
-                date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
-            });
-            localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
-            hideModal('addModal');
-            document.getElementById('inpAmount').value = '';
-            renderUI();
-        }
-
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 40, 'F');
-            doc.setTextColor(255, 255, 255); doc.text("RAPORTI FINANCIAR PRO", 15, 25);
-            const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount} EUR`]);
-            doc.autoTable({ startY: 50, head: [['Data', 'Kategoria', 'Shuma']], body: rows });
-            doc.save('Raporti_FaturaIme.pdf');
-        }
-
-       function showLimitModal() {
-    let l = prompt("Sa dëshiron ta kesh limitin tënd mujor?", db.limit);
-    
-    // Nëse përdoruesi shkruan diçka dhe shtyp OK
-    if (l !== null && l !== "") {
-        let shumaere = parseFloat(l);
         
-        if (!isNaN(shumaere)) {
-            db.limit = shumaere;
-            localStorage.setItem('f_pro_lim_v3', shumaere);
-            renderUI(); // Kjo e përditëson Dashboard-in menjëherë
-        } else {
-            alert("Ju lutem shkruani një numër të vlefshëm!");
-        }
+        updateFinancialIntelligence();
     }
-}
+
+    // 10. LOGJIKA E SHPENZIMEVE
+    function submitExpense() {
+        const amtInput = document.getElementById('inpAmount');
+        const amt = amtInput.value;
+        const cat = document.getElementById('selectedCat').value;
+        const icon = document.getElementById('selectedIcon').value;
         
-        function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
+        if (!amt || parseFloat(amt) <= 0) {
+            alert("Shkruani një shume të vlefshme!");
+            return;
+        }
 
+        db.expenses.unshift({
+            amount: parseFloat(amt),
+            cat: cat,
+            icon: icon,
+            date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
 
-
-function updateFinancialIntelligence() {
-    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-    const limit = db.limit;
-    const usagePercent = limit > 0 ? (total / limit) * 100 : 0;
-    
-    // Krijo tekstin e Inteligjencës Artificiale
-    let healthStatus = "";
-    let healthColor = "";
-    
-    if (usagePercent < 50) {
-        healthStatus = "Stabilitet i Plotë";
-        healthColor = "#10b981"; // jeshile
-    } else if (usagePercent < 85) {
-        healthStatus = "Kujdes, limitit po i afroheni";
-        healthColor = "#f59e0b"; // portokalli
-    } else {
-        healthStatus = "Kritike: Rishikoni shpenzimet!";
-        healthColor = "#ef4444"; // kuqe
+        localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
+        hideModal('addModal');
+        amtInput.value = '';
+        renderUI();
     }
 
-    // Përditëso UI-në me animacion
-    const statusEl = document.getElementById('auth-status-main'); // Duhet ta shtosh këtë ID në HTML
-    if(statusEl) {
-        statusEl.innerText = healthStatus;
-        statusEl.style.color = healthColor;
-    }
-    
-    updateCategoryDonut(); // Funksioni i ri për grafikun rrethor
-}
-
-function updateCategoryDonut() {
-    const categories = {};
-    db.expenses.forEach(ex => {
-        categories[ex.cat] = (categories[ex.cat] || 0) + ex.amount;
-    });
-
-    const ctx = document.getElementById('categoryChart').getContext('2d');
-    if (window.catChart) window.catChart.destroy();
-
-    window.catChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(categories),
-            datasets: [{
-                data: Object.values(categories),
-                backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'],
-                borderWidth: 0,
-                hoverOffset: 20
-            }]
-        },
-        options: {
-            cutout: '80%',
-            plugins: {
-                legend: { display: false }
+    function showLimitModal() {
+        let l = prompt("Sa dëshiron ta kesh limitin tënd mujor?", db.limit);
+        if (l !== null && l !== "") {
+            let shumaere = parseFloat(l);
+            if (!isNaN(shumaere)) {
+                db.limit = shumaere;
+                localStorage.setItem('f_pro_lim_v3', shumaere);
+                renderUI();
+            } else {
+                alert("Ju lutem shkruani një numër të vlefshëm!");
             }
         }
-    });
-}
+    }
+
+    function clearAll() {
+        if (confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) {
+            db.expenses = [];
+            localStorage.removeItem('f_pro_v3');
+            renderUI();
+        }
+    }
+
+    // 11. ANALIZA FINANCIARE (AI)
+    function updateFinancialIntelligence() {
+        const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+        const limit = db.limit;
+        const usagePercent = limit > 0 ? (total / limit) * 100 : 0;
+
+        let healthStatus = "Caktoni një limit";
+        let healthColor = "#64748b";
+
+        if (limit > 0) {
+            if (usagePercent < 50) {
+                healthStatus = "Stabilitet i Plotë";
+                healthColor = "#10b981";
+            } else if (usagePercent < 85) {
+                healthStatus = "Kujdes, po i afroheni limitit";
+                healthColor = "#f59e0b";
+            } else {
+                healthStatus = "Kritike: Rishikoni shpenzimet!";
+                healthColor = "#ef4444";
+            }
+        }
+
+        const statusEl = document.getElementById('auth-status-main');
+        if (statusEl) {
+            statusEl.innerText = healthStatus;
+            statusEl.style.color = healthColor;
+        }
+        updateCategoryDonut();
+    }
+
+    function updateCategoryDonut() {
+        const canvas = document.getElementById('categoryChart');
+        if (!canvas) return;
+
+        const categories = {};
+        db.expenses.forEach(ex => {
+            categories[ex.cat] = (categories[ex.cat] || 0) + ex.amount;
+        });
+
+        const ctx = canvas.getContext('2d');
+        if (db.catChart) db.catChart.destroy();
+
+        db.catChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(categories),
+                datasets: [{
+                    data: Object.values(categories),
+                    backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                cutout: '80%',
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    // 12. EKSPORTO PDF
+    function downloadPDF() {
+        if (typeof window.jspdf === 'undefined') {
+            alert("Libraria PDF nuk është ngarkuar!");
+            return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFillColor(15, 23, 42); 
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255); 
+        doc.setFontSize(20);
+        doc.text("RAPORTI FINANCIAR PRO", 15, 25);
         
-        
-    </script>
+        const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount.toFixed(2)} EUR`]);
+        doc.autoTable({ 
+            startY: 50, 
+            head: [['Data', 'Kategoria', 'Shuma']], 
+            body: rows,
+            theme: 'striped'
+        });
+        doc.save('Raporti_FaturaIme.pdf');
+    }
+</script>
+ 
 </body>
 </html>
+
 
 
 
