@@ -201,6 +201,46 @@
     </div>
 </div>
 
+            <script>
+
+function handleManualAuth() {
+    const nameInput = document.getElementById('userNameInput');
+    const name = nameInput.value.trim();
+    const overlay = document.getElementById('auth-overlay');
+    const authTitle = document.getElementById('auth-title');
+    const authForm = document.getElementById('auth-form');
+
+    if (name === "") {
+        alert("Ju lutem shkruani emrin tuaj!");
+        return;
+    }
+
+    // Ruajmë emrin në LocalStorage që app-i ta mbajë mend edhe kur rifreskohet
+    localStorage.setItem('f_pro_user_name', name);
+
+    // Animacioni i suksesit
+    authForm.style.opacity = '0';
+    authForm.style.pointerEvents = 'none';
+    authTitle.innerText = `Mirësevjen, ${name}!`;
+    authTitle.style.color = "#10b981";
+
+    setTimeout(() => {
+        overlay.style.backdropFilter = "blur(0px)";
+        overlay.style.opacity = "0";
+        
+        setTimeout(() => {
+            overlay.remove();
+            // Përditësojmë emrin në Dashboard (nëse ke një element me ID 'userGreeting')
+            const greeting = document.getElementById('userGreeting');
+            if(greeting) greeting.innerText = `Përshëndetje, ${name}`;
+            
+            // Nisim pjesën tjetër të aplikacionit
+            initApp();
+        }, 800);
+    }, 1500);
+}
+
+            </script>
 
     <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5">
         <div class="mt-12 space-y-8">
@@ -639,50 +679,13 @@
         });
         doc.save('Raporti_FaturaIme.pdf');
     }
-
-
-function handleManualAuth() {
-    const nameInput = document.getElementById('userNameInput');
-    const name = nameInput.value.trim();
-    const overlay = document.getElementById('auth-overlay');
-    const authTitle = document.getElementById('auth-title');
-    const authForm = document.getElementById('auth-form');
-
-    if (name === "") {
-        alert("Ju lutem shkruani emrin tuaj!");
-        return;
-    }
-
-    // Ruajmë emrin në LocalStorage që app-i ta mbajë mend edhe kur rifreskohet
-    localStorage.setItem('f_pro_user_name', name);
-
-    // Animacioni i suksesit
-    authForm.style.opacity = '0';
-    authForm.style.pointerEvents = 'none';
-    authTitle.innerText = `Mirësevjen, ${name}!`;
-    authTitle.style.color = "#10b981";
-
-    setTimeout(() => {
-        overlay.style.backdropFilter = "blur(0px)";
-        overlay.style.opacity = "0";
-        
-        setTimeout(() => {
-            overlay.remove();
-            // Përditësojmë emrin në Dashboard (nëse ke një element me ID 'userGreeting')
-            const greeting = document.getElementById('userGreeting');
-            if(greeting) greeting.innerText = `Përshëndetje, ${name}`;
-            
-            // Nisim pjesën tjetër të aplikacionit
-            initApp();
-        }, 800);
-    }, 1500);
-}
     
     
 </script>
  
 </body>
 </html>
+
 
 
 
