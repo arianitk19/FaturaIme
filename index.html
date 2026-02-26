@@ -19,6 +19,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
+
+
+/* LIGHT THEME DEFINITIONS */
+body.light-theme {
+    background-color: #f8fafc; /* Ngjyrë e hapur Slate */
+    color: #1e293b;
+}
+
+body.light-theme #main-app {
+    background: #f1f5f9;
+}
+
+body.light-theme .glass-panel {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #1e293b;
+    shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .text-white {
+    color: #0f172a !important;
+}
+
+body.light-theme .text-slate-400, 
+body.light-theme .text-slate-500 {
+    color: #64748b !important;
+}
+
+body.light-theme #sidebar {
+    background: rgba(255, 255, 255, 0.98);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Korigjim për butonat në Light Mode */
+body.light-theme .ios-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+        
         :root { --accent: #6366f1; }
         body { 
             font-family: 'Space Grotesk', sans-serif; 
@@ -242,26 +282,86 @@ function handleManualAuth() {
 
             </script>
 
-    <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5">
-        <div class="mt-12 space-y-8">
-            <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest">Menuja Kryesore</h3>
-            <div class="space-y-4">
-                <button onclick="location.reload()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2" stroke-width="2"/></svg>
-                    <span class="font-medium">Dashboard</span>
-                </button>
-                <button onclick="downloadPDF()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
-                    <span class="font-medium">Eksporto PDF</span>
-                </button>
-                <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
-                    <span class="font-medium">Cakto Limitin</span>
-                </button>
+  <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-[#0a0a0c]/98 backdrop-blur-2xl p-8 border-r border-white/5 z-[9000] shadow-2xl transition-all duration-500 transform -translate-x-full">
+    
+    <button onclick="toggleMenu()" class="absolute top-6 right-6 p-2 rounded-full bg-white/5 text-white/40 hover:text-white transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+
+    <div class="mt-10 mb-12 flex flex-col items-center text-center">
+        <div class="relative mb-4">
+            <div class="w-24 h-24 rounded-[2rem] overflow-hidden border-2 border-indigo-500/30 p-1 bg-gradient-to-tr from-indigo-600/20 to-purple-600/20">
+                <img id="sidebarUserPhoto" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" class="w-full h-full object-cover rounded-[1.8rem]" alt="Profile">
             </div>
-            <button onclick="clearAll()" class="mt-20 text-red-500 text-xs font-bold uppercase tracking-widest opacity-40">Fshi të dhënat</button>
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-4 border-[#0a0a0c] rounded-full"></div>
+        </div>
+        <h2 id="sidebarUserName" class="text-xl font-bold text-white tracking-tight">Përdoruesi</h2>
+        <p class="text-[10px] text-indigo-400 uppercase tracking-[0.2em] font-black mt-1">Premium Member</p>
+    </div>
+
+    <div class="mb-12 p-5 rounded-[2rem] bg-white/5 border border-white/5">
+        <div class="flex justify-between items-end mb-2">
+            <span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Statusi i Limitit</span>
+            <span id="sidebarLimitPercent" class="text-xs font-black text-indigo-400">0%</span>
+        </div>
+        <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+            <div id="sidebarLimitBar" class="h-full bg-gradient-to-r from-indigo-600 to-purple-500 transition-all duration-1000" style="width: 0%"></div>
         </div>
     </div>
+
+    <div class="space-y-6">
+        <h3 class="text-slate-500 font-bold text-[10px] uppercase tracking-[0.3em] ml-2">Menuja Kryesore</h3>
+        
+        <nav class="space-y-3">
+            <button onclick="location.reload()" class="group w-full flex items-center gap-4 p-4 rounded-[1.5rem] transition-all duration-300 hover:bg-indigo-600/10 border border-transparent hover:border-indigo-500/20">
+                <div class="w-10 h-10 flex items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2" stroke-width="2"/></svg>
+                </div>
+                <span class="font-bold text-sm text-slate-300 group-hover:text-white transition-colors">Dashboard</span>
+            </button>
+
+            <button onclick="downloadPDF()" class="group w-full flex items-center gap-4 p-4 rounded-[1.5rem] transition-all duration-300 hover:bg-emerald-600/10 border border-transparent hover:border-emerald-500/20">
+                <div class="w-10 h-10 flex items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
+                </div>
+                <span class="font-bold text-sm text-slate-300 group-hover:text-white transition-colors">Eksporto Raportin</span>
+            </button>
+
+            <button onclick="showLimitModal()" class="group w-full flex items-center gap-4 p-4 rounded-[1.5rem] transition-all duration-300 hover:bg-purple-600/10 border border-transparent hover:border-purple-500/20">
+                <div class="w-10 h-10 flex items-center justify-center rounded-2xl bg-purple-500/10 text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
+                </div>
+                <span class="font-bold text-sm text-slate-300 group-hover:text-white transition-colors">Menaxho Limitin</span>
+            </button>
+        </nav>
+    </div>
+
+      
+<div class="mt-8 p-4 rounded-2xl bg-white/5 border border-white/5">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div id="theme-icon-container" class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400">
+                <svg id="moon-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-width="2"/></svg>
+                <svg id="sun-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-width="2"/></svg>
+            </div>
+            <span class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Tema e dritës</span>
+        </div>
+        
+        <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="theme-toggle" class="sr-only peer" onchange="toggleTheme()">
+            <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+        </label>
+    </div>
+</div>
+      
+      
+    <div class="absolute bottom-10 left-8 right-8">
+        <button onclick="clearAll()" class="w-full flex items-center justify-center gap-2 p-4 rounded-2xl text-red-500/40 hover:text-red-500 hover:bg-red-500/5 transition-all text-[10px] font-black uppercase tracking-widest border border-transparent hover:border-red-500/10">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
+            Fshi të dhënat
+        </button>
+    </div>
+</div>
 
     <div id="main-app" class="max-w-md mx-auto min-h-screen px-6 pt-16 pb-24">
         <div class="flex justify-between items-center mb-12">
@@ -360,85 +460,125 @@ function handleManualAuth() {
         </div>
     </div>
 <script>
-    // 1. REGJISTRI I IKONAVE PER DASHBOARD
+    /**
+     * FATURA IME PRO - CORE ENGINE v4.0
+     * Optimizuar për performancë maksimale dhe UI interaktive.
+     */
+
+    // 1. KONFIGURIMI I IKONAVE (SVG PATHS OPTIMIZED)
     const iconMap = {
-        food: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
+        food:   `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
         travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
-        bill: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
-        style: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
+        bill:   `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
+        style:  `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
         health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
         assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
     };
 
-    // 2. DATABASE DHE SHTETI FILLESTAR
-    let db = {
+    // 2. STATE MANAGEMENT (CENTRALIZED)
+    const db = {
         expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
         limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 0,
-        chart: null,
-        catChart: null
+        userName: localStorage.getItem('f_pro_user_name') || "",
+        userPhoto: localStorage.getItem('f_pro_user_photo') || null,
+        charts: {
+            line: null,
+            donut: null
+        }
     };
 
-    // 3. MENAXHIMI I NGARKIMIT (WINDOW ONLOAD)
-    window.onload = () => {
+    // 3. LIFECYCLE INITIALIZATION
+    window.addEventListener('load', () => {
+        const intro = document.getElementById('intro-screen');
+        
+        // Sekuenca e startimit me vonesë për efekt premium
         setTimeout(() => {
-            const intro = document.getElementById('intro-screen');
             if (intro) {
                 intro.style.opacity = '0';
+                intro.style.pointerEvents = 'none';
+                
                 setTimeout(() => {
                     intro.remove();
-                    // Kontrollojmë nëse kemi FaceID screen, përndryshe nisim direkt app-in
-                    const faceScreen = document.getElementById('face-id-screen');
-                    if (faceScreen) {
-                        startFaceID();
-                    } else {
-                        initApp();
-                    }
-                }, 1000);
+                    handleNavigationFlow();
+                }, 800);
             }
-        }, 2500);
-    };
+        }, 2200);
+    });
 
-    // 4. AUTENTIKIMI FACE ID
+    function handleNavigationFlow() {
+        const faceScreen = document.getElementById('face-id-screen');
+        const authOverlay = document.getElementById('auth-overlay');
+
+        if (db.userName && db.userName !== "") {
+            // Nëse përdoruesi ekziston, kalo direkt te Skanimi FaceID ose Dashboard
+            if (faceScreen) {
+                startFaceID();
+            } else {
+                if (authOverlay) authOverlay.remove();
+                initApp();
+            }
+        } else {
+            // Nëse nuk ka emër, mbajmë Auth Overlay hapur (pjesa që ndërtuam më parë)
+            if (authOverlay) authOverlay.classList.remove('hidden');
+        }
+    }
+
+    // 4. FACE ID AUTHENTICATION (ANIMATED)
     async function startFaceID() {
         const screen = document.getElementById('face-id-screen');
         const wrapper = document.getElementById('scanner-wrapper');
         const status = document.getElementById('auth-status');
 
-        if (!screen) return;
+        if (!screen) return (initApp()); // Fallback nese mungon elementi
+
         screen.style.display = 'flex';
         wrapper.classList.add('scanning-active');
-        status.innerText = "Skanimi...";
+        status.innerText = "Duke verifikuar tiparet...";
 
+        // Simulim i procesimit biometrik
         setTimeout(() => {
             wrapper.classList.remove('scanning-active');
             screen.classList.add('auth-success');
-            status.innerText = "U identifikua";
+            status.innerText = "Identiteti u konfirmua";
             status.style.color = "#10b981";
 
             setTimeout(() => {
                 screen.style.opacity = "0";
-                screen.style.transform = "scale(1.2)";
+                screen.style.transform = "scale(1.1) translateY(-20px)";
                 setTimeout(() => {
                     screen.remove();
                     initApp();
-                }, 800);
-            }, 1000);
-        }, 2500);
+                }, 600);
+            }, 1200);
+        }, 2800);
     }
 
-    // 5. INICIALIZIMI I APLIKACIONIT
+    // 5. INICIALIZIMI I DASHBOARD-IT
     function initApp() {
         const mainApp = document.getElementById('main-app');
         if (mainApp) {
-            mainApp.style.opacity = '1';
-            mainApp.style.transform = 'translateY(0)';
+            mainApp.style.display = 'block';
+            setTimeout(() => {
+                mainApp.style.opacity = '1';
+                mainApp.style.transform = 'translateY(0)';
+            }, 50);
         }
+
+        // Përditëso UI me të dhënat e ruajtura (Emri & Foto)
+        const greeting = document.getElementById('userGreeting');
+        const dashPhoto = document.getElementById('dashboardUserPhoto');
+        
+        if (greeting && db.userName) greeting.innerText = `Përshëndetje, ${db.userName}`;
+        if (dashPhoto && db.userPhoto) dashPhoto.src = db.userPhoto;
+
         document.body.style.overflow = 'auto';
-        initChart();
+        
+        // Startimi i moduleve grafike
+        initCharts();
         renderUI();
     }
 
-    // 6. SKANIMI AI (TESSERACT)
+    // 6. AI SCANNING MODULE (TESSERACT ENGINE)
     async function performAIScan(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -447,182 +587,214 @@ function handleManualAuth() {
         if (loader) loader.style.display = 'flex';
 
         try {
-            const result = await Tesseract.recognize(file, 'eng+sqi', {
-                logger: m => console.log(m)
-            });
-
+            const result = await Tesseract.recognize(file, 'eng+sqi');
             const text = result.data.text;
-            const priceRegex = /\d+[\.,]\d{2}/g;
-            const matches = text.match(priceRegex);
+            
+            // Regjeks më i avancuar për gjetjen e çmimit Total
+            const prices = text.match(/\d+[\.,]\d{2}/g);
 
-            if (matches) {
-                const prices = matches.map(p => parseFloat(p.replace(',', '.')));
-                const total = Math.max(...prices);
-                document.getElementById('inpAmount').value = total;
+            if (prices) {
+                const numericPrices = prices.map(p => parseFloat(p.replace(',', '.')));
+                const totalAmount = Math.max(...numericPrices);
+                document.getElementById('inpAmount').value = totalAmount;
+                
+                // Feedback haptik/vizual
+                console.log("AI gjeti shumën:", totalAmount);
             } else {
-                alert("Skaneri nuk gjeti dot një shumë të qartë. Provoni një foto më të afërt.");
+                alert("Skanimi nuk arriti të lexojë një shumë. Provoni dritë më të mirë.");
             }
         } catch (error) {
-            console.error("Gabim gjatë skanimit:", error);
-            alert("Gabim gjatë skanimit.");
+            console.error("AI Scan Error:", error);
         } finally {
             if (loader) loader.style.display = 'none';
         }
     }
 
-    // 7. FUNKSIONET E UI (MODAL, MENU)
-    function toggleMenu() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('menu-overlay');
-        if (sidebar) sidebar.classList.toggle('open');
-        if (overlay) overlay.classList.toggle('active');
+    // 7. CHART ENGINE (CHART.JS INTEGRATION)
+    function initCharts() {
+        // Line Chart - Trendi i shpenzimeve
+        const lineCtx = document.getElementById('appChart')?.getContext('2d');
+        if (lineCtx) {
+            db.charts.line = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['', '', '', '', '', ''],
+                    datasets: [{
+                        data: [0, 0, 0, 0, 0, 0],
+                        borderColor: '#6366f1',
+                        borderWidth: 4,
+                        tension: 0.5,
+                        pointRadius: 0,
+                        fill: true,
+                        backgroundColor: 'rgba(99, 102, 241, 0.08)'
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }, 
+                    scales: { x: { display: false }, y: { display: false } } 
+                }
+            });
+        }
     }
 
-    function showAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
-    function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-    function setCat(cat, icon, el) {
-        document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        document.getElementById('selectedCat').value = cat;
-        document.getElementById('selectedIcon').value = icon;
-    }
-
-    // 8. GRAFIKET (CHART.JS)
-    function initChart() {
-        const chartEl = document.getElementById('appChart');
-        if (!chartEl) return;
-        const ctx = chartEl.getContext('2d');
-        db.chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['', '', '', '', '', ''],
-                datasets: [{
-                    data: [0, 0, 0, 0, 0, 0],
-                    borderColor: '#6366f1',
-                    borderWidth: 3,
-                    tension: 0.5,
-                    pointRadius: 0,
-                    fill: true,
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                }]
-            },
-            options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-        });
-    }
-
-    // 9. RENDERIMI KRYESOR
+    // 8. DATA RENDERING ENGINE (THE BRAIN)
     function renderUI() {
         const total = db.expenses.reduce((s, a) => s + a.amount, 0);
         const remaining = db.limit - total;
 
-        document.getElementById('mainBalance').innerText = `${total.toFixed(2)} €`;
-        document.getElementById('limitText').innerText = `${db.limit.toFixed(2)} €`;
-        document.getElementById('remainingText').innerText = `${remaining.toFixed(2)} €`;
-        document.getElementById('remainingText').style.color = remaining < 0 ? '#ef4444' : '#10b981';
+        // Update Balances
+        const els = {
+            bal: document.getElementById('mainBalance'),
+            lim: document.getElementById('limitText'),
+            rem: document.getElementById('remainingText')
+        };
 
+        if (els.bal) els.bal.innerText = `${total.toFixed(2)} €`;
+        if (els.lim) els.lim.innerText = `${db.limit.toFixed(2)} €`;
+        if (els.rem) {
+            els.rem.innerText = `${remaining.toFixed(2)} €`;
+            els.rem.style.color = remaining < 0 ? '#ef4444' : '#10b981';
+        }
+
+
+function updateSidebarUI() {
+    // 1. Emri dhe Fotoja
+    const nameEl = document.getElementById('sidebarUserName');
+    const photoEl = document.getElementById('sidebarUserPhoto');
+    
+    if (db.userName) nameEl.innerText = db.userName;
+    if (db.userPhoto) photoEl.src = db.userPhoto;
+
+    // 2. Kalkulimi i Limitit për Bar-in
+    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+    const percent = db.limit > 0 ? Math.min((total / db.limit) * 100, 100) : 0;
+    
+    const bar = document.getElementById('sidebarLimitBar');
+    const percentText = document.getElementById('sidebarLimitPercent');
+    
+    if (bar) bar.style.width = `${percent}%`;
+    if (percentText) percentText.innerText = `${Math.round(percent)}%`;
+
+    // Ngjyra dinamike e bar-it
+    if (percent > 85) bar.style.background = "linear-gradient(to r, #ef4444, #b91c1c)";
+    else bar.style.background = "linear-gradient(to r, #6366f1, #a855f7)";
+}
+
+// Modifiko toggleMenu() që të përditësojë Sidebar sa herë hapet
+function toggleMenu() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('menu-overlay');
+    
+    const isOpen = sidebar.classList.contains('open');
+    
+    if (!isOpen) {
+        updateSidebarUI(); // Përditëso të dhënat para se të shfaqet
+        sidebar.classList.add('open');
+        sidebar.style.transform = "translateX(0)";
+        overlay?.classList.add('active');
+    } else {
+        sidebar.classList.remove('open');
+        sidebar.style.transform = "translateX(-100%)";
+        overlay?.classList.remove('active');
+    }
+}
+
+        
+        // Render List
         const container = document.getElementById('listContainer');
         if (container) {
-            container.innerHTML = db.expenses.length ? '' : '<p class="text-center opacity-20 py-10">Zbrazët</p>';
-            db.expenses.slice(0, 10).forEach(exp => {
-                container.innerHTML += `
-                    <div class="glass-panel p-6 flex justify-between items-center mb-4">
+            if (db.expenses.length === 0) {
+                container.innerHTML = `<div class="py-12 text-center opacity-20 italic">Nuk ka të dhëna për këtë muaj</div>`;
+            } else {
+                container.innerHTML = db.expenses.slice(0, 15).map(exp => `
+                    <div class="glass-panel p-5 flex justify-between items-center mb-4 transition-all hover:bg-white/5">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center">
+                            <div class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center">
                                 ${iconMap[exp.icon] || iconMap.food}
                             </div>
                             <div>
-                                <h4 class="font-bold text-xs uppercase tracking-widest">${exp.cat}</h4>
-                                <p class="text-[9px] opacity-50 font-medium">${exp.date}</p>
+                                <h4 class="font-bold text-[11px] uppercase tracking-tighter text-white/90">${exp.cat}</h4>
+                                <p class="text-[9px] opacity-40 font-medium">${exp.date}</p>
                             </div>
                         </div>
-                        <span class="font-bold text-sm">-${exp.amount.toFixed(2)} €</span>
-                    </div>`;
-            });
+                        <div class="text-right">
+                            <span class="font-bold text-sm text-white">-${exp.amount.toFixed(2)} €</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
 
-        if (db.chart) {
-            db.chart.data.datasets[0].data = db.expenses.slice(0, 6).map(e => e.amount).reverse();
-            db.chart.update();
+        // Update Charts
+        if (db.charts.line) {
+            db.charts.line.data.datasets[0].data = db.expenses.slice(0, 6).map(e => e.amount).reverse();
+            db.charts.line.update();
         }
         
         updateFinancialIntelligence();
     }
 
-    // 10. LOGJIKA E SHPENZIMEVE
+    // 9. FINANCIAL LOGIC (SUBMIT / LIMIT / CLEAR)
     function submitExpense() {
         const amtInput = document.getElementById('inpAmount');
-        const amt = amtInput.value;
-        const cat = document.getElementById('selectedCat').value;
-        const icon = document.getElementById('selectedIcon').value;
+        const val = parseFloat(amtInput.value);
+        const cat = document.getElementById('selectedCat').value || "Tjera";
+        const icon = document.getElementById('selectedIcon').value || "food";
         
-        if (!amt || parseFloat(amt) <= 0) {
-            alert("Shkruani një shume të vlefshme!");
+        if (isNaN(val) || val <= 0) {
+            alert("Shuma nuk është e vlefshme!");
             return;
         }
 
         db.expenses.unshift({
-            amount: parseFloat(amt),
+            amount: val,
             cat: cat,
             icon: icon,
             date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         });
 
-        localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
+        saveAndSync();
         hideModal('addModal');
         amtInput.value = '';
         renderUI();
     }
 
-    function showLimitModal() {
-        let l = prompt("Sa dëshiron ta kesh limitin tënd mujor?", db.limit);
-        if (l !== null && l !== "") {
-            let shumaere = parseFloat(l);
-            if (!isNaN(shumaere)) {
-                db.limit = shumaere;
-                localStorage.setItem('f_pro_lim_v3', shumaere);
-                renderUI();
-            } else {
-                alert("Ju lutem shkruani një numër të vlefshëm!");
-            }
-        }
+    function saveAndSync() {
+        localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
+        localStorage.setItem('f_pro_lim_v3', db.limit.toString());
     }
 
-    function clearAll() {
-        if (confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) {
-            db.expenses = [];
-            localStorage.removeItem('f_pro_v3');
+    function showLimitModal() {
+        const newLimit = prompt("Cakto limitin tënd mujor (€):", db.limit);
+        if (newLimit !== null && !isNaN(parseFloat(newLimit))) {
+            db.limit = parseFloat(newLimit);
+            saveAndSync();
             renderUI();
         }
     }
 
-    // 11. ANALIZA FINANCIARE (AI)
+    // 10. AI FINANCIAL INTELLIGENCE
     function updateFinancialIntelligence() {
         const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-        const limit = db.limit;
-        const usagePercent = limit > 0 ? (total / limit) * 100 : 0;
-
-        let healthStatus = "Caktoni një limit";
-        let healthColor = "#64748b";
-
-        if (limit > 0) {
-            if (usagePercent < 50) {
-                healthStatus = "Stabilitet i Plotë";
-                healthColor = "#10b981";
-            } else if (usagePercent < 85) {
-                healthStatus = "Kujdes, po i afroheni limitit";
-                healthColor = "#f59e0b";
-            } else {
-                healthStatus = "Kritike: Rishikoni shpenzimet!";
-                healthColor = "#ef4444";
-            }
-        }
-
+        const usage = db.limit > 0 ? (total / db.limit) * 100 : 0;
         const statusEl = document.getElementById('auth-status-main');
-        if (statusEl) {
-            statusEl.innerText = healthStatus;
-            statusEl.style.color = healthColor;
+
+        let msg = "Cakto limitin";
+        let color = "#64748b";
+
+        if (db.limit > 0) {
+            if (usage < 50) { msg = "Gjendje e Shkëlqyer"; color = "#10b981"; }
+            else if (usage < 85) { msg = "Kujdes me shpenzimet"; color = "#f59e0b"; }
+            else { msg = "Kritike: Rishiko Buxhetin!"; color = "#ef4444"; }
         }
+
+        if (statusEl) {
+            statusEl.innerText = msg;
+            statusEl.style.color = color;
+        }
+
         updateCategoryDonut();
     }
 
@@ -630,61 +802,130 @@ function handleManualAuth() {
         const canvas = document.getElementById('categoryChart');
         if (!canvas) return;
 
-        const categories = {};
-        db.expenses.forEach(ex => {
-            categories[ex.cat] = (categories[ex.cat] || 0) + ex.amount;
-        });
+        const summary = {};
+        db.expenses.forEach(ex => summary[ex.cat] = (summary[ex.cat] || 0) + ex.amount);
 
-        const ctx = canvas.getContext('2d');
-        if (db.catChart) db.catChart.destroy();
+        if (db.charts.donut) db.charts.donut.destroy();
 
-        db.catChart = new Chart(ctx, {
+        db.charts.donut = new Chart(canvas.getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: Object.keys(categories),
+                labels: Object.keys(summary),
                 datasets: [{
-                    data: Object.values(categories),
+                    data: Object.values(summary),
                     backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'],
                     borderWidth: 0,
-                    hoverOffset: 10
+                    hoverOffset: 15
                 }]
             },
-            options: {
-                cutout: '80%',
-                plugins: { legend: { display: false } }
-            }
+            options: { cutout: '82%', plugins: { legend: { display: false } } }
         });
     }
 
-    // 12. EKSPORTO PDF
+    // 11. PDF GENERATION (PROFESSIONAL REPORT)
     function downloadPDF() {
-        if (typeof window.jspdf === 'undefined') {
-            alert("Libraria PDF nuk është ngarkuar!");
-            return;
-        }
+        if (typeof window.jspdf === 'undefined') return alert("Sistemi PDF po ngarkohet...");
+        
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.setFillColor(15, 23, 42); 
-        doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255); 
-        doc.setFontSize(20);
-        doc.text("RAPORTI FINANCIAR PRO", 15, 25);
         
-        const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount.toFixed(2)} EUR`]);
-        doc.autoTable({ 
-            startY: 50, 
-            head: [['Data', 'Kategoria', 'Shuma']], 
+        // Header i raportit
+        doc.setFillColor(30, 41, 59);
+        doc.rect(0, 0, 210, 50, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.text("FATURA IME PRO", 15, 25);
+        doc.setFontSize(10);
+        doc.text(`Gjeneruar për: ${db.userName || 'Përdorues'}`, 15, 35);
+        doc.text(`Data: ${new Date().toLocaleDateString()}`, 15, 42);
+
+        // Tabela e të dhënave
+        const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount.toFixed(2)} €`]);
+        doc.autoTable({
+            startY: 60,
+            head: [['Ora', 'Kategoria', 'Shuma (€)']],
             body: rows,
-            theme: 'striped'
+            theme: 'grid',
+            headStyles: { fillColor: [99, 102, 241] }
         });
-        doc.save('Raporti_FaturaIme.pdf');
+
+        doc.save(`Raporti_${db.userName || 'Financiar'}.pdf`);
+    }
+
+    // UTILS
+    function toggleMenu() {
+        document.getElementById('sidebar')?.classList.toggle('open');
+        document.getElementById('menu-overlay')?.classList.toggle('active');
+    }
+
+    function hideModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+    
+    function setCat(cat, icon, el) {
+        document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected', 'border-indigo-500'));
+        el.classList.add('selected', 'border-indigo-500');
+        document.getElementById('selectedCat').value = cat;
+        document.getElementById('selectedIcon').value = icon;
+    }
+
+
+// --- THEME ENGINE v1.0 ---
+
+function toggleTheme() {
+    const isLight = document.getElementById('theme-toggle').checked;
+    const body = document.body;
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const themeIconBox = document.getElementById('theme-icon-container');
+
+    if (isLight) {
+        // AKTIVIZO LIGHT MODE
+        body.classList.add('light-theme');
+        localStorage.setItem('f_pro_theme', 'light');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+        themeIconBox.classList.replace('bg-indigo-500/20', 'bg-amber-500/20');
+        themeIconBox.classList.replace('text-indigo-400', 'text-amber-600');
+    } else {
+        // AKTIVIZO DARK MODE
+        body.classList.remove('light-theme');
+        localStorage.setItem('f_pro_theme', 'dark');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+        themeIconBox.classList.replace('bg-amber-500/20', 'bg-indigo-500/20');
+        themeIconBox.classList.replace('text-amber-600', 'text-indigo-400');
     }
     
+    // Përditëso grafikët që të përshtaten me temën e re
+    updateChartTheme(isLight);
+}
+
+function updateChartTheme(isLight) {
+    if (!db.charts.line) return;
+
+    const textColor = isLight ? '#1e293b' : '#ffffff';
+    const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+
+    // Përditëso konfigurimin e Chart.js
+    db.charts.line.options.scales.x.ticks.color = textColor;
+    db.charts.line.options.scales.y.ticks.color = textColor;
+    db.charts.line.update();
+}
+
+// THIRRE KËTË TE window.onload
+function applySavedTheme() {
+    const savedTheme = localStorage.getItem('f_pro_theme');
+    const toggle = document.getElementById('theme-toggle');
+    
+    if (savedTheme === 'light') {
+        if (toggle) toggle.checked = true;
+        toggleTheme();
+    }
+}
     
 </script>
- 
 </body>
 </html>
+
 
 
 
