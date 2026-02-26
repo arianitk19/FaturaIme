@@ -151,19 +151,7 @@
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* AI Scanner Loading Overlay */
-        #ai-loader {
-            display: none;
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            border-radius: 32px;
-            z-index: 50;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+       
     </style>
 </head>
 <body class="antialiased">
@@ -416,11 +404,7 @@
 
 async function startFaceID() { const screen = document.getElementById('face-id-screen'); const wrapper = document.getElementById('scanner-wrapper'); const status = document.getElementById('auth-status'); screen.style.display = 'flex'; wrapper.classList.add('scanning-active'); status.innerText = "Skanimi..."; setTimeout(unlockApp, 2500); function unlockApp() { wrapper.classList.remove('scanning-active'); screen.classList.add('auth-success'); status.innerText = "U identifikua"; status.style.color = "#10b981"; setTimeout(() => { screen.style.opacity = "0"; screen.style.transform = "scale(1.2)"; setTimeout(() => { screen.remove(); document.getElementById('main-app').style.opacity = '1'; document.getElementById('main-app').style.transform = 'translateY(0)'; document.body.style.overflow = 'auto'; initChart(); renderUI(); }, 800); }, 1000); } }
         
-        // AI SCANNER LOGIC
-        async function performAIScan(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
+       
             const loader = document.getElementById('ai-loader');
             loader.style.display = 'flex';
 
@@ -628,6 +612,7 @@ function updateCategoryDonut() {
     </script>
 </body>
 </html>
+
 
 
 
