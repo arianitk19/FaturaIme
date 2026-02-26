@@ -21,24 +21,34 @@
     <style>
 
 
-/* Variablat për Temat */
-:root {
-    --bg: #000;
-    --text: #fff;
-    --panel: rgba(15, 15, 15, 0.7);
-    --border: rgba(255, 255, 255, 0.05);
-}
-
+/* LIGHT MODE - PREMIUM SOFT DESIGN */
 body.light-mode {
-    --bg: #f2f2f7;
-    --text: #000;
-    --panel: rgba(255, 255, 255, 0.8);
-    --border: rgba(0, 0, 0, 0.1);
+    background: #F2F2F7; /* Ngjyra e butë iOS */
+    color: #1C1C1E;
 }
 
-body { background: var(--bg); color: var(--text); transition: background 0.3s ease; }
-.glass-panel { background: var(--panel) !important; border-color: var(--border) !important; color: var(--text); }
-        
+.light-mode .glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.05);
+}
+
+.light-mode #sidebar {
+    background: rgba(255, 255, 255, 0.95);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .ios-btn div { background: #1C1C1E; } /* Hamburger menu */
+.light-mode .logo-text { background: linear-gradient(to bottom, #1c1c1e 30%, #6366f1 100%); -webkit-background-clip: text; }
+.light-mode #main-app h2, .light-mode #main-app p:not(.text-slate-500) { color: #1C1C1E; }
+.light-mode .text-white { color: #1C1C1E !important; }
+.light-mode .bg-white\/5 { background: rgba(0, 0, 0, 0.03); }
+.light-mode .cat-card.selected { background: #6366f1 !important; color: white !important; }
+
+/* Switch Toggle Styling */
+#themeBtn { position: relative; width: 50px; height: 26px; border-radius: 20px; transition: 0.3s; }
+.light-mode #themeCircle { transform: translateX(24px); background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
         
         
@@ -226,37 +236,46 @@ body { background: var(--bg); color: var(--text); transition: background 0.3s ea
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
                     <span class="font-medium">Cakto Limitin</span>
                 </button>
-            </div>
-            <button onclick="clearAll()" class="mt-20 text-red-500 text-xs font-bold uppercase tracking-widest opacity-40">Fshi të dhënat</button>
-        </div>
 
-
-        <div class="space-y-6 mb-10 border-b border-white/5 pb-6">
-    <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase opacity-50">Tema</span>
-        <button onclick="toggleTheme()" class="p-2 bg-white/5 rounded-xl ios-btn">🌓</button>
-    </div>
+<div class="space-y-4 pt-4 border-t border-white/5">
+    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4">Preferencat</p>
     
-    <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase opacity-50">Gjuha</span>
-        <div class="flex gap-2">
-            <button onclick="setLang('sq')" class="px-3 py-1 bg-white/5 rounded-lg text-[10px] font-bold">AL</button>
-            <button onclick="setLang('en')" class="px-3 py-1 bg-white/5 rounded-lg text-[10px] font-bold">EN</button>
-        </div>
+    <div class="flex items-center justify-between p-4 glass-panel mx-2">
+        <span class="text-xs font-bold uppercase tracking-tighter">Pamja</span>
+        <button onclick="toggleTheme()" id="themeBtn" class="bg-indigo-600/20">
+            <div id="themeCircle" class="absolute left-1 top-1 w-4 h-4 bg-indigo-500 rounded-full transition-all duration-300"></div>
+        </button>
     </div>
 
-    <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase opacity-50">Valuta</span>
-        <select onchange="updateCurrency(this.value)" class="bg-transparent text-xs font-bold outline-none">
-            <option value="€">EUR (€)</option>
-            <option value="$">USD ($)</option>
-            <option value="L">ALL (L)</option>
+    <div class="p-4 glass-panel mx-2 flex flex-col gap-2">
+        <span class="text-[9px] font-black text-indigo-500 uppercase">Valuta Kryesore</span>
+        <select id="currSelect" onchange="updateCurrency(this.value)" class="bg-transparent text-xs font-bold outline-none w-full appearance-none cursor-pointer">
+            <option value="€">EUR - Euro (€)</option>
+            <option value="$">USD - Dollar ($)</option>
+            <option value="£">GBP - Pound (£)</option>
+            <option value="CHF">CHF - Franku (₣)</option>
+            <option value="ALL">ALL - Leku (L)</option>
         </select>
     </div>
+
+    <div class="p-4 glass-panel mx-2 flex flex-col gap-2">
+        <span class="text-[9px] font-black text-indigo-500 uppercase">Gjuha / Language</span>
+        <select id="langSelect" onchange="updateLang(this.value)" class="bg-transparent text-xs font-bold outline-none w-full appearance-none cursor-pointer">
+            <option value="sq">Shqip</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+        </select>
+    </div>
+
+    <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
+        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
+        <span class="font-medium">Cakto Limitin</span>
+    </button>
 </div>
 
+<button onclick="clearAll()" class="mt-10 w-full text-red-500 text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity">Fshi çdo të dhënë</button>
         
-    </div>
+</div>
 
     <div id="main-app" class="max-w-md mx-auto min-h-screen px-6 pt-16 pb-24">
         <div class="flex justify-between items-center mb-12">
@@ -542,24 +561,49 @@ const translations = {
     en: { total: "Total Spent", limit: "Limit", remain: "Remaining", dashboard: "Overview" }
 };
 
+
+// Variablat globale
+let currentCurrency = localStorage.getItem('f_curr') || '€';
+let currentLang = localStorage.getItem('f_lang') || 'sq';
+
+// Aplikimi i Temës në nisje
+if(localStorage.getItem('f_theme') === 'light') document.body.classList.add('light-mode');
+
+// 1. Dark / Light Mode
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
-    localStorage.setItem('pref_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    const mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+    localStorage.setItem('f_theme', mode);
 }
 
+// 2. Ndërrimi i Valutave
 function updateCurrency(val) {
     currentCurrency = val;
-    localStorage.setItem('pref_curr', val);
-    renderUI(); // Rifreskon dashboard-in me valutën e re
+    localStorage.setItem('f_curr', val);
+    renderUI(); // Përditëson shifrat në dashboard automatikisht
 }
 
-function setLang(lang) {
-    const t = translations[lang];
-    // Kërkon elementet me data-attribute ose id për t'i ndryshuar
-    document.querySelector('span[tracking-widest]').innerText = t.total;
-    // Mund të shtosh më shumë përkthime këtu
-    localStorage.setItem('pref_lang', lang);
+// 3. Ndërrimi i Gjuhëve (Përkthimi i shpejtë)
+function updateLang(lang) {
+    const dict = {
+        sq: { total: "Totali i Shpenzuar", limit: "Limit", mbetja: "Mbetja" },
+        en: { total: "Total Spent", limit: "Limit", mbetja: "Balance" },
+        de: { total: "Gesamtausgaben", limit: "Limit", mbetja: "Restbetrag" }
+    };
+    
+    // Ruajmë gjuhën
+    localStorage.setItem('f_lang', lang);
+    
+    // Përditësojmë tekstet kryesore pa reload
+    document.querySelector('span[tracking-[0.3em]]').innerText = dict[lang].total;
+    document.querySelectorAll('p[text-[9px]]')[0].innerText = dict[lang].limit;
+    document.querySelectorAll('p[text-[9px]]')[1].innerText = dict[lang].mbetja;
 }
+
+// E RËNDËSISHME: Duhet të modifikosh funksionin tënd renderUI() 
+// që të përdorë `currentCurrency` në vend të `€`. 
+// Psh: mainBalance.innerText = `${total.toFixed(2)} ${currentCurrency}`;
+
 
 // Ngarko preferencat kur hapet App-i
 if(localStorage.getItem('pref_theme') === 'light') document.body.classList.add('light-mode');
@@ -568,6 +612,7 @@ if(localStorage.getItem('pref_theme') === 'light') document.body.classList.add('
     </script>
 </body>
 </html>
+
 
 
 
