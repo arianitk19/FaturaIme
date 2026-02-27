@@ -12,8 +12,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
     
 <link rel="apple-touch-icon" href="https://img.icons8.com/sf-black-filled/512/FFFFFF/wallet.png">
 
@@ -22,70 +20,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
-
-
-
-
-
-
-/* --- ADAPTIVE SYSTEM --- */
-
-/* 1. Rregullat për DESKTOP (Webfaqe) */
-@media (min-width: 1024px) {
-    #main-app {
-        max-width: 1200px !important; /* Hapet hapsira */
-        display: grid;
-        grid-template-columns: 280px 1fr; /* Sidebar dhe Kontenti krah për krah */
-        gap: 32px;
-        padding-top: 40px;
-    }
-
-    .sidebar {
-        position: sticky !important;
-        transform: translateX(0) !important; /* Sidebar rri gjithmonë i hapur */
-        background: rgba(10, 10, 10, 0.5) !important;
-        border-radius: 32px;
-        height: calc(100vh - 80px);
-        margin-left: 0;
-    }
-
-    #menu-overlay, button[onclick="toggleMenu()"] {
-        display: none !important; /* Zhduket butoni i menusë në Desktop */
-    }
-
-    .glass-panel {
-        border-radius: 24px; /* Më shumë katror në desktop për seriozitet */
-    }
-}
-
-/* 2. Rregullat për MOBILE (App 100%) */
-@media (max-width: 1023px) {
-    body {
-        padding-bottom: env(safe-area-inset-bottom); /* Mbështetje për iPhone Dynamic Island/Bottom Bar */
-        overflow-x: hidden;
-    }
-
-    #main-app {
-        max-width: 100%;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    /* Ndjesia e App-it: Hiqen scrollbars dhe shtohet bounce efekt */
-    .no-scrollbar {
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .ios-btn:active {
-        background: rgba(255, 255, 255, 0.1);
-        transform: scale(0.95); /* Reagim i menjëhershëm në prekje */
-    }
-}
-
-
-
-
-
         
 
 /* AUTH SYSTEM STYLING */
@@ -832,42 +766,11 @@ function processAuth() {
     startAppFlow();
 }
 
-
-
-
-
-function adaptToDevice() {
-    const isMobile = window.innerWidth < 1024;
-    const sidebar = document.getElementById('sidebar');
-    const mainApp = document.getElementById('main-app');
-
-    if (!isMobile) {
-        // Nëse jemi në Desktop, vendosim Sidebar-in brenda main-app për grid layout
-        if (sidebar && mainApp && !mainApp.contains(sidebar)) {
-            mainApp.prepend(sidebar);
-            sidebar.classList.remove('fixed');
-            sidebar.classList.add('relative');
-        }
-    } else {
-        // Nëse jemi në Mobile, Sidebar kthehet në "Slide-over" si App
-        if (sidebar && mainApp.contains(sidebar)) {
-            document.body.prepend(sidebar);
-            sidebar.classList.add('fixed');
-            sidebar.classList.remove('relative');
-        }
-    }
-}
-
-// Ekzekutohet kur hapet dhe kur ndryshon madhësia
-window.addEventListener('resize', adaptToDevice);
-window.addEventListener('load', adaptToDevice);
-        
-
-        
         
     </script>
 </body>
 </html>
+
 
 
 
