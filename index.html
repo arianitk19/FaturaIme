@@ -19,6 +19,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
+
+
+
+/* Stilet për Formën e Regjistrimit */
+#auth-container {
+    position: fixed;
+    inset: 0;
+    z-index: 6000;
+    background: #000;
+    display: none; /* Do të aktivizohet nga JS */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 40px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.2);
+}
+
+.auth-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 18px;
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 15px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.auth-input:focus {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.05);
+}
+
+        
         :root { --accent: #6366f1; }
         body { 
             font-family: 'Space Grotesk', sans-serif; 
@@ -177,16 +222,33 @@
         </div>
     </div>
 
-    <div id="face-id-screen">
-        <div id="scanner-wrapper" class="relative w-32 h-32 border-4 border-white/5 rounded-[40px] flex items-center justify-center transition-all duration-500">
-            <div id="scan-line" class="hidden"></div>
-            <svg id="face-icon" class="w-16 h-16 text-white/20 transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M9 3H5a2 2 0 00-2 2v4m14-6h4a2 2 0 012 2v4M5 19h4a2 2 0 01-2-2v-4m14 6h-4a2 2 0 00-2-2v-4M8 11l2 2 4-4" />
-            </svg>
-        </div>
-        <p id="auth-status" class="mt-8 text-xs font-bold tracking-[0.3em] text-white/30 uppercase italic">Face Required</p>
-    </div>
 
+
+    <div id="auth-container">
+    <div class="auth-card">
+        <div class="mb-8">
+            <div class="w-16 h-16 bg-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold italic tracking-tighter">KRIJO LLOGARINË</h2>
+            <p class="text-slate-500 text-xs mt-2 uppercase tracking-widest">FaturaIme PRO Cloud Sync</p>
+        </div>
+
+        <input type="text" id="regName" placeholder="Emri i plotë" class="auth-input">
+        <input type="email" id="regEmail" placeholder="Email Adresa" class="auth-input">
+        <input type="password" id="regPass" placeholder="Fjalëkalimi" class="auth-input">
+
+        <button onclick="handleAuth()" class="w-full bg-white text-black p-5 rounded-2xl font-black uppercase tracking-widest ios-btn mt-4">
+            Vazhdo drejt Sistemit
+        </button>
+        
+        <p class="text-[10px] text-slate-600 mt-6 uppercase tracking-tighter">Të dhënat tuaja ruhen në memorien lokale të siguruar me AI.</p>
+    </div>
+</div>
+
+    
     <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5">
         <div class="mt-12 space-y-8">
             <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest">Menuja Kryesore</h3>
@@ -336,9 +398,7 @@
             }, 2500);
         };
 
-async function startFaceID() { const screen = document.getElementById('face-id-screen'); const wrapper = document.getElementById('scanner-wrapper'); const status = document.getElementById('auth-status'); screen.style.display = 'flex'; wrapper.classList.add('scanning-active'); status.innerText = "Skanimi..."; setTimeout(unlockApp, 2500); function unlockApp() { wrapper.classList.remove('scanning-active'); screen.classList.add('auth-success'); status.innerText = "U identifikua"; status.style.color = "#10b981"; setTimeout(() => { screen.style.opacity = "0"; screen.style.transform = "scale(1.2)"; setTimeout(() => { screen.remove(); document.getElementById('main-app').style.opacity = '1'; document.getElementById('main-app').style.transform = 'translateY(0)'; document.body.style.overflow = 'auto'; initChart(); renderUI(); }, 800); }, 1000); } }
-        
-        // AI SCANNER LOGIC
+
         async function performAIScan(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -484,6 +544,63 @@ async function startFaceID() { const screen = document.getElementById('face-id-s
 }
         
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
+
+
+
+
+// Shtojmë të dhënat e përdoruesit në db ekzistues
+db.user = JSON.parse(localStorage.getItem('f_pro_user')) || null;
+
+window.onload = () => {
+    setTimeout(() => {
+        const intro = document.getElementById('intro-screen');
+        if(intro) {
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.remove();
+                // Kontrollo nëse përdoruesi ekziston
+                if(!db.user) {
+                    document.getElementById('auth-container').style.display = 'flex';
+                } else {
+                    startFaceID();
+                }
+            }, 1000);
+        }
+    }, 2500);
+};
+
+function handleAuth() {
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const pass = document.getElementById('regPass').value;
+
+    if(!name || !email || !pass) {
+        alert("Ju lutem plotësoni të gjitha fushat!");
+        return;
+    }
+
+    // Ruajtja e të dhënave në "Sistemin e Skedarëve" të Front-end (localStorage)
+    const userData = {
+        name: name,
+        email: email,
+        joined: new Date().toLocaleDateString()
+    };
+
+    localStorage.setItem('f_pro_user', JSON.stringify(userData));
+    db.user = userData;
+
+    // Tranzicioni drejt FaceID
+    document.getElementById('auth-container').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('auth-container').remove();
+        startFaceID();
+    }, 500);
+}
+
+
+        
+        
     </script>
 </body>
 </html>
+
