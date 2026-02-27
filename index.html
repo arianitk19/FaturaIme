@@ -268,39 +268,41 @@
 
 
 
-<div id="auth-container">
-    <div class="auth-card">
-        <div id="login-form">
-            <h2 class="text-3xl font-bold mb-2 italic">Mirësevini.</h2>
-            <p class="text-slate-500 text-sm mb-10">Identifikohuni në sistemin tuaj AI.</p>
-            
-            <div class="input-group">
-                <input type="email" placeholder="Email" class="auth-input">
+<div id="auth-wrapper" class="fixed inset-0 z-[6000] bg-black flex items-center justify-center p-6">
+    <div class="auth-card w-full max-w-[420px] glass-panel p-10 border border-white/10 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/20 blur-[80px]"></div>
+        
+        <div id="auth-content">
+            <div class="mb-10">
+                <h2 id="auth-title" class="text-4xl font-bold tracking-tighter italic">Hyni.</h2>
+                <p id="auth-subtitle" class="text-slate-500 text-sm mt-2 font-medium">Sistemi i autorizuar FaturaIme PRO</p>
             </div>
-            <div class="input-group">
-                <input type="password" placeholder="Fjalëkalimi" class="auth-input">
-            </div>
-            
-            <button onclick="handleAuth()" class="auth-btn">Hyni</button>
-            <p class="switch-text">Nuk keni llogari? <span class="switch-link" onclick="toggleAuth(true)">Regjistrohuni</span></p>
-        </div>
 
-        <div id="signup-form" class="hidden">
-            <h2 class="text-3xl font-bold mb-2 italic">Krijo Llogari.</h2>
-            <p class="text-slate-500 text-sm mb-10">Filloni menaxhimin inteligjent sot.</p>
-            
-            <div class="input-group">
-                <input type="text" placeholder="Emri i Plotë" class="auth-input">
+            <div class="space-y-4">
+                <div id="name-field" class="hidden">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4 mb-2 block">Emri Plotë</label>
+                    <input type="text" id="auth-name" class="auth-input w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm" placeholder="Emri juaj...">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4 mb-2 block">Email Adresa</label>
+                    <input type="email" id="auth-email" class="auth-input w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm" placeholder="email@shembull.com">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4 mb-2 block">Fjalëkalimi</label>
+                    <input type="password" id="auth-pass" class="auth-input w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm" placeholder="••••••••">
+                </div>
             </div>
-            <div class="input-group">
-                <input type="email" placeholder="Email" class="auth-input">
-            </div>
-            <div class="input-group">
-                <input type="password" placeholder="Krijo Fjalëkalimin" class="auth-input">
-            </div>
-            
-            <button onclick="handleAuth()" class="auth-btn">Regjistrohu</button>
-            <p class="switch-text">Keni një llogari? <span class="switch-link" onclick="toggleAuth(false)">Hyni</span></p>
+
+            <div id="auth-error" class="text-red-500 text-[10px] font-bold uppercase mt-4 ml-4 hidden text-center">Të dhëna të gabuara!</div>
+
+            <button onclick="processAuth()" id="main-auth-btn" class="w-full bg-white text-black font-black p-5 rounded-2xl mt-8 ios-btn uppercase tracking-widest text-xs">Vazhdo</button>
+
+            <p class="text-center mt-8 text-[11px] text-slate-500 font-medium">
+                <span id="switch-msg">Nuk keni llogari?</span> 
+                <button onclick="toggleAuthMode()" id="switch-btn" class="text-white font-bold underline underline-offset-4 ml-1">Krijo një</button>
+            </p>
         </div>
     </div>
 </div>
@@ -605,32 +607,94 @@ async function startFaceID() { const screen = document.getElementById('face-id-s
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
 
 
-        // AUTH LOGIC
-function toggleAuth(showSignup) {
-    const login = document.getElementById('login-form');
-    const signup = document.getElementById('signup-form');
-    
-    if(showSignup) {
-        login.classList.add('hidden');
-        signup.classList.remove('hidden');
+ let isSignUp = false;
+
+function toggleAuthMode() {
+    isSignUp = !isSignUp;
+    const title = document.getElementById('auth-title');
+    const subtitle = document.getElementById('auth-subtitle');
+    const nameField = document.getElementById('name-field');
+    const btn = document.getElementById('main-auth-btn');
+    const msg = document.getElementById('switch-msg');
+    const sBtn = document.getElementById('switch-btn');
+
+    if(isSignUp) {
+        title.innerText = "Regjistrohu.";
+        subtitle.innerText = "Krijo profilin tënd financiar";
+        nameField.classList.remove('hidden');
+        btn.innerText = "Krijo Llogarinë";
+        msg.innerText = "Keni një llogari?";
+        sBtn.innerText = "Hyni këtu";
     } else {
-        signup.classList.add('hidden');
-        login.classList.remove('hidden');
+        title.innerText = "Hyni.";
+        subtitle.innerText = "Sistemi i autorizuar FaturaIme PRO";
+        nameField.classList.add('hidden');
+        btn.innerText = "Vazhdo";
+        msg.innerText = "Nuk keni llogari?";
+        sBtn.innerText = "Krijo një";
     }
 }
 
-function handleAuth() {
-    // Këtu mund të shtohet logjika reale e Backend-it (Firebase/Node.js)
-    // Për momentin, simulojmë një sukses brilant
-    const container = document.getElementById('auth-container');
-    container.style.transition = "all 1s cubic-bezier(0.16, 1, 0.3, 1)";
-    container.style.opacity = "0";
-    container.style.transform = "translateY(-50px)";
+function processAuth() {
+    const email = document.getElementById('auth-email').value;
+    const pass = document.getElementById('auth-pass').value;
+    const name = document.getElementById('auth-name').value;
+    const error = document.getElementById('auth-error');
+
+    if(!email || !pass) {
+        showError("Plotësoni të gjitha fushat!");
+        return;
+    }
+
+    if(isSignUp) {
+        // REGJISTRIMI
+        const user = { name, email, pass };
+        localStorage.setItem('f_pro_user', JSON.stringify(user));
+        startAppFlow();
+    } else {
+        // LOGIN
+        const savedUser = JSON.parse(localStorage.getItem('f_pro_user'));
+        if(savedUser && savedUser.email === email && savedUser.pass === pass) {
+            startAppFlow();
+        } else {
+            showError("Email ose Fjalëkalimi i gabuar!");
+        }
+    }
+}
+
+function showError(text) {
+    const error = document.getElementById('auth-error');
+    error.innerText = text;
+    error.classList.remove('hidden');
+    setTimeout(() => error.classList.add('hidden'), 3000);
+}
+
+function startAppFlow() {
+    const wrapper = document.getElementById('auth-wrapper');
+    wrapper.style.transition = "all 1s cubic-bezier(0.16, 1, 0.3, 1)";
+    wrapper.style.opacity = "0";
+    wrapper.style.transform = "scale(1.1)";
     
     setTimeout(() => {
-        container.remove();
-        // Pas login-it, nisim Intro-n dhe FaceID-n
+        wrapper.remove();
+        // Tash thirrim Intro-n që e ke pasur
+        runIntroSequence();
     }, 1000);
+}
+
+function runIntroSequence() {
+    const intro = document.getElementById('intro-screen');
+    if(intro) {
+        intro.style.display = 'flex';
+        // Këtu vazhdon animacioni yt origjinal i intros
+        setTimeout(() => {
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.remove();
+                startFaceID(); // Kalon te FaceID
+            }, 1000);
+        }, 2500);
+    }
 }
 
 // NDRYSHIM: Modifikoni window.onload që të mos fshehë Intro automatikisht
@@ -670,4 +734,5 @@ function handleAuth() {
     </script>
 </body>
 </html>
+
 
