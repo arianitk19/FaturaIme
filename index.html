@@ -636,7 +636,38 @@ function handleAuth() {
 // NDRYSHIM: Modifikoni window.onload që të mos fshehë Intro automatikisht
 // por të presë për login nëse dëshironi, ose thjesht lini handleAuth ta heqë formën.
 
+function handleAuth() {
+    const authContainer = document.getElementById('auth-container');
+    
+    // 1. Animacioni i largimit të formës së Login
+    authContainer.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+    authContainer.style.opacity = "0";
+    authContainer.style.filter = "blur(20px)";
+
+    setTimeout(() => {
+        authContainer.remove(); // Heqim formën plotësisht
+        
+        // 2. NISIM INTRO-N CINEMATIC (Saktësisht si e kishit)
+        const intro = document.getElementById('intro-screen');
+        if(intro) {
+            // Resetojmë stilin në rast se ka nisur më parë
+            intro.style.display = 'flex';
+            intro.style.opacity = '1';
+
+            setTimeout(() => {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.remove();
+                    // 3. NISIM FACE ID pas Intro-s
+                    startFaceID();
+                }, 1000);
+            }, 2500);
+        }
+    }, 800);
+}
+        
         
     </script>
 </body>
 </html>
+
