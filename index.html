@@ -22,6 +22,18 @@
     <style>
         
 
+
+
+#currency-wrapper {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.currency-btn.bg-white {
+    transform: scale(1.05);
+}
+
+
+        
 /* AUTH SYSTEM STYLING */
 #auth-container {
     position: fixed;
@@ -327,6 +339,21 @@
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
                     <span class="font-medium">Eksporto PDF</span>
                 </button>
+
+
+
+<div class="px-4 py-6 border-t border-white/5 mt-auto">
+    <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4 ml-2">Valuta e Sistemit</p>
+    <div class="grid grid-cols-4 gap-2 bg-white/5 p-1 rounded-2xl border border-white/10">
+        <button onclick="changeCurrency(0)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-0">€</button>
+        <button onclick="changeCurrency(1)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-1">L</button>
+        <button onclick="changeCurrency(2)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-2">CHF</button>
+        <button onclick="changeCurrency(3)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-3">$</button>
+    </div>
+</div>
+                
+
+                
                 <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
                     <span class="font-medium">Cakto Limitin</span>
@@ -766,10 +793,67 @@ function processAuth() {
     startAppFlow();
 }
 
+
+
+
+const exchangeData = [
+    { symbol: "€", rate: 1, color: "#6366f1" }, 
+    { symbol: "L", rate: 103.5, color: "#ef4444" }, 
+    { symbol: "CHF", rate: 0.96, color: "#ffffff" }, 
+    { symbol: "$", rate: 1.08, color: "#22c55e" }
+];
+
+function changeCurrency(index) {
+    // 1. Luajmë tingullin Apple
+    if(typeof playIOSClick === "function") playIOSClick();
+    
+    // 2. Ruajmë zgjedhjen
+    currentIndex = index;
+    localStorage.setItem('selectedCurrencyIndex', currentIndex);
+    
+    // 3. Përditësojmë pamjen e butonave në menu
+    updateMenuButtons();
+    
+    // 4. Animacioni i Dashboard-it
+    const balanceWrapper = document.getElementById('currency-wrapper');
+    if(balanceWrapper) {
+        balanceWrapper.style.opacity = "0";
+        balanceWrapper.style.transform = "translateY(5px)";
+        
+        setTimeout(() => {
+            updateUI(); // Funksioni që përditëson numrat (Totalin, Limitin, Mbetjen)
+            balanceWrapper.style.opacity = "1";
+            balanceWrapper.style.transform = "translateY(0)";
+        }, 200);
+    }
+}
+
+        
+function updateMenuButtons() {
+    // Resetojmë të gjithë butonat
+    document.querySelectorAll('.currency-btn').forEach((btn, idx) => {
+        btn.classList.remove('bg-white', 'text-black', 'shadow-xl');
+        btn.classList.add('text-slate-500');
+        
+        // Nëse është butoni aktiv, e bëjmë të ndritshëm
+        if(idx === currentIndex) {
+            btn.classList.remove('text-slate-500');
+            btn.classList.add('bg-white', 'text-black', 'shadow-xl');
+        }
+    });
+}
+
+// Thirre këtë kur hapet aplikacioni për herë të parë
+document.addEventListener('DOMContentLoaded', () => {
+    updateMenuButtons();
+    updateUI();
+});
+
         
     </script>
 </body>
 </html>
+
 
 
 
