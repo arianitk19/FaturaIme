@@ -459,8 +459,9 @@ function handleManualAuth() {
             <button onclick="submitExpense()" class="w-full bg-white text-black p-6 rounded-2xl font-black text-lg mt-6 ios-btn uppercase">Konfirmo</button>
         </div>
     </div>
-<script>
-   /**
+
+     <script>
+/**
  * FATURA IME PRO - CORE ENGINE v4.5 (COMPLETE VERSION)
  */
 
@@ -482,6 +483,30 @@ const db = {
     userPhoto: localStorage.getItem('f_pro_user_photo') || null,
     charts: { line: null, donut: null }
 };
+
+// --- FUNKSIONI I RI SHTUES (URA LIDHESE) ---
+function handleManualAuth() {
+    const nameInput = document.getElementById('userNameInput');
+    const name = nameInput.value.trim();
+    const overlay = document.getElementById('auth-overlay');
+
+    if (name === "") {
+        alert("Ju lutem shkruani emrin tuaj!");
+        return;
+    }
+
+    db.userName = name;
+    localStorage.setItem('f_pro_user_name', name);
+    
+    // Përdorim logjikën tënde ekzistuese për të mbyllur overlay-n
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.remove();
+            initApp(); // Thërret funksionin tënd origjinal
+        }, 800);
+    }
+}
 
 // 3. LIFECYCLE INITIALIZATION
 window.addEventListener('load', () => {
@@ -514,7 +539,7 @@ function handleNavigationFlow() {
     }
 }
 
-// 4. AUTHENTICATION LOGIC (FIXED)
+// 4. AUTHENTICATION LOGIC (ORIGJINALE)
 function completeAuth() {
     const nameInput = document.getElementById('userNameInput');
     const photoInput = document.getElementById('userPhotoInput');
@@ -610,7 +635,6 @@ function renderUI() {
     const total = db.expenses.reduce((s, a) => s + a.amount, 0);
     const remaining = db.limit - total;
 
-    // Balancat
     const bEl = document.getElementById('mainBalance');
     if (bEl) bEl.innerText = `${total.toFixed(2)} €`;
     
@@ -623,7 +647,6 @@ function renderUI() {
         rEl.style.color = remaining < 0 ? '#ef4444' : '#10b981';
     }
 
-    // Lista
     const container = document.getElementById('listContainer');
     if (container) {
         if (db.expenses.length === 0) {
@@ -748,7 +771,7 @@ function clearAll() {
     }
 }
 
-// 9. AI & CHARTS INITIALIZATION (Siç i kishe)
+// 9. AI & CHARTS INITIALIZATION
 function initCharts() {
     const ctx = document.getElementById('appChart')?.getContext('2d');
     if (!ctx) return;
@@ -785,10 +808,12 @@ function setCat(c, i, el) {
     el.classList.add('border-indigo-500');
     document.getElementById('selectedCat').value = c;
     document.getElementById('selectedIcon').value = i;
-}         
-    </script>           
+}
+</script>       
+            
 </body>
 </html>
+
 
 
 
