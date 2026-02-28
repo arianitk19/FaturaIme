@@ -238,41 +238,6 @@
         </div>
     </aside>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div id="app-loader" style="position:fixed; inset:0; background:#000; z-index:9999; display:flex; align-items:center; justify-content:center; transition: opacity 0.4s;">
-    <div style="width:40px; height:40px; border:3px solid rgba(255,255,255,0.1); border-top-color:#6366f1; border-radius:50%; animate: spin 1s linear infinite;"></div>
-</div>
-
-<style>
-    @keyframes spin { to { transform: rotate(360deg); } }
-</style>
-
-<script>
-    // Fshi loader-in kur faqja të jetë gati
-    window.addEventListener('load', () => {
-        const loader = document.getElementById('app-loader');
-        loader.style.opacity = '0';
-        setTimeout(() => loader.remove(), 400);
-    });
-</script>
-
-
-
-
-
-
     
     <script>
         let db = JSON.parse(localStorage.getItem('apex_v8_db')) || [];
@@ -417,41 +382,6 @@
 
         function resetData() { if(confirm("FSHI TË GJITHA?")) { localStorage.clear(); location.reload(); } }
 
-
-
-
-
-
-        
-
-// Funksioni që lexon të dhënat e përbashkëta
-function syncAppData() {
-    const profile = JSON.parse(localStorage.getItem('apex_v8_profile')) || { name: 'Apex Enterprise', logo: null };
-    
-    // Përditëso emrin e biznesit kudo ku ka ID-në 'bizNameDisplay'
-    const nameElements = document.querySelectorAll('#bizNameDisplay');
-    nameElements.forEach(el => el.innerText = profile.name);
-
-    // Përditëso logon kudo ku ka ID-në 'appLogo'
-    if (profile.logo) {
-        const logoElements = document.querySelectorAll('#appLogo');
-        logoElements.forEach(el => {
-            el.src = profile.logo;
-            el.classList.remove('hidden');
-        });
-    }
-}
-
-// Dëgjo nëse ndryshon diçka në memorien e App-it
-window.addEventListener('storage', (e) => {
-    if (e.key === 'apex_v8_profile' || e.key === 'apex_v8_db') {
-        syncAppData();
-        if(typeof render === "function") render(); // Nëse ekziston funksioni i listës, rifreskoje
-    }
-});
-
-// Thirre sapo të hapet faqja
-window.addEventListener('DOMContentLoaded', syncAppData);
 
 
         
