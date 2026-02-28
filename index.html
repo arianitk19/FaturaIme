@@ -452,6 +452,36 @@
         </div>
     </div>
 
+
+
+
+
+
+
+
+
+<div id="app-loader" style="position:fixed; inset:0; background:#000; z-index:9999; display:flex; align-items:center; justify-content:center; transition: opacity 0.4s;">
+    <div style="width:40px; height:40px; border:3px solid rgba(255,255,255,0.1); border-top-color:#6366f1; border-radius:50%; animate: spin 1s linear infinite;"></div>
+</div>
+
+<style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+    // Fshi loader-in kur faqja të jetë gati
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('app-loader');
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 400);
+    });
+</script>
+
+
+
+
+
+    
     <script>
         // REGJISTRI I IKONAVE PER DASHBOARD
         const iconMap = {
@@ -877,4 +907,5 @@ window.addEventListener('DOMContentLoaded', syncAppData);
     </script>
 </body>
 </html>
+
 
