@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Biznesi Im</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --accent: #6366f1; --bg: #000000; --panel: #0d0d0d; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            height: 100vh; 
+            overflow: hidden; 
+            margin: 0;
+        }
+
+        /* Mobile Optimized Layout */
+        .os-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
+        }
+
+        /* Top Bar Professional */
+        .system-bar {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+
+        /* Dynamic Main Area */
+        .main-view {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+        .main-view::-webkit-scrollbar { display: none; }
+
+        /* OS Cards */
+        .glass-card {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 15px;
+        }
+
+        /* Floating Bottom Navigation (Perfekt për Mobile) */
+        .nav-dock {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px;
+            padding: 10px 15px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+            justify-content: space-around;
+        }
+
+        .nav-icon {
+            padding: 12px;
+            border-radius: 20px;
+            transition: 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .nav-icon:active { transform: scale(0.9); background: var(--accent); }
+
+        /* Sidebar full-screen për Mobile */
+        #sidebar {
+            position: fixed; inset: 0; 
+            background: #000; z-index: 2000;
+            transform: translateY(100%);
+            transition: 0.5s cubic-bezier(0.32, 1, 0.23, 1);
+            padding: 40px 25px;
+        }
+        #sidebar.active { transform: translateY(0); }
+
+        /* Inputs */
+        .os-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            padding: 18px; width: 100%; color: #fff;
+            font-weight: 600; outline: none;
+        }
+
+        .tr-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.02);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="os-container">
+        <header class="system-bar">
+            <div class="flex items-center gap-3">
+                <div id="logoCircle" class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center overflow-hidden border border-white/10">
+                    <span class="text-xs font-black">-</span>
+                </div>
+                <h1 id="bizTitleDisplay" class="text-sm font-black uppercase tracking-widest italic">Biznesi IM</h1>
+            </div>
+            <div class="text-right">
+                <p id="liveClock" class="text-[10px] font-bold opacity-40">00:00</p>
+            </div>
+        </header>
+
+        <main class="main-view">
+            <div class="glass-card bg-gradient-to-br from-indigo-900/20 to-transparent">
+                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2">Bilanci Operativ</p>
+                <h2 id="balance" class="text-5xl font-black italic tracking-tighter">0.00 €</h2>
+                <div class="flex gap-4 mt-6 pt-6 border-t border-white/5">
+                    <div class="flex-1">
+                        <p class="text-[8px] font-bold opacity-40 uppercase">Të Hyra</p>
+                        <p id="totalIn" class="text-emerald-400 font-bold">0.00</p>
+                    </div>
+                    <div class="flex-1 text-right">
+                        <p class="text-[8px] font-bold opacity-40 uppercase">Të Dalura</p>
+                        <p id="totalOut" class="text-red-400 font-bold">0.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="space-y-3">
+                    <input type="number" id="trAmt" placeholder="Shuma €" class="os-input text-2xl text-center">
+                    <input type="text" id="trDesc" placeholder="Përshkrimi..." class="os-input text-sm">
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <button onclick="addTr('in')" class="bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase">Arkëto</button>
+                        <button onclick="addTr('out')" class="bg-zinc-800 text-white py-4 rounded-2xl font-black text-[10px] uppercase border border-white/10">Paguaj</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-2">
+                <h3 class="text-[10px] font-black uppercase tracking-widest opacity-30 mb-4">Transaksionet e fundit</h3>
+                <div id="ledger">
+                    </div>
+            </div>
+        </main>
+
+        <nav class="nav-dock">
+            <div class="nav-icon" onclick="location.reload()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            </div>
+            <div class="nav-icon" onclick="toggleSidebar()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            </div>
+            <div class="nav-icon" onclick="generateProfessionalPDF()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <div class="nav-icon text-red-500" onclick="window.location.href='index.html'">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            </div>
+        </nav>
+    </div>
+
+    <aside id="sidebar">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-xs font-black uppercase tracking-widest">Profili i Biznesit</h2>
+            <button onclick="toggleSidebar()" class="text-3xl">&times;</button>
+        </div>
+
+        <div class="flex flex-col items-center gap-6">
+            <div onclick="document.getElementById('logoIn').click()" class="w-24 h-24 rounded-3xl bg-zinc-900 border border-white/10 flex items-center justify-center overflow-hidden">
+                <img id="sideLogoPrev" src="" class="hidden w-full h-full object-cover">
+                <span id="logoText" class="text-[10px] font-bold opacity-30">LOGO</span>
+            </div>
+            <input type="file" id="logoIn" class="hidden" onchange="uploadLogo(event)">
+            
+            <div class="w-full">
+                <label class="text-[9px] font-black opacity-40 uppercase mb-2 block">Emri Zyrtar i Biznesit</label>
+                <input type="text" id="bizNameInput" class="os-input" placeholder="Shkruaj emrin këtu..." oninput="updateProfile()">
+            </div>
+
+            <button onclick="resetData()" class="mt-20 text-red-500 text-[10px] font-black uppercase tracking-widest">Fshi të dhënat e sistemit</button>
+        </div>
+    </aside>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('apex_v8_db')) || [];
+        let profile = JSON.parse(localStorage.getItem('apex_v8_profile')) || { name: 'Apex Enterprise', logo: null };
+
+        window.onload = () => {
+            syncProfile();
+            render();
+            startTime();
+        };
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        function uploadLogo(e) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                profile.logo = event.target.result;
+                localStorage.setItem('apex_v8_profile', JSON.stringify(profile));
+                syncProfile();
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function updateProfile() {
+            profile.name = document.getElementById('bizNameInput').value || 'Apex Enterprise';
+            document.getElementById('bizTitleDisplay').innerText = profile.name;
+            localStorage.setItem('apex_v8_profile', JSON.stringify(profile));
+        }
+
+        function syncProfile() {
+            document.getElementById('bizTitleDisplay').innerText = profile.name;
+            document.getElementById('bizNameInput').value = profile.name;
+            if(profile.logo) {
+                document.getElementById('sideLogoPrev').src = profile.logo;
+                document.getElementById('sideLogoPrev').classList.remove('hidden');
+                document.getElementById('logoText').classList.add('hidden');
+                document.getElementById('logoCircle').innerHTML = `<img src="${profile.logo}" class="w-full h-full object-cover">`;
+            }
+        }
+
+        function addTr(type) {
+            const amt = document.getElementById('trAmt').value;
+            const desc = document.getElementById('trDesc').value;
+            if(!amt || !desc) return;
+
+            const now = new Date();
+            db.unshift({
+                id: Date.now(),
+                val: parseFloat(amt),
+                desc: desc,
+                type: type,
+                date: now.toLocaleDateString('sq-AL'),
+                time: now.toLocaleTimeString('sq-AL', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                fullDate: now.toLocaleDateString('sq-AL', { day: '2-digit', month: '2-digit', year: 'numeric' })
+            });
+
+            localStorage.setItem('apex_v8_db', JSON.stringify(db));
+            document.getElementById('trAmt').value = '';
+            document.getElementById('trDesc').value = '';
+            render();
+        }
+
+        function render() {
+            const ledger = document.getElementById('ledger');
+            ledger.innerHTML = '';
+            let hi = 0, lo = 0;
+
+            db.forEach(item => {
+                const isI = item.type === 'in';
+                if(isI) hi += item.val; else lo += item.val;
+
+                ledger.innerHTML += `
+                    <div class="tr-item">
+                        <div>
+                            <h4 class="text-xs font-bold uppercase">${item.desc}</h4>
+                            <p class="text-[8px] opacity-40 font-bold mt-1 uppercase">${item.date} • ${item.time}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold ${isI ? 'text-emerald-400' : 'text-red-400'}">${isI ? '+' : '-'}${item.val.toFixed(2)} €</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('balance').innerText = (hi - lo).toFixed(2) + " €";
+            document.getElementById('totalIn').innerText = hi.toFixed(2);
+            document.getElementById('totalOut').innerText = lo.toFixed(2);
+        }
+
+        function startTime() {
+            setInterval(() => {
+                document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('sq-AL', { hour: '2-digit', minute: '2-digit' });
+            }, 1000);
+        }
+
+        function generateProfessionalPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Background & Branding
+            doc.setFillColor(15, 15, 15);
+            doc.rect(0, 0, 210, 50, 'F');
+            
+            if(profile.logo) {
+                doc.addImage(profile.logo, 'PNG', 15, 10, 30, 30);
+            }
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(22);
+            doc.text(profile.name.toUpperCase(), 50, 25);
+            
+            doc.setFontSize(9);
+            doc.setTextColor(150, 150, 150);
+            doc.text(`RAPORTI FINANCIAR ZYRTAR`, 50, 32);
+            doc.text(`GJENERUAR MË: ${new Date().toLocaleString('sq-AL')}`, 50, 37);
+
+            // Table
+            const rows = db.map(e => [
+                e.date, 
+                e.time, 
+                e.desc.toUpperCase(), 
+                e.type === 'in' ? 'ARKETIM' : 'PAGESE', 
+                e.val.toFixed(2) + " €"
+            ]);
+
+            doc.autoTable({
+                startY: 60,
+                head: [['DATA', 'ORA', 'PERSHKRIMI', 'STATUSI', 'VLERA']],
+                body: rows,
+                theme: 'striped',
+                headStyles: { fillColor: [99, 102, 241], fontSize: 9 },
+                styles: { fontSize: 8, font: 'helvetica' }
+            });
+
+            const finalY = doc.lastAutoTable.finalY + 15;
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            doc.text(`BALANCA FINALE: ${document.getElementById('balance').innerText}`, 15, finalY);
+
+            doc.save(`APEX_OS_${profile.name}_Report.pdf`);
+        }
+
+        function resetData() { if(confirm("FSHI TË GJITHA?")) { localStorage.clear(); location.reload(); } }
+    </script>
+</body>
+</html>
