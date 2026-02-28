@@ -380,6 +380,45 @@
         }
 
         function resetData() { if(confirm("FSHI TË GJITHA?")) { localStorage.clear(); location.reload(); } }
+
+
+
+
+
+
+        
+
+// Funksioni që lexon të dhënat e përbashkëta
+function syncAppData() {
+    const profile = JSON.parse(localStorage.getItem('apex_v8_profile')) || { name: 'Apex Enterprise', logo: null };
+    
+    // Përditëso emrin e biznesit kudo ku ka ID-në 'bizNameDisplay'
+    const nameElements = document.querySelectorAll('#bizNameDisplay');
+    nameElements.forEach(el => el.innerText = profile.name);
+
+    // Përditëso logon kudo ku ka ID-në 'appLogo'
+    if (profile.logo) {
+        const logoElements = document.querySelectorAll('#appLogo');
+        logoElements.forEach(el => {
+            el.src = profile.logo;
+            el.classList.remove('hidden');
+        });
+    }
+}
+
+// Dëgjo nëse ndryshon diçka në memorien e App-it
+window.addEventListener('storage', (e) => {
+    if (e.key === 'apex_v8_profile' || e.key === 'apex_v8_db') {
+        syncAppData();
+        if(typeof render === "function") render(); // Nëse ekziston funksioni i listës, rifreskoje
+    }
+});
+
+// Thirre sapo të hapet faqja
+window.addEventListener('DOMContentLoaded', syncAppData);
+
+
+        
     </script>
 </body>
 </html>
