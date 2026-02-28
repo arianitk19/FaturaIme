@@ -10,6 +10,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/sf-black-filled/512/FFFFFF/wallet.png">
+
+    <style>
+        /* FIX PËR MOBILE QË TË MOS LËVIZË SI FAQE WEB-I */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* Ndalon scroll-in e krejt faqes */
+            background-color: #000;
+            position: fixed; /* E bën "beton" në ekran */
+            width: 100%;
+        }
+
+        .app-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-top: env(safe-area-inset-top); /* E nxjerr tekstin prej notch-it */
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto; /* Vetëm këtu brenda bëhet scroll */
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+
+
     <style>
         :root { --accent: #6366f1; --bg: #000000; --panel: #0d0d0d; }
         body { 
