@@ -903,6 +903,27 @@ function renderUI() {
 
 
 
+function goTo(page) {
+    const overlay = document.getElementById('page-transition');
+    overlay.style.pointerEvents = 'all';
+    overlay.style.opacity = '1'; // Ekrani bëhet i zi
+
+    setTimeout(() => {
+        window.location.href = page;
+    }, 300); // Koha e animacionit
+}
+
+// Kur faqja ngarkohet, bëje overlay-in transparent
+window.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('page-transition');
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+        overlay.style.pointerEvents = 'none';
+    }, 300);
+});
+        
+
+
 
 
 
@@ -911,6 +932,7 @@ function renderUI() {
     </script>
 </body>
 </html>
+
 
 
 
