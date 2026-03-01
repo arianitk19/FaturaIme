@@ -249,40 +249,45 @@
 
 
 
-<div id="auth-shield" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-1000">
-    <div class="auth-card w-full max-w-[420px] rounded-[40px] p-12 shadow-2xl">
+<div id="auth-shield" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-1000 bg-black">
+    <div id="auth-card" class="auth-card w-full max-w-[420px] rounded-[40px] p-12 shadow-2xl relative">
         <div class="relative z-10">
-            <div class="mb-12">
-                <h2 id="auth-main-title" class="text-4xl font-black italic tracking-tighter">FATURAIME<span class="text-indigo-500">.</span></h2>
-                <p id="auth-sub-title" class="text-[9px] uppercase tracking-[0.5em] text-slate-500 mt-2 font-bold">Krijoni një llogari për të nisur eksperiencën tuaj</p>
+            <div class="mb-12 text-center">
+                <h2 id="auth-main-title" class="text-4xl font-black italic tracking-tighter text-white">SIGN UP<span class="text-indigo-500">.</span></h2>
+                <p id="auth-sub-title" class="text-[9px] uppercase tracking-[0.5em] text-slate-500 mt-4 font-bold italic">Sistemi i autorizuar FaturaIme PRO</p>
             </div>
 
-            <div class="space-y-8">
-                <div id="field-name" class="auth-input-container">
-                    <input type="text" id="a-name" placeholder="EMRI MBIEMRI" class="auth-input">
+            <div class="space-y-6">
+                <div id="field-name" class="auth-input-container relative group">
+                    <input type="text" id="a-name" placeholder="EMRI MBIEMRI" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-widest focus:border-indigo-500 outline-none transition-all">
+                    <span class="absolute right-0 top-4 text-[7px] text-indigo-400 opacity-0 group-focus-within:opacity-100 transition-opacity uppercase font-black">Min. 4 karaktere</span>
                 </div>
                 
-                <div class="auth-input-container">
-                    <input type="email" id="a-email" placeholder="EMAIL ADRESA" class="auth-input">
+                <div class="auth-input-container relative group">
+                    <input type="email" id="a-email" placeholder="EMAIL ADRESA" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-widest focus:border-indigo-500 outline-none transition-all">
+                    <span class="absolute right-0 top-4 text-[7px] text-indigo-400 opacity-0 group-focus-within:opacity-100 transition-opacity uppercase font-black">Shembull@email.com</span>
                 </div>
 
-                <div class="auth-input-container">
-                    <input type="password" id="a-pass" placeholder="PASSWORD" class="auth-input">
+                <div class="auth-input-container relative group">
+                    <input type="password" id="a-pass" placeholder="PASSWORD" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-widest focus:border-indigo-500 outline-none transition-all">
+                    <div id="pass-info" class="absolute -bottom-6 left-0 text-[7px] text-slate-500 opacity-0 group-focus-within:opacity-100 transition-opacity uppercase font-black tracking-widest">
+                        Kërkohet: 1 Shkronjë e madhe, 1 Shifër, Min. 8 karaktere
+                    </div>
                 </div>
             </div>
 
-            <div class="flex justify-end mt-2">
-    <span onclick="recoveryFlow()" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase">
-        Harruat fjalëkalimin?
-    </span>
-</div>
+            <div id="recovery-container" class="flex justify-end mt-10 hidden">
+                <span onclick="recoveryFlow()" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase italic">
+                    Harruat fjalëkalimin?
+                </span>
+            </div>
 
-            <button onclick="processAuth()" class="w-full btn-premium py-6 mt-12 uppercase text-[11px] tracking-[0.2em]">
-                Hyni
+            <button onclick="processAuth()" class="w-full bg-white text-black font-black py-6 mt-12 uppercase text-[11px] tracking-[0.3em] rounded-2xl hover:bg-indigo-500 hover:text-white transition-all active:scale-95 shadow-lg shadow-white/5">
+                Vazhdo
             </button>
 
-            <div class="mt-8 text-center">
-                <span id="switch-trigger" onclick="toggleMode()" class="text-[9px] font-black text-slate-600 hover:text-white cursor-pointer transition-all tracking-widest uppercase">
+            <div class="mt-10 text-center">
+                <span id="switch-trigger" onclick="toggleMode()" class="text-[9px] font-black text-slate-600 hover:text-indigo-400 cursor-pointer transition-all tracking-widest uppercase italic">
                     Kaloni në Log In
                 </span>
             </div>
@@ -698,19 +703,45 @@ async function startFaceID() {
 
 let mode = 'signup';
 
-// Kontrolli automatik i sesionit real
+// Kontrolli i Sesionit Real - Nuk harrohet kurre
 (function() {
-    if(localStorage.getItem('faturaime_locked') === 'false') {
-        document.getElementById('auth-shield').remove();
+    // Kontrollojme nese perdoruesi eshte i autorizuar
+    if(localStorage.getItem('faturaime_auth_active') === 'true') {
+        const shield = document.getElementById('auth-shield');
+        if(shield) shield.remove();
         document.body.style.overflow = 'auto';
     }
 })();
 
 function toggleMode() {
     mode = (mode === 'signup') ? 'login' : 'signup';
-    document.getElementById('auth-main-title').innerHTML = mode === 'signup' ? 'SIGN UP<span class="text-indigo-500">.</span>' : 'LOG IN<span class="text-indigo-500">.</span>';
-    document.getElementById('field-name').style.display = mode === 'signup' ? 'block' : 'none';
-    document.getElementById('switch-trigger').innerText = mode === 'signup' ? 'Kaloni në Log In' : 'Krijo një llogari të re';
+    
+    const title = document.getElementById('auth-main-title');
+    const nameField = document.getElementById('field-name');
+    const trigger = document.getElementById('switch-trigger');
+    const recovery = document.getElementById('recovery-container');
+    const passInfo = document.getElementById('pass-info');
+
+    if (mode === 'signup') {
+        title.innerHTML = 'SIGN UP<span class="text-indigo-500">.</span>';
+        nameField.style.display = 'block';
+        trigger.innerText = 'Kaloni në Log In';
+        recovery.classList.add('hidden');
+        passInfo.style.display = 'block';
+    } else {
+        title.innerHTML = 'LOG IN<span class="text-indigo-500">.</span>';
+        nameField.style.display = 'none';
+        trigger.innerText = 'Krijo një llogari të re';
+        recovery.classList.remove('hidden');
+        passInfo.style.display = 'none';
+    }
+}
+
+function shakeForm() {
+    const card = document.getElementById('auth-card');
+    card.classList.add('animate-shake'); // Shto kete klase ne CSS
+    if(navigator.vibrate) navigator.vibrate([50, 30, 50]);
+    setTimeout(() => card.classList.remove('animate-shake'), 500);
 }
 
 function processAuth() {
@@ -718,50 +749,69 @@ function processAuth() {
     const e = document.getElementById('a-email').value;
     const p = document.getElementById('a-pass').value;
 
-    // VALIDIMI STRIKT DHE I HESHTUR
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     const hasUpperCase = /[A-Z]/.test(p);
     const hasNumber = /\d/.test(p);
     const isPassLong = p.length >= 8;
 
-    // Nese kriteret deshtojne, sistemi thjesht refuzon pa dhene shpjegime monotone
-    if (!isEmailValid) {
-        shakeForm();
-        return;
-    }
+    if (!isEmailValid) { shakeForm(); return; }
 
     if (mode === 'signup') {
+        // Validimi strikt per regjistrim
         if (!hasUpperCase || !hasNumber || !isPassLong || n.length < 4) {
-            console.warn("Security Breach: Requirements not met.");
             shakeForm();
             return;
         }
-        // Ruajtja ne DB lokale si regjistrim real
+        // Ruajtja ne memorien e thelle (Nuk preket nga fshirja e shpenzimeve)
         localStorage.setItem('user_cred', JSON.stringify({name: n, email: e, pass: p}));
+        localStorage.setItem('faturaime_auth_active', 'true');
+        accessGranted();
     } else {
+        // Log In
         const cred = JSON.parse(localStorage.getItem('user_cred'));
         if (!cred || e !== cred.email || p !== cred.pass) {
             shakeForm();
             return;
         }
+        localStorage.setItem('faturaime_auth_active', 'true');
+        accessGranted();
     }
-
-    // Nese qdo gje eshte 10/10, hapet sistemi
-    accessGranted();
 }
 
+function accessGranted() {
+    const shield = document.getElementById('auth-shield');
+    shield.style.opacity = '0';
+    shield.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+        shield.remove();
+        document.body.style.overflow = 'auto';
+        // Ketu nese ke funksionin e intros, thirre
+        if(typeof runIntroSequence === 'function') runIntroSequence();
+    }, 1000);
+}
+
+// 1. EFEKTI I DRIDHJES (SHAKE) - Për gabimet pa dritare njoftimi (Silent Error)
 function shakeForm() {
     const card = document.querySelector('.auth-card');
+    // Shtohet një bordurë e kuqe e lehtë për feedback vizual premium
     card.classList.add('border-red-500/50');
     card.style.animation = 'shake 0.4s ease';
+    
+    // Luajmë një dridhje haptike në telefon nëse pajisja e mbështet
+    if(navigator.vibrate) navigator.vibrate(50);
+
     setTimeout(() => {
         card.style.animation = '';
         card.classList.remove('border-red-500/50');
     }, 400);
 }
 
+// 2. AKSESI I DHËNË (ACCESS GRANTED) - Kyçja e sesionit që nuk harrohet kurrë
 function accessGranted() {
+    // Kjo 'vula' bën që edhe nëse përdoruesi fshin të dhënat brenda sistemit, 
+    // llogaria mbetet e autorizuar dhe nuk kërkohet regjistrimi prapë.
     localStorage.setItem('faturaime_locked', 'false');
+    
     const shield = document.getElementById('auth-shield');
     shield.style.filter = 'blur(20px)';
     shield.style.opacity = '0';
@@ -770,32 +820,20 @@ function accessGranted() {
     setTimeout(() => {
         shield.remove();
         document.body.style.overflow = 'auto';
-        // Ketu mund te nisesh direkt FaceID nese deshiron nje shtrese tjeter
+        
+        // Tranzicioni drejt FaceID për siguri maksimale
         if(typeof startFaceID === "function") startFaceID();
+        
+        // Njoftimi i mirëseardhjes (opsional)
+        console.log("SISTEMI: Aksesi u autorizua plotësisht.");
     }, 800);
 }
 
-// Shto kete animation ne CSS per efektin e gabimit
-const style = document.createElement('style');
-style.innerHTML = `@keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }`;
-document.head.appendChild(style);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 3. RECOVERY FLOW - Sistemi i harresës së fjalëkalimit (i rreptë)
 function recoveryFlow() {
     const email = document.getElementById('a-email').value;
     
+    // Kontrolli fillestar i email-it
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         alert("SECURITY: Ju lutem shënoni email-in tuaj zyrtar për të nisur procesin e verifikimit.");
         return;
@@ -804,31 +842,47 @@ function recoveryFlow() {
     const cred = JSON.parse(localStorage.getItem('user_cred'));
 
     if (cred && email === cred.email) {
-        // Një proces verifikimi i simuluar që ruan seriozitetin e faqes
+        // Gjenerimi i kodit - Seriozitet i simuluar bankar
         const code = Math.floor(100000 + Math.random() * 900000);
         alert("SISTEMI: Një kod verifikimi u gjenerua për sigurinë tuaj: " + code);
         
         const userCode = prompt("Shënoni kodin e pranuar:");
         
         if (userCode == code) {
-            const newPass = prompt("SISTEMI: Identiteti u konfirmua. Shënoni fjalëkalimin e ri (Duhet të përmbajë shkronjë të madhe dhe numër):");
+            const newPass = prompt("SISTEMI: Identiteti u konfirmua. Shënoni fjalëkalimin e ri:");
             
-            // Verifikimi strikt edhe gjatë rikthimit
+            // Validimi strikt i fjalëkalimit të ri (Shkronjë e madhe, Numër, 8 Karaktere)
             if (/[A-Z]/.test(newPass) && /\d/.test(newPass) && newPass.length >= 8) {
                 cred.pass = newPass;
                 localStorage.setItem('user_cred', JSON.stringify(cred));
-                alert("SUKSES: Fjalëkalimi u përditësua. Mund të identifikoheni.");
+                alert("SUKSES: Fjalëkalimi u përditësua. Mund të identifikoheni tani.");
             } else {
-                alert("SECURITY DENIED: Fjalëkalimi i ri nuk i plotëson kriteret e sigurisë.");
+                alert("SECURITY DENIED: Fjalëkalimi i ri nuk i plotëson kriteret strikte (A-Z, 0-9, 8+).");
+                shakeForm();
             }
         } else {
             alert("SECURITY ALERT: Kod i pasaktë. Aksesi u bllokua.");
+            shakeForm();
         }
     } else {
         alert("ERROR: Ky email nuk ekziston në bazën tonë të të dhënave.");
+        shakeForm();
     }
 }
 
+
+
+        // Shto kete animation ne CSS per efektin e gabimit
+const style = document.createElement('style');
+style.innerHTML = `
+    @keyframes shake { 
+        0%, 100% {transform: translateX(0);} 
+        25% {transform: translateX(-10px);} 
+        75% {transform: translateX(10px);} 
+    }
+    .auth-card { transition: border 0.3s ease; border: 1px solid transparent; }
+`;
+document.head.appendChild(style);
 
 
 
@@ -932,6 +986,7 @@ window.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
