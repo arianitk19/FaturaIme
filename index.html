@@ -701,41 +701,78 @@ async function startFaceID() {
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
 
 
-let mode = 'signup';
 
-// Kontrolli i Sesionit Real - Nuk harrohet kurre
-(function() {
-    // Kontrollojme nese perdoruesi eshte i autorizuar
-    if(localStorage.getItem('faturaime_auth_active') === 'true') {
-        const shield = document.getElementById('auth-shield');
-        if(shield) shield.remove();
-        document.body.style.overflow = 'auto';
+
+  // Funksioni për të parë fjalëkalimin (Syri)
+function togglePasswordView() {
+    const passInput = document.getElementById('a-pass');
+    const eyeIcon = document.getElementById('eye-icon');
+    
+    if (passInput.type === 'password') {
+        passInput.type = 'text';
+        eyeIcon.classList.add('text-indigo-500');
+    } else {
+        passInput.type = 'password';
+        eyeIcon.classList.remove('text-indigo-500');
     }
-})();
+}
 
+// Sistemi i Sinjaleve Inteligjente
+function checkHint(type) {
+    const val = document.getElementById('a-' + type).value;
+    const hint = document.getElementById('hint-' + type);
+
+    // Shfaq ose fshih sinjalin bazuar në shkrim
+    if (val.length > 0) {
+        hint.style.opacity = "1";
+        hint.style.transform = "translateY(0)";
+    } else {
+        hint.style.opacity = "0";
+        hint.style.transform = "translateY(-5px)";
+    }
+
+    // Validimi specifik për passwordin (vetëm në Signup)
+    if (type === 'pass' && mode === 'signup') {
+        const hasUpper = /[A-Z]/.test(val);
+        const hasNum = /\d/.test(val);
+        const isLong = val.length >= 8;
+
+        document.getElementById('req-upper').style.color = hasUpper ? "#6366f1" : "#475569";
+        document.getElementById('req-num').style.color = hasNum ? "#6366f1" : "#475569";
+        document.getElementById('req-len').style.color = isLong ? "#6366f1" : "#475569";
+    }
+}
+
+// Modifiko toggleMode që të pastrojë sinjalet kur ndërrohet lloji i llogarisë
 function toggleMode() {
     mode = (mode === 'signup') ? 'login' : 'signup';
     
+    // Resetimi i fushave
+    document.querySelectorAll('.auth-input').forEach(i => i.value = "");
+    document.querySelectorAll('[id^="hint-"]').forEach(h => h.style.opacity = "0");
+    
+    // Pjesa tjetër e kodit tënd ekzistues...
     const title = document.getElementById('auth-main-title');
     const nameField = document.getElementById('field-name');
     const trigger = document.getElementById('switch-trigger');
     const recovery = document.getElementById('recovery-container');
-    const passInfo = document.getElementById('pass-info');
+    const passHint = document.getElementById('hint-pass');
 
     if (mode === 'signup') {
         title.innerHTML = 'SIGN UP<span class="text-indigo-500">.</span>';
         nameField.style.display = 'block';
         trigger.innerText = 'Kaloni në Log In';
         recovery.classList.add('hidden');
-        passInfo.style.display = 'block';
+        passHint.style.display = 'flex';
     } else {
         title.innerHTML = 'LOG IN<span class="text-indigo-500">.</span>';
         nameField.style.display = 'none';
         trigger.innerText = 'Krijo një llogari të re';
         recovery.classList.remove('hidden');
-        passInfo.style.display = 'none';
+        passHint.style.display = 'none';
     }
 }
+        
 
 function shakeForm() {
     const card = document.getElementById('auth-card');
@@ -982,10 +1019,85 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
+function accessGranted() {
+    localStorage.setItem('faturaime_auth_active', 'true');
+    const shield = document.getElementById('auth-shield');
+    const card = document.getElementById('auth-card');
+    
+    // Animacion Premium i daljes
+    card.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+    card.style.transform = "translateY(50px) scale(0.9)";
+    card.style.opacity = "0";
+    
+    shield.style.backgroundColor = "white"; // Ndryshimi i ngjyrës për efekt flash
+    shield.style.transition = "all 1s ease";
+    shield.style.opacity = "0";
+
+    setTimeout(() => {
+        shield.remove();
+        document.body.style.overflow = 'auto';
+        if(typeof runIntroSequence === 'function') runIntroSequence();
+    }, 1000);
+}
+        
+
+
+
+
+
+
+function checkHint(type) {
+    const val = document.getElementById('a-' + type).value;
+    const hint = document.getElementById('hint-' + type);
+    const btn = document.querySelector('.btn-premium'); // Butoni yt
+
+    if (val.length > 0) {
+        hint.style.opacity = "1";
+        hint.style.transform = "translateY(0)";
+    } else {
+        hint.style.opacity = "0";
+        hint.style.transform = "translateY(-5px)";
+    }
+
+    if (type === 'pass' && mode === 'signup') {
+        const hasUpper = /[A-Z]/.test(val);
+        const hasNum = /\d/.test(val);
+        const isLong = val.length >= 8;
+
+        // Feedback Vizual
+        updateRequirement('req-upper', hasUpper);
+        updateRequirement('req-num', hasNum);
+        updateRequirement('req-len', isLong);
+
+        // Success Glow: Nëse plotësohen të gjitha, butoni "ndizet"
+        if(hasUpper && hasNum && isLong && document.getElementById('a-name').value.length >= 4) {
+            btn.style.boxShadow = "0 0 20px rgba(99, 102, 241, 0.6)";
+            btn.style.borderColor = "#6366f1";
+        } else {
+            btn.style.boxShadow = "none";
+            btn.style.borderColor = "rgba(255,255,255,0.1)";
+        }
+    }
+}
+
+function updateRequirement(id, met) {
+    const el = document.getElementById(id);
+    if (met && el.style.color !== "rgb(99, 102, 241)") {
+        el.style.color = "#6366f1";
+        // Vibrim i lehtë kur plotësohet një kusht (vetëm në Mobile)
+        if (navigator.vibrate) navigator.vibrate(10); 
+    } else if (!met) {
+        el.style.color = "#475569";
+    }
+}
+
+        
+
 
     </script>
 </body>
 </html>
+
 
 
 
