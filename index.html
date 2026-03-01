@@ -249,53 +249,34 @@
 
 
 
-<div id="auth-shield" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-1000 bg-black">
-    <div id="auth-card" class="auth-card w-full max-w-[420px] rounded-[40px] p-12 shadow-2xl relative">
-        <div class="relative z-10">
-            <div class="mb-12 text-center">
-                <h2 id="auth-main-title" class="text-4xl font-black italic tracking-tighter text-white">SIGN UP<span class="text-indigo-500">.</span></h2>
-                <p id="auth-sub-title" class="text-[9px] uppercase tracking-[0.5em] text-slate-500 mt-4 font-bold italic">Sistemi i autorizuar FaturaIme PRO</p>
-            </div>
+<div class="space-y-6">
+    <div id="field-name" class="relative group">
+        <input type="text" id="a-name" oninput="checkHint('name')" placeholder="EMRI MBIEMRI" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-[0.2em] outline-none focus:border-indigo-500 transition-all">
+        <div id="hint-name" class="absolute -bottom-5 left-0 text-[7px] font-black text-indigo-400 opacity-0 transition-all uppercase tracking-widest">Shënoni emrin dhe mbiemrin tuaj</div>
+    </div>
+    
+    <div class="relative group">
+        <input type="email" id="a-email" oninput="checkHint('email')" placeholder="EMAIL ADRESA" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-[0.2em] outline-none focus:border-indigo-500 transition-all">
+        <div id="hint-email" class="absolute -bottom-5 left-0 text-[7px] font-black text-indigo-400 opacity-0 transition-all uppercase tracking-widest">Format: shembull@email.com</div>
+    </div>
 
-            <div class="space-y-6">
-                <div id="field-name" class="auth-input-container relative group">
-                    <input type="text" id="a-name" placeholder="EMRI MBIEMRI" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-widest focus:border-indigo-500 outline-none transition-all">
-                    <span class="absolute right-0 top-4 text-[7px] text-indigo-400 opacity-0 group-focus-within:opacity-100 transition-opacity uppercase font-black">Min. 4 karaktere</span>
-                </div>
-                
-                <div class="auth-input-container relative group">
-                    <input type="email" id="a-email" placeholder="EMAIL ADRESA" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-widest focus:border-indigo-500 outline-none transition-all">
-                    <span class="absolute right-0 top-4 text-[7px] text-indigo-400 opacity-0 group-focus-within:opacity-100 transition-opacity uppercase font-black">Shembull@email.com</span>
-                </div>
+    <div class="relative group">
+        <input type="password" id="a-pass" oninput="checkHint('pass')" placeholder="PASSWORD" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-[0.2em] outline-none focus:border-indigo-500 transition-all pr-10">
+        
+        <div onclick="togglePasswordView()" class="absolute right-0 top-4 cursor-pointer text-slate-500 hover:text-white transition-colors">
+            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+        </div>
 
-                <div class="auth-input-container relative group">
-                    <input type="password" id="a-pass" placeholder="PASSWORD" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-widest focus:border-indigo-500 outline-none transition-all">
-                    <div id="pass-info" class="absolute -bottom-6 left-0 text-[7px] text-slate-500 opacity-0 group-focus-within:opacity-100 transition-opacity uppercase font-black tracking-widest">
-                        Kërkohet: 1 Shkronjë e madhe, 1 Shifër, Min. 8 karaktere
-                    </div>
-                </div>
-            </div>
-
-            <div id="recovery-container" class="flex justify-end mt-10 hidden">
-                <span onclick="recoveryFlow()" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase italic">
-                    Harruat fjalëkalimin?
-                </span>
-            </div>
-
-            <button onclick="processAuth()" class="w-full bg-white text-black font-black py-6 mt-12 uppercase text-[11px] tracking-[0.3em] rounded-2xl hover:bg-indigo-500 hover:text-white transition-all active:scale-95 shadow-lg shadow-white/5">
-                Vazhdo
-            </button>
-
-            <div class="mt-10 text-center">
-                <span id="switch-trigger" onclick="toggleMode()" class="text-[9px] font-black text-slate-600 hover:text-indigo-400 cursor-pointer transition-all tracking-widest uppercase italic">
-                    Kaloni në Log In
-                </span>
-            </div>
+        <div id="hint-pass" class="absolute -bottom-5 left-0 flex gap-3 opacity-0 transition-all">
+            <span id="req-upper" class="text-[6px] font-black text-slate-500 uppercase tracking-tighter">ABC</span>
+            <span id="req-num" class="text-[6px] font-black text-slate-500 uppercase tracking-tighter">123</span>
+            <span id="req-len" class="text-[6px] font-black text-slate-500 uppercase tracking-tighter">8+ Karakter</span>
         </div>
     </div>
 </div>
-
-
 
 
 
@@ -1097,6 +1078,7 @@ function updateRequirement(id, met) {
     </script>
 </body>
 </html>
+
 
 
 
