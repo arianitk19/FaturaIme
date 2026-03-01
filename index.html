@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>FATURAIME</title>
+    <title>FaturaIme PRO AI</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
-    <link rel="manifest" href="manifest.json">
-
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     
 <link rel="apple-touch-icon" href="https://img.icons8.com/sf-black-filled/512/FFFFFF/wallet.png">
 
@@ -21,73 +20,97 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
+        
 
 
 
-/* AUTH SUPERIOR DESIGN */
-#auth-shield {
-    background: radial-gradient(circle at center, #111 0%, #000 100%);
-    backdrop-filter: blur(50px);
+#currency-wrapper {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.currency-btn.bg-white {
+    transform: scale(1.05);
+}
+
+
+        
+/* AUTH SYSTEM STYLING */
+#auth-container {
+    position: fixed;
+    inset: 0;
+    z-index: 6000;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
 .auth-card {
-    background: rgba(10, 10, 10, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 40px;
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.input-group {
     position: relative;
-    overflow: hidden;
-}
-
-.auth-card::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    background: conic-gradient(transparent, transparent, transparent, #6366f1);
-    animation: rotate-border 6s linear infinite;
-    z-index: -1;
-}
-
-@keyframes rotate-border {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.auth-input-container {
-    position: relative;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.auth-input-container:focus-within {
-    border-bottom-color: #6366f1;
-    transform: translateY(-2px);
+    margin-bottom: 20px;
 }
 
 .auth-input {
-    background: transparent;
     width: 100%;
-    padding: 16px 5px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 18px 24px;
+    border-radius: 20px;
+    color: white;
     outline: none;
-    font-size: 14px;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.auth-input:focus {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 18px;
+    border-radius: 20px;
+    background: white;
+    color: black;
+    font-weight: 700;
+    text-transform: uppercase;
     letter-spacing: 1px;
-    color: #fff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn-premium {
-    background: #fff;
-    color: #000;
-    font-weight: 900;
-    transition: all 0.4s ease;
-    clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+.auth-btn:active { transform: scale(0.96); }
+
+.switch-text {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
 }
 
-.btn-premium:hover {
-    background: #6366f1;
-    color: #fff;
-    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+.switch-link {
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 5px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
-
-
+        
         :root { --accent: #6366f1; }
         body { 
             font-family: 'Space Grotesk', sans-serif; 
@@ -246,41 +269,6 @@
         </div>
     </div>
 
-
-
-
-<div class="space-y-6">
-    <div id="field-name" class="relative group">
-        <input type="text" id="a-name" oninput="checkHint('name')" placeholder="EMRI MBIEMRI" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-[0.2em] outline-none focus:border-indigo-500 transition-all">
-        <div id="hint-name" class="absolute -bottom-5 left-0 text-[7px] font-black text-indigo-400 opacity-0 transition-all uppercase tracking-widest">Shënoni emrin dhe mbiemrin tuaj</div>
-    </div>
-    
-    <div class="relative group">
-        <input type="email" id="a-email" oninput="checkHint('email')" placeholder="EMAIL ADRESA" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-[0.2em] outline-none focus:border-indigo-500 transition-all">
-        <div id="hint-email" class="absolute -bottom-5 left-0 text-[7px] font-black text-indigo-400 opacity-0 transition-all uppercase tracking-widest">Format: shembull@email.com</div>
-    </div>
-
-    <div class="relative group">
-        <input type="password" id="a-pass" oninput="checkHint('pass')" placeholder="PASSWORD" class="auth-input w-full bg-transparent border-b border-white/10 py-4 text-xs tracking-[0.2em] outline-none focus:border-indigo-500 transition-all pr-10">
-        
-        <div onclick="togglePasswordView()" class="absolute right-0 top-4 cursor-pointer text-slate-500 hover:text-white transition-colors">
-            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-        </div>
-
-        <div id="hint-pass" class="absolute -bottom-5 left-0 flex gap-3 opacity-0 transition-all">
-            <span id="req-upper" class="text-[6px] font-black text-slate-500 uppercase tracking-tighter">ABC</span>
-            <span id="req-num" class="text-[6px] font-black text-slate-500 uppercase tracking-tighter">123</span>
-            <span id="req-len" class="text-[6px] font-black text-slate-500 uppercase tracking-tighter">8+ Karakter</span>
-        </div>
-    </div>
-</div>
-
-
-
-
     <div id="face-id-screen">
         <div id="scanner-wrapper" class="relative w-32 h-32 border-4 border-white/5 rounded-[40px] flex items-center justify-center transition-all duration-500">
             <div id="scan-line" class="hidden"></div>
@@ -288,9 +276,57 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M9 3H5a2 2 0 00-2 2v4m14-6h4a2 2 0 012 2v4M5 19h4a2 2 0 01-2-2v-4m14 6h-4a2 2 0 00-2-2v-4M8 11l2 2 4-4" />
             </svg>
         </div>
-        <p id="auth-status" class="mt-8 text-xs font-bold tracking-[0.3em] text-white/30 uppercase italic">Identifikimi është i nevojshëm</p>
+        <p id="auth-status" class="mt-8 text-xs font-bold tracking-[0.3em] text-white/30 uppercase italic">Face Required</p>
     </div>
 
+
+
+<div id="auth-wrapper" class="fixed inset-0 z-[6000] bg-black flex items-center justify-center p-6">
+    <div class="auth-card w-full max-w-[420px] glass-panel p-10 border border-white/10 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/20 blur-[80px]"></div>
+        
+        <div id="auth-content">
+            <div class="mb-10">
+                <h2 id="auth-title" class="text-4xl font-bold tracking-tighter italic">Hyni.</h2>
+                <p id="auth-subtitle" class="text-slate-500 text-sm mt-2 font-medium">Sistemi i autorizuar FaturaIme PRO</p>
+            </div>
+
+            <div class="space-y-4">
+                <div id="name-field" class="hidden">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4 mb-2 block">Emri Plotë</label>
+                    <input type="text" id="auth-name" class="auth-input w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm" placeholder="Emri juaj...">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4 mb-2 block">Email Adresa</label>
+                    <input type="email" id="auth-email" class="auth-input w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm" placeholder="email@shembull.com">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4 mb-2 block">Fjalëkalimi</label>
+                    <input type="password" id="auth-pass" class="auth-input w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm" placeholder="••••••••">
+                </div>
+            </div>
+
+            <div id="auth-error" class="text-red-500 text-[10px] font-bold uppercase mt-4 ml-4 hidden text-center">Të dhëna të gabuara!</div>
+
+            <button onclick="processAuth()" id="main-auth-btn" class="w-full bg-white text-black font-black p-5 rounded-2xl mt-8 ios-btn uppercase tracking-widest text-xs">Vazhdo</button>
+
+            <p class="text-center mt-8 text-[11px] text-slate-500 font-medium">
+                <span id="switch-msg">Nuk keni llogari?</span> 
+                <button onclick="toggleAuthMode()" id="switch-btn" class="text-white font-bold underline underline-offset-4 ml-1">Krijo një</button>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+    <audio id="ios-click-sound" preload="auto">
+    <source src="https://www.soundjay.com/buttons/sounds/button-50.mp3" type="audio/mpeg">
+</audio>
+
+    
     <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5">
         <div class="mt-12 space-y-8">
             <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest">Menuja Kryesore</h3>
@@ -303,43 +339,25 @@
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
                     <span class="font-medium">Eksporto PDF</span>
                 </button>
+
+
+
+<div class="px-4 py-6 border-t border-white/5 mt-auto">
+    <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4 ml-2">Valuta e Sistemit</p>
+    <div class="grid grid-cols-4 gap-2 bg-white/5 p-1 rounded-2xl border border-white/10">
+        <button onclick="changeCurrency(0)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-0">€</button>
+        <button onclick="changeCurrency(1)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-1">L</button>
+        <button onclick="changeCurrency(2)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-2">CHF</button>
+        <button onclick="changeCurrency(3)" class="currency-btn py-2 rounded-xl text-xs font-bold transition-all active:scale-90" id="btn-curr-3">$</button>
+    </div>
+</div>
+                
+
+                
                 <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
                     <span class="font-medium">Cakto Limitin</span>
                 </button>
-
-            <button onclick="window.location.href='biznesi.html'" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="font-medium">Biznesi Im</span>
-</button>
-
-
-<div id="page-transition" style="position:fixed; inset:0; background:#000; z-index:10000; opacity:0; pointer-events:none; transition: opacity 0.3s ease;"></div>
-                
-
-
-<div class="mt-10 pt-10 border-t border-white/5">
-    <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[0.4em] mb-6 text-center">Valuta e Sistemit</p>
-    <div class="flex flex-wrap justify-center gap-3">
-        <button onclick="changeSystemCurrency('EUR', '€')" class="cur-btn active glass-panel px-4 py-2 text-[10px] font-bold border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.2)]">EUR €</button>
-        <button onclick="changeSystemCurrency('USD', '$')" class="cur-btn glass-panel px-4 py-2 text-[10px] font-bold opacity-40 hover:opacity-100 transition-all">USD $</button>
-        <button onclick="changeSystemCurrency('CHF', 'Fr')" class="cur-btn glass-panel px-4 py-2 text-[10px] font-bold opacity-40 hover:opacity-100 transition-all">CHF Fr</button>
-        <button onclick="changeSystemCurrency('ALL', 'L')" class="cur-btn glass-panel px-4 py-2 text-[10px] font-bold opacity-40 hover:opacity-100 transition-all">ALL L</button>
-    </div>
-</div>
-
-<style>
-    .cur-btn.active { 
-        border: 1px solid #6366f1 !important; 
-        opacity: 1 !important; 
-        color: #fff;
-        background: rgba(99, 102, 241, 0.1);
-    }
-</style>
-
-
             </div>
             <button onclick="clearAll()" class="mt-20 text-red-500 text-xs font-bold uppercase tracking-widest opacity-40">Fshi të dhënat</button>
         </div>
@@ -442,8 +460,6 @@
         </div>
     </div>
 
-
-    
     <script>
         // REGJISTRI I IKONAVE PER DASHBOARD
         const iconMap = {
@@ -462,77 +478,20 @@
     chart: null
 };
 
+        window.onload = () => {
+            setTimeout(() => {
+                const intro = document.getElementById('intro-screen');
+                if(intro) {
+                    intro.style.opacity = '0';
+                    setTimeout(() => {
+                        intro.remove();
+                        startFaceID();
+                    }, 1000);
+                }
+            }, 2500);
+        };
 
-   window.onload = () => {
-    // Kontrollojmë nëse përdoruesi është verifikuar një herë gjatë këtij sesioni
-    const isVerified = sessionStorage.getItem('app_verified');
-
-    if (isVerified === 'true') {
-        // NËSE ËSHTË VERIFIKUAR: Hiqi pengesat menjëherë pa vonesa
-        const intro = document.getElementById('intro-screen');
-        const faceId = document.getElementById('face-id-screen');
-        if(intro) intro.remove();
-        if(faceId) faceId.remove();
-
-        // Shfaq Dashboard-in direkt
-        const mainApp = document.getElementById('main-app');
-        mainApp.style.opacity = '1';
-        mainApp.style.transform = 'translateY(0)';
-        mainApp.style.transition = 'none'; // Pa animacion për shpejtësi maksimale
-        document.body.style.overflow = 'auto';
-        
-        initChart();
-        renderUI();
-    } else {
-        // NËSE ËSHTË HERËA E PARË: Shfaq Intro-n dhe FaceID normalisht
-        setTimeout(() => {
-            const intro = document.getElementById('intro-screen');
-            if(intro) {
-                intro.style.opacity = '0';
-                setTimeout(() => {
-                    intro.remove();
-                    startFaceID();
-                }, 1000);
-            }
-        }, 2500);
-    }
-};
-
-async function startFaceID() { 
-    const screen = document.getElementById('face-id-screen'); 
-    const wrapper = document.getElementById('scanner-wrapper'); 
-    const status = document.getElementById('auth-status'); 
-    
-    screen.style.display = 'flex'; 
-    wrapper.classList.add('scanning-active'); 
-    status.innerText = "Skanimi..."; 
-
-    setTimeout(unlockApp, 2500); 
-
-    function unlockApp() { 
-        // Shënoje në memorie që u krye FaceID për këtë sesion
-        sessionStorage.setItem('app_verified', 'true');
-
-        wrapper.classList.remove('scanning-active'); 
-        screen.classList.add('auth-success'); 
-        status.innerText = "U identifikua"; 
-        status.style.color = "#10b981"; 
-
-        setTimeout(() => { 
-            screen.style.opacity = "0"; 
-            screen.style.transform = "scale(1.2)"; 
-            setTimeout(() => { 
-                screen.remove(); 
-                document.getElementById('main-app').style.opacity = '1'; 
-                document.getElementById('main-app').style.transform = 'translateY(0)'; 
-                document.body.style.overflow = 'auto'; 
-                initChart(); 
-                renderUI(); 
-            }, 800); 
-        }, 1000); 
-    } 
-}
-        
+async function startFaceID() { const screen = document.getElementById('face-id-screen'); const wrapper = document.getElementById('scanner-wrapper'); const status = document.getElementById('auth-status'); screen.style.display = 'flex'; wrapper.classList.add('scanning-active'); status.innerText = "Skanimi..."; setTimeout(unlockApp, 2500); function unlockApp() { wrapper.classList.remove('scanning-active'); screen.classList.add('auth-success'); status.innerText = "U identifikua"; status.style.color = "#10b981"; setTimeout(() => { screen.style.opacity = "0"; screen.style.transform = "scale(1.2)"; setTimeout(() => { screen.remove(); document.getElementById('main-app').style.opacity = '1'; document.getElementById('main-app').style.transform = 'translateY(0)'; document.body.style.overflow = 'auto'; initChart(); renderUI(); }, 800); }, 1000); } }
         
         // AI SCANNER LOGIC
         async function performAIScan(event) {
@@ -682,408 +641,216 @@ async function startFaceID() {
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
 
 
+ let isSignUp = false;
 
+function toggleAuthMode() {
+    isSignUp = !isSignUp;
+    const title = document.getElementById('auth-title');
+    const subtitle = document.getElementById('auth-subtitle');
+    const nameField = document.getElementById('name-field');
+    const btn = document.getElementById('main-auth-btn');
+    const msg = document.getElementById('switch-msg');
+    const sBtn = document.getElementById('switch-btn');
 
-  // Funksioni për të parë fjalëkalimin (Syri)
-function togglePasswordView() {
-    const passInput = document.getElementById('a-pass');
-    const eyeIcon = document.getElementById('eye-icon');
-    
-    if (passInput.type === 'password') {
-        passInput.type = 'text';
-        eyeIcon.classList.add('text-indigo-500');
+    if(isSignUp) {
+        title.innerText = "Regjistrohu.";
+        subtitle.innerText = "Krijo profilin tënd financiar";
+        nameField.classList.remove('hidden');
+        btn.innerText = "Krijo Llogarinë";
+        msg.innerText = "Keni një llogari?";
+        sBtn.innerText = "Hyni këtu";
     } else {
-        passInput.type = 'password';
-        eyeIcon.classList.remove('text-indigo-500');
+        title.innerText = "Hyni.";
+        subtitle.innerText = "Sistemi i autorizuar FaturaIme PRO";
+        nameField.classList.add('hidden');
+        btn.innerText = "Vazhdo";
+        msg.innerText = "Nuk keni llogari?";
+        sBtn.innerText = "Krijo një";
     }
-}
-
-// Sistemi i Sinjaleve Inteligjente
-function checkHint(type) {
-    const val = document.getElementById('a-' + type).value;
-    const hint = document.getElementById('hint-' + type);
-
-    // Shfaq ose fshih sinjalin bazuar në shkrim
-    if (val.length > 0) {
-        hint.style.opacity = "1";
-        hint.style.transform = "translateY(0)";
-    } else {
-        hint.style.opacity = "0";
-        hint.style.transform = "translateY(-5px)";
-    }
-
-    // Validimi specifik për passwordin (vetëm në Signup)
-    if (type === 'pass' && mode === 'signup') {
-        const hasUpper = /[A-Z]/.test(val);
-        const hasNum = /\d/.test(val);
-        const isLong = val.length >= 8;
-
-        document.getElementById('req-upper').style.color = hasUpper ? "#6366f1" : "#475569";
-        document.getElementById('req-num').style.color = hasNum ? "#6366f1" : "#475569";
-        document.getElementById('req-len').style.color = isLong ? "#6366f1" : "#475569";
-    }
-}
-
-// Modifiko toggleMode që të pastrojë sinjalet kur ndërrohet lloji i llogarisë
-function toggleMode() {
-    mode = (mode === 'signup') ? 'login' : 'signup';
-    
-    // Resetimi i fushave
-    document.querySelectorAll('.auth-input').forEach(i => i.value = "");
-    document.querySelectorAll('[id^="hint-"]').forEach(h => h.style.opacity = "0");
-    
-    // Pjesa tjetër e kodit tënd ekzistues...
-    const title = document.getElementById('auth-main-title');
-    const nameField = document.getElementById('field-name');
-    const trigger = document.getElementById('switch-trigger');
-    const recovery = document.getElementById('recovery-container');
-    const passHint = document.getElementById('hint-pass');
-
-    if (mode === 'signup') {
-        title.innerHTML = 'SIGN UP<span class="text-indigo-500">.</span>';
-        nameField.style.display = 'block';
-        trigger.innerText = 'Kaloni në Log In';
-        recovery.classList.add('hidden');
-        passHint.style.display = 'flex';
-    } else {
-        title.innerHTML = 'LOG IN<span class="text-indigo-500">.</span>';
-        nameField.style.display = 'none';
-        trigger.innerText = 'Krijo një llogari të re';
-        recovery.classList.remove('hidden');
-        passHint.style.display = 'none';
-    }
-}
-        
-
-function shakeForm() {
-    const card = document.getElementById('auth-card');
-    card.classList.add('animate-shake'); // Shto kete klase ne CSS
-    if(navigator.vibrate) navigator.vibrate([50, 30, 50]);
-    setTimeout(() => card.classList.remove('animate-shake'), 500);
 }
 
 function processAuth() {
-    const n = document.getElementById('a-name').value;
-    const e = document.getElementById('a-email').value;
-    const p = document.getElementById('a-pass').value;
+    const email = document.getElementById('auth-email').value;
+    const pass = document.getElementById('auth-pass').value;
+    const name = document.getElementById('auth-name').value;
+    const error = document.getElementById('auth-error');
 
-    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-    const hasUpperCase = /[A-Z]/.test(p);
-    const hasNumber = /\d/.test(p);
-    const isPassLong = p.length >= 8;
-
-    if (!isEmailValid) { shakeForm(); return; }
-
-    if (mode === 'signup') {
-        // Validimi strikt per regjistrim
-        if (!hasUpperCase || !hasNumber || !isPassLong || n.length < 4) {
-            shakeForm();
-            return;
-        }
-        // Ruajtja ne memorien e thelle (Nuk preket nga fshirja e shpenzimeve)
-        localStorage.setItem('user_cred', JSON.stringify({name: n, email: e, pass: p}));
-        localStorage.setItem('faturaime_auth_active', 'true');
-        accessGranted();
-    } else {
-        // Log In
-        const cred = JSON.parse(localStorage.getItem('user_cred'));
-        if (!cred || e !== cred.email || p !== cred.pass) {
-            shakeForm();
-            return;
-        }
-        localStorage.setItem('faturaime_auth_active', 'true');
-        accessGranted();
-    }
-}
-
-function accessGranted() {
-    const shield = document.getElementById('auth-shield');
-    shield.style.opacity = '0';
-    shield.style.transform = 'scale(1.1)';
-    setTimeout(() => {
-        shield.remove();
-        document.body.style.overflow = 'auto';
-        // Ketu nese ke funksionin e intros, thirre
-        if(typeof runIntroSequence === 'function') runIntroSequence();
-    }, 1000);
-}
-
-// 1. EFEKTI I DRIDHJES (SHAKE) - Për gabimet pa dritare njoftimi (Silent Error)
-function shakeForm() {
-    const card = document.querySelector('.auth-card');
-    // Shtohet një bordurë e kuqe e lehtë për feedback vizual premium
-    card.classList.add('border-red-500/50');
-    card.style.animation = 'shake 0.4s ease';
-    
-    // Luajmë një dridhje haptike në telefon nëse pajisja e mbështet
-    if(navigator.vibrate) navigator.vibrate(50);
-
-    setTimeout(() => {
-        card.style.animation = '';
-        card.classList.remove('border-red-500/50');
-    }, 400);
-}
-
-// 2. AKSESI I DHËNË (ACCESS GRANTED) - Kyçja e sesionit që nuk harrohet kurrë
-function accessGranted() {
-    // Kjo 'vula' bën që edhe nëse përdoruesi fshin të dhënat brenda sistemit, 
-    // llogaria mbetet e autorizuar dhe nuk kërkohet regjistrimi prapë.
-    localStorage.setItem('faturaime_locked', 'false');
-    
-    const shield = document.getElementById('auth-shield');
-    shield.style.filter = 'blur(20px)';
-    shield.style.opacity = '0';
-    shield.style.transform = 'scale(1.2)';
-    
-    setTimeout(() => {
-        shield.remove();
-        document.body.style.overflow = 'auto';
-        
-        // Tranzicioni drejt FaceID për siguri maksimale
-        if(typeof startFaceID === "function") startFaceID();
-        
-        // Njoftimi i mirëseardhjes (opsional)
-        console.log("SISTEMI: Aksesi u autorizua plotësisht.");
-    }, 800);
-}
-
-// 3. RECOVERY FLOW - Sistemi i harresës së fjalëkalimit (i rreptë)
-function recoveryFlow() {
-    const email = document.getElementById('a-email').value;
-    
-    // Kontrolli fillestar i email-it
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert("SECURITY: Ju lutem shënoni email-in tuaj zyrtar për të nisur procesin e verifikimit.");
+    if(!email || !pass) {
+        showError("Plotësoni të gjitha fushat!");
         return;
     }
 
-    const cred = JSON.parse(localStorage.getItem('user_cred'));
-
-    if (cred && email === cred.email) {
-        // Gjenerimi i kodit - Seriozitet i simuluar bankar
-        const code = Math.floor(100000 + Math.random() * 900000);
-        alert("SISTEMI: Një kod verifikimi u gjenerua për sigurinë tuaj: " + code);
-        
-        const userCode = prompt("Shënoni kodin e pranuar:");
-        
-        if (userCode == code) {
-            const newPass = prompt("SISTEMI: Identiteti u konfirmua. Shënoni fjalëkalimin e ri:");
-            
-            // Validimi strikt i fjalëkalimit të ri (Shkronjë e madhe, Numër, 8 Karaktere)
-            if (/[A-Z]/.test(newPass) && /\d/.test(newPass) && newPass.length >= 8) {
-                cred.pass = newPass;
-                localStorage.setItem('user_cred', JSON.stringify(cred));
-                alert("SUKSES: Fjalëkalimi u përditësua. Mund të identifikoheni tani.");
-            } else {
-                alert("SECURITY DENIED: Fjalëkalimi i ri nuk i plotëson kriteret strikte (A-Z, 0-9, 8+).");
-                shakeForm();
-            }
+    if(isSignUp) {
+        // REGJISTRIMI
+        const user = { name, email, pass };
+        localStorage.setItem('f_pro_user', JSON.stringify(user));
+        startAppFlow();
+    } else {
+        // LOGIN
+        const savedUser = JSON.parse(localStorage.getItem('f_pro_user'));
+        if(savedUser && savedUser.email === email && savedUser.pass === pass) {
+            startAppFlow();
         } else {
-            alert("SECURITY ALERT: Kod i pasaktë. Aksesi u bllokua.");
-            shakeForm();
-        }
-    } else {
-        alert("ERROR: Ky email nuk ekziston në bazën tonë të të dhënave.");
-        shakeForm();
-    }
-}
-
-
-
-        // Shto kete animation ne CSS per efektin e gabimit
-const style = document.createElement('style');
-style.innerHTML = `
-    @keyframes shake { 
-        0%, 100% {transform: translateX(0);} 
-        25% {transform: translateX(-10px);} 
-        75% {transform: translateX(10px);} 
-    }
-    .auth-card { transition: border 0.3s ease; border: 1px solid transparent; }
-`;
-document.head.appendChild(style);
-
-
-
-
-let currentCurrency = { code: 'EUR', symbol: '€', rate: 1 };
-
-async function changeSystemCurrency(code, symbol) {
-    // 1. Update UI Buttons
-    document.querySelectorAll('.cur-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.innerText.includes(code));
-    });
-
-    // 2. Fetch Live Rate if not EUR
-    if (code === 'EUR') {
-        currentCurrency = { code: 'EUR', symbol: '€', rate: 1 };
-        renderUI();
-    } else {
-        try {
-            const res = await fetch(`https://api.exchangerate-api.com/v4/latest/EUR`);
-            const data = await res.json();
-            currentCurrency = { 
-                code: code, 
-                symbol: symbol, 
-                rate: data.rates[code] 
-            };
-            renderUI();
-        } catch (e) {
-            alert("Sistemi: Gabim në përditësimin e valutës live.");
+            showError("Email ose Fjalëkalimi i gabuar!");
         }
     }
 }
 
-// PERDITESIMI I RENDER_UI (Modifiko funksionin tend ekzistues)
-function renderUI() {
-    const totalBase = db.expenses.reduce((s, a) => s + a.amount, 0);
-    const limitBase = db.limit;
-    
-    // Konvertimi i vlerave per shfaqje
-    const totalConverted = (totalBase * currentCurrency.rate).toFixed(2);
-    const limitConverted = (limitBase * currentCurrency.rate).toFixed(2);
-    const remainingConverted = (limitConverted - totalConverted).toFixed(2);
-
-    // Update Dashboard
-    document.getElementById('mainBalance').innerText = `${totalConverted} ${currentCurrency.symbol}`;
-    document.getElementById('limitText').innerText = `${limitConverted} ${currentCurrency.symbol}`;
-    document.getElementById('remainingText').innerText = `${remainingConverted} ${currentCurrency.symbol}`;
-    
-    // Update List Container (Shpenzimet ne listen poshte)
-    const container = document.getElementById('listContainer');
-    container.innerHTML = db.expenses.length ? '' : '<p class="text-center opacity-20 py-10">Zbrazët</p>';
-    
-    db.expenses.forEach(exp => {
-        const val = (exp.amount * currentCurrency.rate).toFixed(2);
-        container.innerHTML += `
-            <div class="glass-panel p-6 flex justify-between items-center mb-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center">
-                        ${iconMap[exp.icon] || ''}
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-xs uppercase tracking-widest">${exp.cat}</h4>
-                        <p class="text-[9px] opacity-50 font-medium">${exp.date}</p>
-                    </div>
-                </div>
-                <span class="font-bold text-sm">-${val} ${currentCurrency.symbol}</span>
-            </div>`;
-    });
+function showError(text) {
+    const error = document.getElementById('auth-error');
+    error.innerText = text;
+    error.classList.remove('hidden');
+    setTimeout(() => error.classList.add('hidden'), 3000);
 }
 
-
-
-
-
-
-function goTo(page) {
-    const overlay = document.getElementById('page-transition');
-    overlay.style.pointerEvents = 'all';
-    overlay.style.opacity = '1'; // Ekrani bëhet i zi
-
-    setTimeout(() => {
-        window.location.href = page;
-    }, 300); // Koha e animacionit
-}
-
-// Kur faqja ngarkohet, bëje overlay-in transparent
-window.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('page-transition');
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-        overlay.style.pointerEvents = 'none';
-    }, 300);
-});
-        
-
-
-
-
-
-
-function accessGranted() {
-    localStorage.setItem('faturaime_auth_active', 'true');
-    const shield = document.getElementById('auth-shield');
-    const card = document.getElementById('auth-card');
+function startAppFlow() {
+    const wrapper = document.getElementById('auth-wrapper');
+    wrapper.style.transition = "all 1s cubic-bezier(0.16, 1, 0.3, 1)";
+    wrapper.style.opacity = "0";
+    wrapper.style.transform = "scale(1.1)";
     
-    // Animacion Premium i daljes
-    card.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
-    card.style.transform = "translateY(50px) scale(0.9)";
-    card.style.opacity = "0";
-    
-    shield.style.backgroundColor = "white"; // Ndryshimi i ngjyrës për efekt flash
-    shield.style.transition = "all 1s ease";
-    shield.style.opacity = "0";
-
     setTimeout(() => {
-        shield.remove();
-        document.body.style.overflow = 'auto';
-        if(typeof runIntroSequence === 'function') runIntroSequence();
+        wrapper.remove();
+        // Tash thirrim Intro-n që e ke pasur
+        runIntroSequence();
     }, 1000);
 }
-        
 
-
-
-
-
-
-function checkHint(type) {
-    const val = document.getElementById('a-' + type).value;
-    const hint = document.getElementById('hint-' + type);
-    const btn = document.querySelector('.btn-premium'); // Butoni yt
-
-    if (val.length > 0) {
-        hint.style.opacity = "1";
-        hint.style.transform = "translateY(0)";
-    } else {
-        hint.style.opacity = "0";
-        hint.style.transform = "translateY(-5px)";
+function runIntroSequence() {
+    const intro = document.getElementById('intro-screen');
+    if(intro) {
+        intro.style.display = 'flex';
+        // Këtu vazhdon animacioni yt origjinal i intros
+        setTimeout(() => {
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.remove();
+                startFaceID(); // Kalon te FaceID
+            }, 1000);
+        }, 2500);
     }
+}
 
-    if (type === 'pass' && mode === 'signup') {
-        const hasUpper = /[A-Z]/.test(val);
-        const hasNum = /\d/.test(val);
-        const isLong = val.length >= 8;
+// NDRYSHIM: Modifikoni window.onload që të mos fshehë Intro automatikisht
+// por të presë për login nëse dëshironi, ose thjesht lini handleAuth ta heqë formën.
 
-        // Feedback Vizual
-        updateRequirement('req-upper', hasUpper);
-        updateRequirement('req-num', hasNum);
-        updateRequirement('req-len', isLong);
+function handleAuth() {
+    const authContainer = document.getElementById('auth-container');
+    
+    // 1. Animacioni i largimit të formës së Login
+    authContainer.style.transition = "all 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+    authContainer.style.opacity = "0";
+    authContainer.style.filter = "blur(20px)";
 
-        // Success Glow: Nëse plotësohen të gjitha, butoni "ndizet"
-        if(hasUpper && hasNum && isLong && document.getElementById('a-name').value.length >= 4) {
-            btn.style.boxShadow = "0 0 20px rgba(99, 102, 241, 0.6)";
-            btn.style.borderColor = "#6366f1";
-        } else {
-            btn.style.boxShadow = "none";
-            btn.style.borderColor = "rgba(255,255,255,0.1)";
+    setTimeout(() => {
+        authContainer.remove(); // Heqim formën plotësisht
+        
+        // 2. NISIM INTRO-N CINEMATIC (Saktësisht si e kishit)
+        const intro = document.getElementById('intro-screen');
+        if(intro) {
+            // Resetojmë stilin në rast se ka nisur më parë
+            intro.style.display = 'flex';
+            intro.style.opacity = '1';
+
+            setTimeout(() => {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.remove();
+                    // 3. NISIM FACE ID pas Intro-s
+                    startFaceID();
+                }, 1000);
+            }, 2500);
         }
+    }, 800);
+}
+
+
+
+function playIOSClick() {
+    const sound = document.getElementById('ios-click-sound');
+    if (sound) {
+        sound.currentTime = 0; // Reset në fillim nëse klikohet shpejt
+        sound.play().catch(error => console.log("Interaksioni i parë kërkohet për audion."));
     }
 }
 
-function updateRequirement(id, met) {
-    const el = document.getElementById(id);
-    if (met && el.style.color !== "rgb(99, 102, 241)") {
-        el.style.color = "#6366f1";
-        // Vibrim i lehtë kur plotësohet një kusht (vetëm në Mobile)
-        if (navigator.vibrate) navigator.vibrate(10); 
-    } else if (!met) {
-        el.style.color = "#475569";
+
+
+function processAuth() {
+    // Luajmë tingullin Apple në momentin e klikimit
+    playIOSClick();
+
+    const email = document.getElementById('auth-email').value;
+    const pass = document.getElementById('auth-pass').value;
+
+    // Vazhdojmë me logjikën serioze të validimit...
+    if(!email || !pass) {
+        showError("Plotësoni të gjitha fushat!");
+        return;
+    }
+    
+    // Nese gjithcka ok, kalojmë te startAppFlow()
+    startAppFlow();
+}
+
+
+
+
+const exchangeData = [
+    { symbol: "€", rate: 1, color: "#6366f1" }, 
+    { symbol: "L", rate: 103.5, color: "#ef4444" }, 
+    { symbol: "CHF", rate: 0.96, color: "#ffffff" }, 
+    { symbol: "$", rate: 1.08, color: "#22c55e" }
+];
+
+function changeCurrency(index) {
+    // 1. Luajmë tingullin Apple
+    if(typeof playIOSClick === "function") playIOSClick();
+    
+    // 2. Ruajmë zgjedhjen
+    currentIndex = index;
+    localStorage.setItem('selectedCurrencyIndex', currentIndex);
+    
+    // 3. Përditësojmë pamjen e butonave në menu
+    updateMenuButtons();
+    
+    // 4. Animacioni i Dashboard-it
+    const balanceWrapper = document.getElementById('currency-wrapper');
+    if(balanceWrapper) {
+        balanceWrapper.style.opacity = "0";
+        balanceWrapper.style.transform = "translateY(5px)";
+        
+        setTimeout(() => {
+            updateUI(); // Funksioni që përditëson numrat (Totalin, Limitin, Mbetjen)
+            balanceWrapper.style.opacity = "1";
+            balanceWrapper.style.transform = "translateY(0)";
+        }, 200);
     }
 }
 
         
+function updateMenuButtons() {
+    // Resetojmë të gjithë butonat
+    document.querySelectorAll('.currency-btn').forEach((btn, idx) => {
+        btn.classList.remove('bg-white', 'text-black', 'shadow-xl');
+        btn.classList.add('text-slate-500');
+        
+        // Nëse është butoni aktiv, e bëjmë të ndritshëm
+        if(idx === currentIndex) {
+            btn.classList.remove('text-slate-500');
+            btn.classList.add('bg-white', 'text-black', 'shadow-xl');
+        }
+    });
+}
 
+// Thirre këtë kur hapet aplikacioni për herë të parë
+document.addEventListener('DOMContentLoaded', () => {
+    updateMenuButtons();
+    updateUI();
+});
 
+        
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
 
