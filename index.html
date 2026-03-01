@@ -330,6 +330,8 @@
 </button>
 
 
+<div id="page-transition" style="position:fixed; inset:0; background:#000; z-index:10000; opacity:0; pointer-events:none; transition: opacity 0.3s ease;"></div>
+                
 
 
 <div class="mt-10 pt-10 border-t border-white/5">
@@ -474,20 +476,77 @@
     chart: null
 };
 
-        window.onload = () => {
-            setTimeout(() => {
-                const intro = document.getElementById('intro-screen');
-                if(intro) {
-                    intro.style.opacity = '0';
-                    setTimeout(() => {
-                        intro.remove();
-                        startFaceID();
-                    }, 1000);
-                }
-            }, 2500);
-        };
 
-async function startFaceID() { const screen = document.getElementById('face-id-screen'); const wrapper = document.getElementById('scanner-wrapper'); const status = document.getElementById('auth-status'); screen.style.display = 'flex'; wrapper.classList.add('scanning-active'); status.innerText = "Skanimi..."; setTimeout(unlockApp, 2500); function unlockApp() { wrapper.classList.remove('scanning-active'); screen.classList.add('auth-success'); status.innerText = "U identifikua"; status.style.color = "#10b981"; setTimeout(() => { screen.style.opacity = "0"; screen.style.transform = "scale(1.2)"; setTimeout(() => { screen.remove(); document.getElementById('main-app').style.opacity = '1'; document.getElementById('main-app').style.transform = 'translateY(0)'; document.body.style.overflow = 'auto'; initChart(); renderUI(); }, 800); }, 1000); } }
+   window.onload = () => {
+    // Kontrollojmë nëse përdoruesi është verifikuar një herë gjatë këtij sesioni
+    const isVerified = sessionStorage.getItem('app_verified');
+
+    if (isVerified === 'true') {
+        // NËSE ËSHTË VERIFIKUAR: Hiqi pengesat menjëherë pa vonesa
+        const intro = document.getElementById('intro-screen');
+        const faceId = document.getElementById('face-id-screen');
+        if(intro) intro.remove();
+        if(faceId) faceId.remove();
+
+        // Shfaq Dashboard-in direkt
+        const mainApp = document.getElementById('main-app');
+        mainApp.style.opacity = '1';
+        mainApp.style.transform = 'translateY(0)';
+        mainApp.style.transition = 'none'; // Pa animacion për shpejtësi maksimale
+        document.body.style.overflow = 'auto';
+        
+        initChart();
+        renderUI();
+    } else {
+        // NËSE ËSHTË HERËA E PARË: Shfaq Intro-n dhe FaceID normalisht
+        setTimeout(() => {
+            const intro = document.getElementById('intro-screen');
+            if(intro) {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.remove();
+                    startFaceID();
+                }, 1000);
+            }
+        }, 2500);
+    }
+};
+
+async function startFaceID() { 
+    const screen = document.getElementById('face-id-screen'); 
+    const wrapper = document.getElementById('scanner-wrapper'); 
+    const status = document.getElementById('auth-status'); 
+    
+    screen.style.display = 'flex'; 
+    wrapper.classList.add('scanning-active'); 
+    status.innerText = "Skanimi..."; 
+
+    setTimeout(unlockApp, 2500); 
+
+    function unlockApp() { 
+        // Shënoje në memorie që u krye FaceID për këtë sesion
+        sessionStorage.setItem('app_verified', 'true');
+
+        wrapper.classList.remove('scanning-active'); 
+        screen.classList.add('auth-success'); 
+        status.innerText = "U identifikua"; 
+        status.style.color = "#10b981"; 
+
+        setTimeout(() => { 
+            screen.style.opacity = "0"; 
+            screen.style.transform = "scale(1.2)"; 
+            setTimeout(() => { 
+                screen.remove(); 
+                document.getElementById('main-app').style.opacity = '1'; 
+                document.getElementById('main-app').style.transform = 'translateY(0)'; 
+                document.body.style.overflow = 'auto'; 
+                initChart(); 
+                renderUI(); 
+            }, 800); 
+        }, 1000); 
+    } 
+}
+        
         
         // AI SCANNER LOGIC
         async function performAIScan(event) {
@@ -852,6 +911,7 @@ function renderUI() {
     </script>
 </body>
 </html>
+
 
 
 
