@@ -23,6 +23,28 @@
     <style>
 
 
+
+
+/* Mesazhet e gabimit poshtë rubrikave */
+[id^="error-"] {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    font-weight: 800;
+}
+
+.auth-input-container {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 5px; /* Hapësirë për mesazhin */
+}
+
+        
+
+
+
+
+
+
+        
 /* Hiq shëmtinë e autofill-it të browser-it që prish dizajnin e zi */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -323,6 +345,26 @@ input:-webkit-autofill:focus {
 
 
 
+
+<div class="space-y-8">
+    <div id="field-name" class="auth-input-container">
+        <input type="text" id="a-name" placeholder="EMRI MBIEMRI" class="auth-input">
+        <p id="error-name" class="text-[7px] text-red-500 opacity-0 transition-all uppercase tracking-widest mt-1">Shënoni emrin dhe mbiemrin e plotë</p>
+    </div>
+    
+    <div id="field-email" class="auth-input-container">
+        <input type="email" id="a-email" placeholder="EMAIL ADRESA" class="auth-input">
+        <p id="error-email" class="text-[7px] text-red-500 opacity-0 transition-all uppercase tracking-widest mt-1">Adresa email nuk është valide</p>
+    </div>
+
+    <div id="field-pass" class="auth-input-container">
+        <input type="password" id="a-pass" placeholder="PASSWORD" class="auth-input">
+        <p id="error-pass" class="text-[7px] text-red-500 opacity-0 transition-all uppercase tracking-widest mt-1">Min. 8 karaktere (1 shkronjë e madhe & 1 numër)</p>
+    </div>
+</div>
+
+
+    
 
 
     <div id="face-id-screen">
@@ -1026,6 +1068,153 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const fields = [
+        { id: 'a-name', error: 'error-name', check: (val) => val.trim().split(/\s+/).length >= 2 },
+        { id: 'a-email', error: 'error-email', check: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) },
+        { id: 'a-pass', error: 'error-pass', check: (val) => val.length >= 8 && /[A-Z]/.test(val) && /\d/.test(val) }
+    ];
+
+    fields.forEach(field => {
+        const input = document.getElementById(field.id);
+        const errorMsg = document.getElementById(field.error);
+
+        // Kontrolli kur përdoruesi largohet nga rubrika
+        input.addEventListener('blur', () => {
+            if (input.value.length > 0 && !field.check(input.value)) {
+                showError(input, errorMsg);
+            } else if (field.check(input.value)) {
+                hideError(input, errorMsg);
+            }
+        });
+
+        // Kontrolli ndërsa shkruan (për ta hequr të kuqen sapo e rregullon)
+        input.addEventListener('input', () => {
+            if (field.check(input.value)) {
+                hideError(input, errorMsg);
+            }
+        });
+    });
+});
+
+function showError(input, msg) {
+    msg.style.opacity = "1";
+    input.parentElement.style.borderBottomColor = "#ef4444"; // E kuqe
+    if(window.navigator.vibrate) window.navigator.vibrate(10); // Vibrim ultra i lehtë
+}
+
+function hideError(input, msg) {
+    msg.style.opacity = "0";
+    input.parentElement.style.borderBottomColor = "#6366f1"; // Kthehet në vjollcë (Indigo)
+}
+
+
+
+
+
+
+        function processAuth() {
+    const n = document.getElementById('a-name').value;
+    const e = document.getElementById('a-email').value;
+    const p = document.getElementById('a-pass').value;
+
+    const isNameValid = n.trim().split(/\s+/).length >= 2;
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    const isPassValid = p.length >= 8 && /[A-Z]/.test(p) && /\d/.test(p);
+
+    if (!isEmailValid || !isPassValid || (mode === 'signup' && !isNameValid)) {
+        shakeForm();
+        // Shfaq të gjitha gabimet që mungojnë
+        if(!isNameValid && mode === 'signup') showError(document.getElementById('a-name'), document.getElementById('error-name'));
+        if(!isEmailValid) showError(document.getElementById('a-email'), document.getElementById('error-email'));
+        if(!isPassValid) showError(document.getElementById('a-pass'), document.getElementById('error-pass'));
+        return;
+    }
+
+    // Nese qdo gje eshte 10/10
+    accessGranted();
+}
+        
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('a-name');
+    const emailInput = document.getElementById('a-email');
+    const passInput = document.getElementById('a-pass');
+
+    // 1. STRIKT: Blloko hapësirat te Email-i
+    emailInput.addEventListener('keydown', (e) => {
+        if (e.code === "Space") e.preventDefault();
+    });
+
+    // 2. LIVE VALIDATION: Emri & Mbiemri
+    nameInput.addEventListener('input', function() {
+        const parts = this.value.trim().split(/\s+/);
+        const error = document.getElementById('error-name');
+        
+        if (parts.length >= 2 && parts[0].length >= 2 && parts[1].length >= 2) {
+            hideError(this, error);
+        } else {
+            showError(this, error);
+        }
+    });
+
+    // 3. LIVE VALIDATION: Email-i
+    emailInput.addEventListener('input', function() {
+        const error = document.getElementById('error-email');
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
+        
+        if (isValid) {
+            hideError(this, error);
+        } else {
+            showError(this, error);
+        }
+    });
+
+    // 4. LIVE VALIDATION: Password (8+ karaktere, 1 e Madhe, 1 Numër)
+    passInput.addEventListener('input', function() {
+        const error = document.getElementById('error-pass');
+        const hasUpper = /[A-Z]/.test(this.value);
+        const hasNum = /\d/.test(this.value);
+        const isLong = this.value.length >= 8;
+
+        if (hasUpper && hasNum && isLong) {
+            hideError(this, error);
+        } else {
+            showError(this, error);
+        }
+    });
+});
+
+// Funksionet ndihmëse për UI të butë
+function showError(input, msg) {
+    msg.style.opacity = "1";
+    msg.style.transform = "translateY(0)";
+    input.parentElement.style.borderBottomColor = "#ef4444"; // E kuqe (Error)
+}
+
+function hideError(input, msg) {
+    msg.style.opacity = "0";
+    msg.style.transform = "translateY(-5px)";
+    input.parentElement.style.borderBottomColor = "#6366f1"; // Vjollcë (Success)
+}
+
+
+
+
+
+
+
+        
+
+
     </script>
 </body>
 </html>
+
