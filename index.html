@@ -23,24 +23,68 @@
     <style>
 
 
+/* Hiq shëmtinë e autofill-it të browser-it që prish dizajnin e zi */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: white;
+    -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
 
-/* 1. ANIMACIONI I GABIMIT (SHAKE) */
-@keyframes shake {
+/* Animacioni i dridhjes (Shake) i rafinuar */
+@keyframes shake-pro {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-8px); }
-    75% { transform: translateX(8px); }
+    20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(3px); }
 }
 
-.animate-shake {
-    animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
-    border-bottom-color: rgba(244, 63, 94, 1) !important; /* Ngjyrë rose-500 gjatë gabimit */
+.shake-active {
+    animation: shake-pro 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    border-bottom-color: #ef4444 !important;
 }
 
-/* 2. DIZAJNI I INPUTEVE DHE LABELS (FLOATING LABELS) */
+/* Statusi i suksesit për inputet */
+.input-success {
+    border-bottom-color: #10b981 !important;
+}
+
+
+        
+
+/* AUTH SUPERIOR DESIGN */
+#auth-shield {
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    backdrop-filter: blur(50px);
+}
+
+.auth-card {
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(transparent, transparent, transparent, #6366f1);
+    animation: rotate-border 6s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotate-border {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .auth-input-container {
     position: relative;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .auth-input-container:focus-within {
@@ -51,62 +95,29 @@
 .auth-input {
     background: transparent;
     width: 100%;
-    padding: 16px 0;
+    padding: 16px 5px;
     outline: none;
     font-size: 14px;
     letter-spacing: 1px;
     color: #fff;
-    border: none;
 }
 
-/* 3. SINJALET E BUTA (SOFT SIGNALS HINTS) */
-[id^="hint-"], [id^="check-"] {
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: none;
-}
-
-/* 4. BUTONI PREMIUM ME EFEKTIN GLOW */
 .btn-premium {
     background: #fff;
     color: #000;
     font-weight: 900;
-    border-radius: 16px;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
 }
 
 .btn-premium:hover {
     background: #6366f1;
     color: #fff;
-    box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
-    transform: translateY(-2px);
-}
-
-.btn-premium:active {
-    transform: scale(0.96);
-}
-
-/* 5. EFEKTI I SYRIT DHE IKONAVE */
-.eye-toggle-container {
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-}
-
-.eye-toggle-container:hover {
-    opacity: 1;
-}
-
-/* 6. BACKGROUNDI I SHIELD-IT (BLUR) */
-#auth-shield {
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
 }
 
 
-        
 
-        
         :root { --accent: #6366f1; }
         body { 
             font-family: 'Space Grotesk', sans-serif; 
@@ -268,45 +279,49 @@
 
 
 
-<div class="space-y-10">
-    <div class="relative auth-input-container group">
-        <input type="text" id="a-name" oninput="validateLive('name')" placeholder=" " class="auth-input peer">
-        <label class="absolute left-0 top-4 text-slate-500 pointer-events-none transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:-top-4 peer-focus:text-[10px] peer-focus:text-indigo-500 uppercase font-black tracking-widest">Emri & Mbiemri</label>
-        <div id="hint-name" class="absolute -bottom-6 left-0 text-[7px] font-black opacity-0 transition-all duration-500 uppercase tracking-widest"></div>
-    </div>
-    
-    <div class="relative auth-input-container group">
-        <input type="email" id="a-email" oninput="validateLive('email')" placeholder=" " class="auth-input peer">
-        <label class="absolute left-0 top-4 text-slate-500 pointer-events-none transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:-top-4 peer-focus:text-[10px] peer-focus:text-indigo-500 uppercase font-black tracking-widest">Email Adresa</label>
-        <div id="hint-email" class="absolute -bottom-6 left-0 text-[7px] font-black opacity-0 transition-all duration-500 uppercase tracking-widest"></div>
-    </div>
+<div id="auth-shield" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-1000">
+    <div class="auth-card w-full max-w-[420px] rounded-[40px] p-12 shadow-2xl">
+        <div class="relative z-10">
+            <div class="mb-12">
+                <h2 id="auth-main-title" class="text-4xl font-black italic tracking-tighter">FATURAIME<span class="text-indigo-500">.</span></h2>
+                <p id="auth-sub-title" class="text-[9px] uppercase tracking-[0.5em] text-slate-500 mt-2 font-bold">Krijoni një llogari për të nisur eksperiencën tuaj</p>
+            </div>
 
-    <div class="relative auth-input-container group">
-        <input type="password" id="a-pass" oninput="validateLive('pass')" placeholder=" " class="auth-input peer pr-10">
-        <label class="absolute left-0 top-4 text-slate-500 pointer-events-none transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:-top-4 peer-focus:text-[10px] peer-focus:text-indigo-500 uppercase font-black tracking-widest">Password</label>
-        
-        <div onclick="togglePasswordVisibility()" class="absolute right-0 top-4 cursor-pointer text-slate-600 hover:text-white transition-all">
-            <svg id="eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-width="2"/></svg>
-        </div>
+            <div class="space-y-8">
+                <div id="field-name" class="auth-input-container">
+                    <input type="text" id="a-name" placeholder="EMRI MBIEMRI" class="auth-input">
+                </div>
+                
+                <div class="auth-input-container">
+                    <input type="email" id="a-email" placeholder="EMAIL ADRESA" class="auth-input">
+                </div>
 
-        <div id="hint-pass" class="absolute -bottom-6 left-0 flex gap-4 opacity-0 transition-all duration-500">
-            <span id="check-upper" class="text-[6px] font-black text-slate-600 uppercase">Shkronjë e madhe</span>
-            <span id="check-num" class="text-[6px] font-black text-slate-600 uppercase">Shifër</span>
-            <span id="check-spec" class="text-[6px] font-black text-slate-600 uppercase">Pikë/Presje</span>
+                <div class="auth-input-container">
+                    <input type="password" id="a-pass" placeholder="PASSWORD" class="auth-input">
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-2">
+    <span onclick="recoveryFlow()" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase">
+        Harruat fjalëkalimin?
+    </span>
+</div>
+
+            <button onclick="processAuth()" class="w-full btn-premium py-6 mt-12 uppercase text-[11px] tracking-[0.2em]">
+                Hyni
+            </button>
+
+            <div class="mt-8 text-center">
+                <span id="switch-trigger" onclick="toggleMode()" class="text-[9px] font-black text-slate-600 hover:text-white cursor-pointer transition-all tracking-widest uppercase">
+                    Kaloni në Log In
+                </span>
+            </div>
         </div>
     </div>
 </div>
 
 
 
-
-<div class="auth-input-container relative group">
-    <input type="email" id="a-email" oninput="validateLive('email')" placeholder=" " class="auth-input peer">
-    <label class="absolute left-0 top-4 text-slate-600 pointer-events-none transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:-top-4 peer-focus:text-[10px] peer-focus:text-indigo-500 uppercase font-bold tracking-widest">Email Adresa</label>
-    
-    <div id="hint-email" class="absolute -bottom-6 left-0 text-[7px] font-black opacity-0 transition-all duration-500 uppercase tracking-widest text-slate-500"></div>
-</div>
-    
 
 
 
@@ -710,101 +725,206 @@ async function startFaceID() {
         
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
 
+let mode = 'signup';
 
-
-
-
-
-function validateLive(type) {
-    const input = document.getElementById('a-' + type);
-    const val = input.value;
-    const hint = document.getElementById('hint-' + type);
-    
-    // Aktivizimi i sinjalit kur fillon shkrimi
-    if(val.length > 0) {
-        if(hint) hint.style.opacity = "1";
-        if(type === 'pass') document.getElementById('hint-pass').style.opacity = "1";
-    }
-
-    if (type === 'name') {
-        const isOK = val.trim().split(" ").length >= 2 && val.length > 5;
-        hint.innerText = isOK ? "✓ Emër i plotë" : "Shënoni Emrin dhe Mbiemrin";
-        hint.style.color = isOK ? "#6366f1" : "#f43f5e";
-    }
-
-    if (type === 'email') {
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-        hint.innerText = isEmail ? "✓ Email Valid" : "Format i pasaktë i email-it";
-        hint.style.color = isEmail ? "#6366f1" : "#f43f5e";
-    }
-
-    if (type === 'pass') {
-        const hasUpper = /[A-Z]/.test(val);
-        const hasNum = /\d/.test(val);
-        const hasSpec = /[.!?,]/.test(val);
-
-        updateVisualState('check-upper', hasUpper);
-        updateVisualState('check-num', hasNum);
-        updateVisualState('check-spec', hasSpec);
-    }
-}
-
-function updateVisualState(id, met) {
-    const el = document.getElementById(id);
-    if(met) {
-        el.style.color = "#6366f1";
-        el.style.transform = "scale(1.1)";
-    } else {
-        el.style.color = "#475569";
-        el.style.transform = "scale(1)";
-    }
-}
-
-function togglePasswordVisibility() {
-    const p = document.getElementById('a-pass');
-    const icon = document.getElementById('eye-icon');
-    p.type = p.type === 'password' ? 'text' : 'password';
-    icon.style.color = p.type === 'text' ? '#6366f1' : '#475569';
-}
-
-
-
-// Kontrolli ne start
+// Kontrolli i sesionit me efekt të menjëhershëm
 (function() {
-    if(localStorage.getItem('faturaime_auth_active') === 'true') {
-        document.getElementById('auth-shield').style.display = 'none';
+    if(localStorage.getItem('faturaime_locked') === 'false') {
+        const shield = document.getElementById('auth-shield');
+        if(shield) shield.remove();
+        document.body.style.overflow = 'auto';
     }
 })();
 
-function processAuth() {
-    const e = document.getElementById('a-email').value;
-    const p = document.getElementById('a-pass').value;
-    const n = document.getElementById('a-name').value;
+// Formatimi automatik i emrit (Emër Mbiemër me shkronja të mëdha)
+document.getElementById('a-name').addEventListener('input', function() {
+    let words = this.value.split(' ');
+    for (let i = 0; i < words.length; i++) {
+        words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
+    }
+    this.value = words.join(' ');
+});
 
-    if (mode === 'signup') {
-        // Kontrolli strikt final
-        if (n.length < 5 || !e.includes('@') || !/[A-Z]/.test(p) || !/\d/.test(p)) {
-            shakeForm();
-            return;
+function toggleMode() {
+    mode = (mode === 'signup') ? 'login' : 'signup';
+    document.getElementById('auth-main-title').innerHTML = mode === 'signup' ? 'SIGN UP<span class="text-indigo-500">.</span>' : 'LOG IN<span class="text-indigo-500">.</span>';
+    document.getElementById('field-name').style.display = mode === 'signup' ? 'block' : 'none';
+    document.getElementById('switch-trigger').innerText = mode === 'signup' ? 'Kaloni në Log In' : 'Krijo një llogari të re';
+}
+
+function processAuth() {
+    const btn = document.querySelector('.btn-premium');
+    const n = document.getElementById('a-name').value.trim();
+    const e = document.getElementById('a-email').value.toLowerCase().trim();
+    const p = document.getElementById('a-pass').value;
+
+    // VALIDIMI STRIKT (PERFEKSION 100%)
+    const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(e);
+    const hasUpperCase = /[A-Z]/.test(p);
+    const hasNumber = /\d/.test(p);
+    const isPassLong = p.length >= 8;
+    const isNameComplete = n.split(/\s+/).length >= 2; // Kërkon Emër & Mbiemër
+
+    // Feedback vizual i butonit gjatë procesimit
+    btn.innerHTML = "VERIFIKIMI...";
+    btn.style.opacity = "0.7";
+    btn.style.pointerEvents = "none";
+
+    setTimeout(() => {
+        if (!isEmailValid) return authError();
+
+        if (mode === 'signup') {
+            // Regjistrim strikt
+            if (!isNameComplete || !hasUpperCase || !hasNumber || !isPassLong) {
+                return authError();
+            }
+            localStorage.setItem('user_cred', JSON.stringify({name: n, email: e, pass: p}));
+        } else {
+            // Log In strikt
+            const cred = JSON.parse(localStorage.getItem('user_cred'));
+            if (!cred || e !== cred.email || p !== cred.pass) {
+                return authError();
+            }
         }
-        localStorage.setItem('user_cred', JSON.stringify({name: n, email: e, pass: p}));
-    } else {
-        const cred = JSON.parse(localStorage.getItem('user_cred'));
-        if (!cred || e !== cred.email || p !== cred.pass) {
-            shakeForm();
-            return;
-        }
+
+        // Nëse kalon validimin
+        accessGranted();
+    }, 800);
+
+    function authError() {
+        shakeForm();
+        btn.innerHTML = mode === 'signup' ? "KRIJO LLOGARI" : "HYNI";
+        btn.style.opacity = "1";
+        btn.style.pointerEvents = "all";
+        if(window.navigator.vibrate) window.navigator.vibrate([50, 30, 50]); // Haptic Feedback
+    }
+}
+
+function shakeForm() {
+    const card = document.querySelector('.auth-card');
+    // Dridhja me ngjyrë të kuqe për gabim
+    card.style.borderColor = 'rgba(239, 68, 68, 0.5)'; 
+    card.style.animation = 'shake 0.4s cubic-bezier(.36,.07,.19,.97) both';
+    
+    if(window.navigator.vibrate) window.navigator.vibrate(100); // Vibrim i shkurtër gabimi
+
+    setTimeout(() => {
+        card.style.animation = '';
+        card.style.borderColor = 'rgba(255, 255, 255, 0.03)';
+    }, 400);
+}
+
+function accessGranted() {
+    // 1. Shënohet suksesi
+    localStorage.setItem('faturaime_locked', 'false');
+    
+    const card = document.querySelector('.auth-card');
+    const shield = document.getElementById('auth-shield');
+
+    // 2. Efekti vizual i suksesit para se të zhduket (Bordura bëhet e gjelbër)
+    card.style.transition = "all 0.5s ease";
+    card.style.borderColor = "#10b981";
+    card.style.boxShadow = "0 0 40px rgba(16, 185, 129, 0.2)";
+
+    setTimeout(() => {
+        // 3. Tranzicioni "Cinematic" i daljes
+        shield.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+        shield.style.filter = 'blur(30px)';
+        shield.style.opacity = '0';
+        shield.style.transform = 'scale(1.15)'; // Zmadhim i lehtë sikur po "hyjmë" brenda
+        
+        setTimeout(() => {
+            shield.remove();
+            document.body.style.overflow = 'auto';
+            
+            // Nisja e proceseve të radhës
+            if(typeof startFaceID === "function") startFaceID();
+        }, 800);
+    }, 400); // Vonesë e shkurtër që përdoruesi të shohë suksesin (bordurën e gjelbër)
+}
+
+
+
+
+
+
+
+
+
+async function recoveryFlow() {
+    const email = document.getElementById('a-email').value;
+    const subTitle = document.getElementById('auth-sub-title');
+    const mainTitle = document.getElementById('auth-main-title');
+    const btn = document.querySelector('.btn-premium');
+
+    // 1. Validimi i Email-it pa Alert
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        subTitle.innerText = "SHËNONI EMAIL-IN PËR VERIFIKIM";
+        subTitle.style.color = "#ef4444";
+        shakeForm();
+        return;
     }
 
-    // Ky rresht e bën sistemin ta mbajë mend përgjithmonë
-    localStorage.setItem('faturaime_auth_active', 'true');
-    accessGranted();
-}
+    const cred = JSON.parse(localStorage.getItem('user_cred'));
+
+    if (cred && email === cred.email) {
+        // 2. Simulimi i dërgimit të kodit me UI
+        mainTitle.innerHTML = 'VERIFIKIMI<span class="text-indigo-500">.</span>';
+        subTitle.innerText = "KODI U DËRGUA NË EMAIL-IN TUAJ";
+        subTitle.style.color = "#6366f1";
+
+        // Gjenerojmë kodin (për demo po e lëmë 123456 ose random)
+        const generatedCode = Math.floor(100000 + Math.random() * 900000);
+        console.log("DEBUG: Kodi i sigurisë është: " + generatedCode);
+
+        // Kthejmë inputin e emrit në input për kodin (për të mos shtuar elemente të reja)
+        const nameField = document.getElementById('field-name');
+        const nameInput = document.getElementById('a-name');
         
+        nameField.style.display = "block";
+        nameInput.placeholder = "SHËNONI KODIN 6-SHIFROR";
+        nameInput.value = "";
+        btn.innerText = "VERIFIKO KODIN";
 
+        // Ndryshojmë funksionin e butonit përkohësisht
+        btn.onclick = function() {
+            if (nameInput.value == generatedCode) {
+                // 3. Kod i saktë - Kalo te Fjalëkalimi i Ri
+                subTitle.innerText = "ID U KONFIRMUA. SHËNONI PASS E RI";
+                nameInput.placeholder = "FJALËKALIMI I RI";
+                nameInput.type = "password";
+                nameInput.value = "";
+                btn.innerText = "PËRDITËSO";
 
+                btn.onclick = function() {
+                    const newPass = nameInput.value;
+                    if (/[A-Z]/.test(newPass) && /\d/.test(newPass) && newPass.length >= 8) {
+                        cred.pass = newPass;
+                        localStorage.setItem('user_cred', JSON.stringify(cred));
+                        
+                        // Suksesi Final
+                        mainTitle.innerHTML = 'SUKSES<span class="text-indigo-500">.</span>';
+                        subTitle.innerText = "FJALËKALIMI U NDRYSHUA ME SUKSES";
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        subTitle.innerText = "PASS DUHET TË JETË STRIKT (8+ CHAR, 1 CAP, 1 NR)";
+                        subTitle.style.color = "#ef4444";
+                        shakeForm();
+                    }
+                };
+            } else {
+                subTitle.innerText = "KOD I PASAKTË. TENTONI PËRSËRI";
+                subTitle.style.color = "#ef4444";
+                shakeForm();
+            }
+        };
 
-
+    } else {
+        subTitle.innerText = "KY EMAIL NUK EKZISTON NË SISTEM";
+        subTitle.style.color = "#ef4444";
+        shakeForm();
+    }
+}
 
 
 
@@ -909,4 +1029,3 @@ window.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
-
