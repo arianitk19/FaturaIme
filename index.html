@@ -20,7 +20,265 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
-  <style> /* AUTH SUPERIOR DESIGN */ #auth-shield { background: radial-gradient(circle at center, #111 0%, #000 100%); backdrop-filter: blur(50px); } .auth-card { background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.03); position: relative; overflow: hidden; } .auth-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, transparent, transparent, #6366f1); animation: rotate-border 6s linear infinite; z-index: -1; } @keyframes rotate-border { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } .auth-input-container { position: relative; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); } .auth-input-container:focus-within { border-bottom-color: #6366f1; transform: translateY(-2px); } .auth-input { background: transparent; width: 100%; padding: 16px 5px; outline: none; font-size: 14px; letter-spacing: 1px; color: #fff; } .btn-premium { background: #fff; color: #000; font-weight: 900; transition: all 0.4s ease; clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%); } .btn-premium:hover { background: #6366f1; color: #fff; box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4); } :root { --accent: #6366f1; } body { font-family: 'Space Grotesk', sans-serif; background: #000; color: #fff; overflow-x: hidden; } /* --- INTRO CINEMATIC --- */ #intro-screen { position: fixed; inset: 0; z-index: 5000; background: #000; display: flex; align-items: center; justify-content: center; transition: opacity 1s ease; } .logo-box { position: relative; animation: initial-scale 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; } .logo-text { font-size: 3rem; font-weight: 700; letter-spacing: -2px; background: linear-gradient(to bottom, #ffffff 30%, #444444 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; opacity: 0; animation: text-reveal 1s 0.5s ease-out forwards; position: relative; } .light-sweep { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: skewX(-20deg); animation: sweep 1.5s 1s ease-out forwards; pointer-events: none; } @keyframes initial-scale { from { transform: scale(1.2); filter: blur(10px); } to { transform: scale(1); filter: blur(0); } } @keyframes text-reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } @keyframes sweep { from { left: -100%; } to { left: 200%; } } /* --- FACE ID UI --- */ #face-id-screen { position: fixed; inset: 0; z-index: 4000; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); } @keyframes scan-move { 0% { top: 5%; opacity: 0; } 50% { opacity: 1; } 100% { top: 90%; opacity: 0; } } .scanning-active #scan-line { display: block; position: absolute; width: 100%; height: 2px; background: #6366f1; box-shadow: 0 0 15px #6366f1; animation: scan-move 2s ease-in-out infinite; } .scanning-active #scanner-wrapper { border-color: rgba(99, 102, 241, 0.3); transform: scale(1.05); } .auth-success #face-icon { color: #10b981; filter: drop-shadow(0 0 10px #10b981); } /* --- APP UI & OVERLAY --- */ #menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; } #menu-overlay.active { opacity: 1; pointer-events: auto; } .glass-panel { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 32px; } .sidebar { transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1); transform: translateX(-100%); z-index: 1001; } .sidebar.open { transform: translateX(0); } .ios-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); } .ios-btn:active { transform: scale(0.9) brightness(1.2); } .cat-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.05); } .cat-card.selected { background: #fff !important; color: #000 !important; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1); } #main-app { opacity: 0; transform: translateY(30px); transition: all 1s ease; } .no-scrollbar::-webkit-scrollbar { display: none; } /* AI Scanner Loading Overlay */ #ai-loader { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.8); border-radius: 32px; z-index: 50; flex-direction: column; align-items: center; justify-content: center; } </style>
+
+    <style>
+/* --- AUTH SUPERIOR DESIGN & SYSTEM CONFIG --- */
+:root {
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.4);
+}
+
+body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: #000;
+    color: #fff;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#auth-shield {
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+}
+
+.auth-card {
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* Bazë e saktë për Stacking Context */
+}
+
+/* Korigjimi Superior për Klikimin në Telefon */
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(transparent, transparent, transparent, var(--accent));
+    animation: rotate-border 6s linear infinite;
+    z-index: -1;
+    pointer-events: none; /* KRITIKE: Lejon touch-in të kalojë te rubrikat */
+}
+
+@keyframes rotate-border {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.auth-input-container {
+    position: relative;
+    z-index: 10; /* E ngre mbi dritën rrotulluese */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-input-container:focus-within {
+    border-bottom-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.auth-input {
+    background: transparent;
+    width: 100%;
+    padding: 16px 5px;
+    outline: none;
+    font-size: 16px; /* KRITIKE: Ndalon Auto-Zoom-in e padëshiruar në iPhone */
+    letter-spacing: 1px;
+    color: #fff;
+    position: relative;
+    z-index: 20; /* Siguron që inputi është në shtresën më të lartë të prekjes */
+}
+
+.btn-premium {
+    background: #fff;
+    color: #000;
+    font-weight: 900;
+    transition: all 0.4s ease;
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+    cursor: pointer;
+    position: relative;
+    z-index: 30;
+}
+
+.btn-premium:hover {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 15px 30px var(--accent-glow);
+}
+
+/* --- INTRO CINEMATIC --- */
+#intro-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease;
+}
+
+.logo-box {
+    position: relative;
+    animation: initial-scale 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.logo-text {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    background: linear-gradient(to bottom, #ffffff 30%, #444444 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    animation: text-reveal 1s 0.5s ease-out forwards;
+    position: relative;
+}
+
+.light-sweep {
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-20deg);
+    animation: sweep 1.5s 1s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes initial-scale {
+    from { transform: scale(1.2); filter: blur(10px); }
+    to { transform: scale(1); filter: blur(0); }
+}
+
+@keyframes text-reveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sweep {
+    from { left: -100%; }
+    to { left: 200%; }
+}
+
+/* --- FACE ID UI --- */
+#face-id-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    background: #000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scan-move {
+    0% { top: 5%; opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 90%; opacity: 0; }
+}
+
+.scanning-active #scan-line {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 15px var(--accent);
+    animation: scan-move 2s ease-in-out infinite;
+}
+
+.scanning-active #scanner-wrapper {
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: scale(1.05);
+}
+
+.auth-success #face-icon {
+    color: #10b981;
+    filter: drop-shadow(0 0 10px #10b981);
+}
+
+/* --- APP UI & OVERLAY --- */
+#menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+#menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.glass-panel {
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 32px;
+}
+
+.sidebar {
+    transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+    transform: translateX(-100%);
+    z-index: 1001;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.ios-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-btn:active {
+    transform: scale(0.9) brightness(1.2);
+}
+
+.cat-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.cat-card.selected {
+    background: #fff !important;
+    color: #000 !important;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+}
+
+#main-app {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s ease;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* AI Scanner Loading Overlay */
+#ai-loader {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    border-radius: 32px;
+    z-index: 50;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+    
 </head>
 <body class="antialiased">
 
@@ -1342,6 +1600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
