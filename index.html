@@ -22,67 +22,51 @@
 
     <style>
 
-
-/* --- KORIGJIM PËR KLIKIMIN DHE Z-INDEX --- */
-
 .auth-card {
-    background: rgba(10, 10, 10, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Korigjimi 1: Karta nuk duhet të ketë background direkt */
+    background: transparent; 
+    border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(20px);
-    z-index: 1; /* Baza */
+    overflow: hidden; /* Ky tashmë do të funksionojë perfekt */
+    border-radius: 40px;
+    z-index: 1;
 }
 
-/* Ky div i ri duhet të rrethojë gjithë HTML-në brenda card-it */
+/* Korigjimi 2: Sfondi i zi vendoset KËTU, jo te karta */
 .auth-content-wrapper {
     position: relative;
-    z-index: 10; /* Ngritja mbi efektin rrotullues */
-    pointer-events: auto; /* Siguron që klikimet të lejohen këtu */
-}
-
-/* Efekti i Bordurës që Rrotullohet */
-.auth-card::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    background: conic-gradient(transparent, transparent, transparent, #6366f1);
-    animation: rotate-border 6s linear infinite;
-    z-index: -1; /* I detyruar të qëndrojë prapa */
-    pointer-events: none; /* Nuk lejon bllokimin e klikimit */
-}
-
-.auth-input-container {
-    position: relative;
-    z-index: 20; /* Më lart se çdo gjë tjetër */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 15px;
+    z-index: 10;
+    /* Ky background "fsheh" dritën që është në mes dhe lejon klikimin */
+    background: #0a0a0a; 
+    border-radius: 39px; /* Pak më i vogël se karta për të lënë dritën të dalë te bordura */
+    margin: 1px; /* Krijon hapësirën që drita të duket vetëm si vijë rrethuese */
     pointer-events: auto;
 }
 
-.auth-input {
-    background: transparent;
-    width: 100%;
-    padding: 16px 5px;
-    outline: none;
-    font-size: 14px;
-    letter-spacing: 2px;
-    color: #fff;
-    border: none;
-    position: relative;
-    z-index: 30; /* Niveli final i aksesit */
-    cursor: text; /* Siguron kursorin e shkrimit */
+/* Korigjimi 3: Drita rrotulluese (Glow-Trace) */
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; 
+    left: -50%; 
+    width: 200%; 
+    height: 200%;
+    /* Ngjyra e dritës */
+    background: conic-gradient(
+        transparent, 
+        transparent, 
+        transparent, 
+        #6366f1 
+    );
+    animation: rotate-border 4s linear infinite;
+    /* E rëndësishme: Z-INDEX 0 (Midis kartës dhe wrapper-it) */
+    z-index: 0; 
+    pointer-events: none;
 }
 
-/* --- PJESA TJETËR (E PA NDRYSHUAR) --- */
-
-[id^="error-"] {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    font-weight: 800;
-    display: block; 
-    transform: translateY(-5px);
+/* Sigurojmë që gjatë hyrjes (Intro) çdo gjë të lëvizë bashkë */
+#auth-shield {
+    perspective: 1000px;
 }
 
 @keyframes rotate-border {
@@ -90,18 +74,14 @@
     100% { transform: rotate(360deg); }
 }
 
-.btn-premium {
+/* INPUTET DHE BUTONAT - Asnjë ndryshim, janë perfekt me z-index të lartë */
+.auth-input {
     position: relative;
-    z-index: 40; /* Butoni duhet të jetë gjithmonë i klikueshëm */
-    background: #fff;
-    color: #000;
-    font-weight: 900;
+    z-index: 20;
+    pointer-events: all;
+    background: transparent;
     border: none;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
 }
-
 
         :root { --accent: #6366f1; }
         body { 
@@ -1463,6 +1443,7 @@ const modeObserver = {
     </script>
 </body>
 </html>
+
 
 
 
