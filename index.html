@@ -767,9 +767,12 @@ async function startFaceID() {
         
         function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
 
+
+
+        
 let mode = 'signup';
 
-// Kontrolli i sesionit me efekt të menjëhershëm
+// 1. Kontrolli i sesionit (I saktë, i mbrojtur nga null)
 (function() {
     if(localStorage.getItem('faturaime_locked') === 'false') {
         const shield = document.getElementById('auth-shield');
@@ -778,80 +781,128 @@ let mode = 'signup';
     }
 })();
 
-// Formatimi automatik i emrit (Emër Mbiemër me shkronja të mëdha)
-document.getElementById('a-name').addEventListener('input', function() {
-    let words = this.value.split(' ');
-    for (let i = 0; i < words.length; i++) {
-        words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
-    }
-    this.value = words.join(' ');
-});
-
-function toggleMode() {
-    mode = (mode === 'signup') ? 'login' : 'signup';
-    document.getElementById('auth-main-title').innerHTML = mode === 'signup' ? 'SIGN UP<span class="text-indigo-500">.</span>' : 'LOG IN<span class="text-indigo-500">.</span>';
-    document.getElementById('field-name').style.display = mode === 'signup' ? 'block' : 'none';
-    document.getElementById('switch-trigger').innerText = mode === 'signup' ? 'Kaloni në Log In' : 'Krijo një llogari të re';
+// 2. Formatimi i emrit (KORIGJIM: Parandalimi i kërcimit të kursorit)
+const nameInput = document.getElementById('a-name');
+if (nameInput) {
+    nameInput.addEventListener('input', function() {
+        let selectionStart = this.selectionStart; // Ruajmë pozicionin e kursorit
+        let words = this.value.split(' ');
+        for (let i = 0; i < words.length; i++) {
+            if (words[i].length > 0) {
+                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
+            }
+        }
+        this.value = words.join(' ');
+        this.setSelectionRange(selectionStart, selectionStart); // Rikthejmë kursorin ku ishte
+    });
 }
 
+// 3. Ndërrimi i modalitetit (Shtuar: Menaxhimi i Linkut Recovery nëse ekziston)
+function toggleMode() {
+    mode = (mode === 'signup') ? 'login' : 'signup';
+    
+    const title = document.getElementById('auth-main-title');
+    const fieldName = document.getElementById('field-name');
+    const trigger = document.getElementById('switch-trigger');
+    const recovery = document.getElementById('recovery-link'); // Referencë për linkun e fjalëkalimit
+
+    if (title) title.innerHTML = mode === 'signup' ? 'SIGN UP<span class="text-indigo-500">.</span>' : 'LOG IN<span class="text-indigo-500">.</span>';
+    if (fieldName) fieldName.style.display = mode === 'signup' ? 'block' : 'none';
+    if (trigger) trigger.innerText = mode === 'signup' ? 'Kaloni në Log In' : 'Krijo një llogari të re';
+    if (recovery) recovery.style.display = mode === 'login' ? 'flex' : 'none';
+}
+
+// 4. Procesi i Autentikimit (KORIGJIM: Shtuar variabla e munguar btn te Error)
 function processAuth() {
     const btn = document.querySelector('.btn-premium');
-    const n = document.getElementById('a-name').value.trim();
-    const e = document.getElementById('a-email').value.toLowerCase().trim();
-    const p = document.getElementById('a-pass').value;
+    const nameEl = document.getElementById('a-name');
+    const emailEl = document.getElementById('a-email');
+    const passEl = document.getElementById('a-pass');
 
-    // VALIDIMI STRIKT (PERFEKSION 100%)
+    if (!btn || !emailEl || !passEl) return;
+
+    const n = nameEl.value.trim();
+    const e = emailEl.value.toLowerCase().trim();
+    const p = passEl.value;
+
+    // VALIDIMI STRIKT
     const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(e);
     const hasUpperCase = /[A-Z]/.test(p);
     const hasNumber = /\d/.test(p);
     const isPassLong = p.length >= 8;
-    const isNameComplete = n.split(/\s+/).length >= 2; // Kërkon Emër & Mbiemër
+    const isNameComplete = n.split(/\s+/).filter(word => word.length > 0).length >= 2;
 
-    // Feedback vizual i butonit gjatë procesimit
+    // Feedback vizual fillestar
+    const originalText = btn.innerHTML;
     btn.innerHTML = "VERIFIKIMI...";
     btn.style.opacity = "0.7";
     btn.style.pointerEvents = "none";
 
     setTimeout(() => {
-        if (!isEmailValid) return authError();
+        // Funksion i brendshëm për të thirrur gabimin duke kaluar butonin si referencë
+        const triggerError = () => {
+            if (typeof authError === 'function') {
+                authError(btn); // Kalojmë butonin te funksioni i gabimit
+            } else {
+                btn.innerHTML = originalText;
+                btn.style.opacity = "1";
+                btn.style.pointerEvents = "all";
+            }
+        };
+
+        if (!isEmailValid) return triggerError();
 
         if (mode === 'signup') {
-            // Regjistrim strikt
             if (!isNameComplete || !hasUpperCase || !hasNumber || !isPassLong) {
-                return authError();
+                return triggerError();
             }
             localStorage.setItem('user_cred', JSON.stringify({name: n, email: e, pass: p}));
         } else {
-            // Log In strikt
             const cred = JSON.parse(localStorage.getItem('user_cred'));
             if (!cred || e !== cred.email || p !== cred.pass) {
-                return authError();
+                return triggerError();
             }
         }
 
-        // Nëse kalon validimin
-        accessGranted();
+        if (typeof accessGranted === 'function') {
+            accessGranted();
+        }
     }, 800);
+}
 
-    function authError() {
-        shakeForm();
-        btn.innerHTML = mode === 'signup' ? "KRIJO LLOGARI" : "HYNI";
-        btn.style.opacity = "1";
-        btn.style.pointerEvents = "all";
-        if(window.navigator.vibrate) window.navigator.vibrate([50, 30, 50]); // Haptic Feedback
+        
+
+   // KORIGJIM: Shtova 'btn' si parametër që funksioni të dijë cilin buton të resetoje
+function authError(btn) {
+    // Nëse btn nuk vjen si parametër, e kërkojmë në DOM
+    const targetBtn = btn || document.querySelector('.btn-premium');
+    
+    shakeForm();
+    
+    if (targetBtn) {
+        targetBtn.innerHTML = mode === 'signup' ? "KRIJO LLOGARI" : "HYNI";
+        targetBtn.style.opacity = "1";
+        targetBtn.style.pointerEvents = "all";
     }
+
+    // Haptic Feedback
+    if(window.navigator.vibrate) window.navigator.vibrate([50, 30, 50]);
 }
 
 function shakeForm() {
     const card = document.querySelector('.auth-card');
+    if (!card) return;
+
     // Dridhja me ngjyrë të kuqe për gabim
+    card.style.transition = "border-color 0.2s ease";
     card.style.borderColor = 'rgba(239, 68, 68, 0.5)'; 
     card.style.animation = 'shake 0.4s cubic-bezier(.36,.07,.19,.97) both';
     
-    if(window.navigator.vibrate) window.navigator.vibrate(100); // Vibrim i shkurtër gabimi
+    if(window.navigator.vibrate) window.navigator.vibrate(100); 
 
     setTimeout(() => {
         card.style.animation = '';
+        // KORIGJIM: Kthimi në transparencën origjinale pas dridhjes
         card.style.borderColor = 'rgba(255, 255, 255, 0.03)';
     }, 400);
 }
@@ -862,27 +913,38 @@ function accessGranted() {
     
     const card = document.querySelector('.auth-card');
     const shield = document.getElementById('auth-shield');
+    const btn = document.querySelector('.btn-premium');
 
-    // 2. Efekti vizual i suksesit para se të zhduket (Bordura bëhet e gjelbër)
-    card.style.transition = "all 0.5s ease";
-    card.style.borderColor = "#10b981";
-    card.style.boxShadow = "0 0 40px rgba(16, 185, 129, 0.2)";
+    // KORIGJIM: Feedback vizual edhe në buton për suksesin
+    if(btn) {
+        btn.innerHTML = "SUKSES";
+        btn.style.background = "#10b981";
+    }
+
+    // 2. Efekti vizual i suksesit (Bordura bëhet e gjelbër)
+    if (card) {
+        card.style.transition = "all 0.5s ease";
+        card.style.borderColor = "#10b981";
+        card.style.boxShadow = "0 0 40px rgba(16, 185, 129, 0.2)";
+    }
 
     setTimeout(() => {
-        // 3. Tranzicioni "Cinematic" i daljes
-        shield.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
-        shield.style.filter = 'blur(30px)';
-        shield.style.opacity = '0';
-        shield.style.transform = 'scale(1.15)'; // Zmadhim i lehtë sikur po "hyjmë" brenda
-        
-        setTimeout(() => {
-            shield.remove();
-            document.body.style.overflow = 'auto';
+        if (shield) {
+            // 3. Tranzicioni "Cinematic" i daljes
+            shield.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+            shield.style.filter = 'blur(30px)';
+            shield.style.opacity = '0';
+            shield.style.transform = 'scale(1.15)'; 
             
-            // Nisja e proceseve të radhës
-            if(typeof startFaceID === "function") startFaceID();
-        }, 800);
-    }, 400); // Vonesë e shkurtër që përdoruesi të shohë suksesin (bordurën e gjelbër)
+            setTimeout(() => {
+                shield.remove();
+                document.body.style.overflow = 'auto';
+                
+                // Nisja e proceseve të radhës (FaceID)
+                if(typeof startFaceID === "function") startFaceID();
+            }, 800);
+        }
+    }, 400); 
 }
 
 
@@ -892,79 +954,98 @@ function accessGranted() {
 
 
 
-
 async function recoveryFlow() {
-    const email = document.getElementById('a-email').value;
+    const emailEl = document.getElementById('a-email');
     const subTitle = document.getElementById('auth-sub-title');
     const mainTitle = document.getElementById('auth-main-title');
     const btn = document.querySelector('.btn-premium');
+    const nameField = document.getElementById('field-name');
+    const nameInput = document.getElementById('a-name');
 
-    // 1. Validimi i Email-it pa Alert
+    if (!emailEl || !subTitle || !mainTitle || !btn) return;
+
+    const email = emailEl.value.trim().toLowerCase();
+
+    // 1. Validimi i Email-it (Strikt pa Alert)
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         subTitle.innerText = "SHËNONI EMAIL-IN PËR VERIFIKIM";
         subTitle.style.color = "#ef4444";
-        shakeForm();
+        if (typeof shakeForm === 'function') shakeForm();
         return;
     }
 
     const cred = JSON.parse(localStorage.getItem('user_cred'));
 
     if (cred && email === cred.email) {
-        // 2. Simulimi i dërgimit të kodit me UI
+        // 2. Simulimi i dërgimit të kodit
         mainTitle.innerHTML = 'VERIFIKIMI<span class="text-indigo-500">.</span>';
         subTitle.innerText = "KODI U DËRGUA NË EMAIL-IN TUAJ";
         subTitle.style.color = "#6366f1";
 
-        // Gjenerojmë kodin (për demo po e lëmë 123456 ose random)
         const generatedCode = Math.floor(100000 + Math.random() * 900000);
         console.log("DEBUG: Kodi i sigurisë është: " + generatedCode);
 
-        // Kthejmë inputin e emrit në input për kodin (për të mos shtuar elemente të reja)
-        const nameField = document.getElementById('field-name');
-        const nameInput = document.getElementById('a-name');
+        // Transformimi i UI: Përdorim fushën e emrit për Kodin
+        if (nameField && nameInput) {
+            nameField.style.display = "block";
+            nameInput.type = "text"; // Sigurohemi që është tekst për kodin
+            nameInput.placeholder = "SHËNONI KODIN 6-SHIFROR";
+            nameInput.value = "";
+            nameInput.focus();
+        }
         
-        nameField.style.display = "block";
-        nameInput.placeholder = "SHËNONI KODIN 6-SHIFROR";
-        nameInput.value = "";
         btn.innerText = "VERIFIKO KODIN";
 
-        // Ndryshojmë funksionin e butonit përkohësisht
+        // NDRYSHIMI I FUNKSIONIT TË BUTONIT (Faza e Kodit)
         btn.onclick = function() {
             if (nameInput.value == generatedCode) {
-                // 3. Kod i saktë - Kalo te Fjalëkalimi i Ri
+                // 3. Kod i saktë - Kalojmë te Fjalëkalimi i Ri
                 subTitle.innerText = "ID U KONFIRMUA. SHËNONI PASS E RI";
+                subTitle.style.color = "#10b981";
                 nameInput.placeholder = "FJALËKALIMI I RI";
-                nameInput.type = "password";
+                nameInput.type = "password"; 
                 nameInput.value = "";
+                nameInput.focus();
                 btn.innerText = "PËRDITËSO";
 
+                // NDRYSHIMI I FUNKSIONIT TË BUTONIT (Faza Finale)
                 btn.onclick = function() {
                     const newPass = nameInput.value;
-                    if (/[A-Z]/.test(newPass) && /\d/.test(newPass) && newPass.length >= 8) {
+                    const hasUpperCase = /[A-Z]/.test(newPass);
+                    const hasNumber = /\d/.test(p = newPass);
+                    const isPassLong = newPass.length >= 8;
+
+                    if (hasUpperCase && hasNumber && isPassLong) {
                         cred.pass = newPass;
                         localStorage.setItem('user_cred', JSON.stringify(cred));
                         
-                        // Suksesi Final
                         mainTitle.innerHTML = 'SUKSES<span class="text-indigo-500">.</span>';
                         subTitle.innerText = "FJALËKALIMI U NDRYSHUA ME SUKSES";
-                        setTimeout(() => location.reload(), 1500);
+                        subTitle.style.color = "#10b981";
+                        
+                        // Korigjim: Pastrojmë onclick-un që të mos ketë loop
+                        btn.onclick = null;
+                        
+                        setTimeout(() => {
+                            location.reload(); // Rifreskim i pastër i sistemit
+                        }, 1500);
                     } else {
                         subTitle.innerText = "PASS DUHET TË JETË STRIKT (8+ CHAR, 1 CAP, 1 NR)";
                         subTitle.style.color = "#ef4444";
-                        shakeForm();
+                        if (typeof shakeForm === 'function') shakeForm();
                     }
                 };
             } else {
                 subTitle.innerText = "KOD I PASAKTË. TENTONI PËRSËRI";
                 subTitle.style.color = "#ef4444";
-                shakeForm();
+                if (typeof shakeForm === 'function') shakeForm();
             }
         };
 
     } else {
         subTitle.innerText = "KY EMAIL NUK EKZISTON NË SISTEM";
         subTitle.style.color = "#ef4444";
-        shakeForm();
+        if (typeof shakeForm === 'function') shakeForm();
     }
 }
 
@@ -1070,8 +1151,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const fields = [
-        { id: 'a-name', error: 'error-name', check: (val) => val.trim().split(/\s+/).length >= 2 },
-        { id: 'a-email', error: 'error-email', check: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) },
+        { id: 'a-name', error: 'error-name', check: (val) => val.trim().split(/\s+/).filter(w => w.length > 0).length >= 2 },
+        { id: 'a-email', error: 'error-email', check: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim()) },
         { id: 'a-pass', error: 'error-pass', check: (val) => val.length >= 8 && /[A-Z]/.test(val) && /\d/.test(val) }
     ];
 
@@ -1079,63 +1160,129 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById(field.id);
         const errorMsg = document.getElementById(field.error);
 
-        // Kontrolli kur përdoruesi largohet nga rubrika
-        input.addEventListener('blur', () => {
-            if (input.value.length > 0 && !field.check(input.value)) {
-                showError(input, errorMsg);
-            } else if (field.check(input.value)) {
-                hideError(input, errorMsg);
-            }
-        });
+        // Kontrolli nëse elementet ekzistojnë në DOM para se të shtojmë eventet
+        if (input && errorMsg) {
+            
+            // 1. Kontrolli kur përdoruesi largohet nga rubrika (Blur)
+            input.addEventListener('blur', () => {
+                // Shfaqim gabimin vetëm nëse ka shkruar diçka dhe nuk është valid
+                if (input.value.length > 0 && !field.check(input.value)) {
+                    showError(input, errorMsg);
+                } else if (field.check(input.value)) {
+                    hideError(input, errorMsg);
+                }
+            });
 
-        // Kontrolli ndërsa shkruan (për ta hequr të kuqen sapo e rregullon)
-        input.addEventListener('input', () => {
-            if (field.check(input.value)) {
-                hideError(input, errorMsg);
-            }
-        });
+            // 2. Kontrolli ndërsa shkruan (Input)
+            input.addEventListener('input', () => {
+                // Sapo plotësohet kushti, e heqim gabimin automatikisht
+                if (field.check(input.value)) {
+                    hideError(input, errorMsg);
+                }
+            });
+        }
     });
 });
 
+// FUNKSIONET E FEEDBACK-UT VIZUAL
 function showError(input, msg) {
+    if (!input || !msg) return;
+    
     msg.style.opacity = "1";
-    input.parentElement.style.borderBottomColor = "#ef4444"; // E kuqe
-    if(window.navigator.vibrate) window.navigator.vibrate(10); // Vibrim ultra i lehtë
+    msg.style.transform = "translateY(0)"; // Opsionale: shtoni pak lëvizje
+    
+    // Korigjim: Sigurohemi që prindi ekziston për të ndryshuar border-in
+    if (input.parentElement) {
+        input.parentElement.style.borderBottomColor = "#ef4444"; // Red-500
+    }
+    
+    if(window.navigator.vibrate) window.navigator.vibrate(10); 
 }
 
 function hideError(input, msg) {
+    if (!input || !msg) return;
+
     msg.style.opacity = "0";
-    input.parentElement.style.borderBottomColor = "#6366f1"; // Kthehet në vjollcë (Indigo)
+    
+    if (input.parentElement) {
+        // Kthehet në ngjyrën origjinale të sistemit tënd (Indigo-500)
+        input.parentElement.style.borderBottomColor = "#6366f1"; 
+    }
 }
 
 
 
 
 
+     /* EKZEKUTIMI I AUTENTIKIMIT (FINAL CHECK)
+   Ky funksion lidh Validimin, UI-në dhe Autorizimin
+*/
+function processAuth() {
+    // 1. Marrja e vlerave me pastrim hapësirash (Trim)
+    const nameInput = document.getElementById('a-name');
+    const emailInput = document.getElementById('a-email');
+    const passInput = document.getElementById('a-pass');
 
-        function processAuth() {
-    const n = document.getElementById('a-name').value;
-    const e = document.getElementById('a-email').value;
-    const p = document.getElementById('a-pass').value;
+    if (!emailInput || !passInput) return; // Siguri nëse elementet mungojnë
 
-    const isNameValid = n.trim().split(/\s+/).length >= 2;
+    const n = nameInput ? nameInput.value.trim() : "";
+    const e = emailInput.value.trim().toLowerCase();
+    const p = passInput.value;
+
+    // 2. Logjika e Validimit Strikt
+    const isNameValid = n.split(/\s+/).filter(w => w.length > 0).length >= 2;
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     const isPassValid = p.length >= 8 && /[A-Z]/.test(p) && /\d/.test(p);
 
-    if (!isEmailValid || !isPassValid || (mode === 'signup' && !isNameValid)) {
-        shakeForm();
-        // Shfaq të gjitha gabimet që mungojnë
-        if(!isNameValid && mode === 'signup') showError(document.getElementById('a-name'), document.getElementById('error-name'));
-        if(!isEmailValid) showError(document.getElementById('a-email'), document.getElementById('error-email'));
-        if(!isPassValid) showError(document.getElementById('a-pass'), document.getElementById('error-pass'));
-        return;
+    // 3. Kontrolli i Gabimeve (Korigjim: Validimi i emrit bëhet VETËM në Signup)
+    let hasError = false;
+
+    if (mode === 'signup' && !isNameValid) {
+        showError(nameInput, document.getElementById('error-name'));
+        hasError = true;
+    }
+    
+    if (!isEmailValid) {
+        showError(emailInput, document.getElementById('error-email'));
+        hasError = true;
+    }
+    
+    if (!isPassValid) {
+        showError(passInput, document.getElementById('error-pass'));
+        hasError = true;
     }
 
-    // Nese qdo gje eshte 10/10
-    accessGranted();
-}
-        
+    // 4. Ekzekutimi i Feedback-ut në rast gabimi
+    if (hasError) {
+        if (typeof shakeForm === 'function') shakeForm();
+        return; // Ndalohet procesi këtu
+    }
 
+    // 5. Verifikimi i llogarisë (Log In vs Sign Up)
+    if (mode === 'signup') {
+        // Regjistrimi në LocalStorage
+        localStorage.setItem('user_cred', JSON.stringify({ name: n, email: e, pass: p }));
+    } else {
+        // Kontrolli i kredencialeve ekzistuese
+        const cred = JSON.parse(localStorage.getItem('user_cred'));
+        if (!cred || e !== cred.email || p !== cred.pass) {
+            // Gabim në kredenciale (Email ose Pass i pasaktë)
+            if (typeof shakeForm === 'function') shakeForm();
+            // Shfaqim një mesazh specifik në subtitle për vërejtje
+            const subTitle = document.getElementById('auth-sub-title');
+            if (subTitle) {
+                subTitle.innerText = "EMAIL OSE FJALËKALIM I PASAKTË";
+                subTitle.style.color = "#ef4444";
+            }
+            return;
+        }
+    }
+
+    // 6. NËSE ÇDO GJË ËSHTË 10/10
+    if (typeof accessGranted === 'function') {
+        accessGranted();
+    }
+}
 
 
 
@@ -1148,63 +1295,99 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailInput = document.getElementById('a-email');
     const passInput = document.getElementById('a-pass');
 
-    // 1. STRIKT: Blloko hapësirat te Email-i
-    emailInput.addEventListener('keydown', (e) => {
-        if (e.code === "Space") e.preventDefault();
-    });
+    // 1. STRIKT: Blloko hapësirat te Email-i (Korigjim: Përdorim 'key' për pajtueshmëri maksimale)
+    if (emailInput) {
+        emailInput.addEventListener('keydown', (e) => {
+            if (e.key === " " || e.code === "Space") {
+                e.preventDefault();
+            }
+        });
+    }
 
-    // 2. LIVE VALIDATION: Emri & Mbiemri
-    nameInput.addEventListener('input', function() {
-        const parts = this.value.trim().split(/\s+/);
-        const error = document.getElementById('error-name');
-        
-        if (parts.length >= 2 && parts[0].length >= 2 && parts[1].length >= 2) {
-            hideError(this, error);
-        } else {
-            showError(this, error);
-        }
-    });
+    // 2. LIVE VALIDATION: Emri & Mbiemri (Korigjim: Validim inteligjent që nuk pengon shkrimin)
+    if (nameInput) {
+        nameInput.addEventListener('input', function() {
+            const val = this.value.trim();
+            const parts = val.split(/\s+/).filter(p => p.length > 0);
+            const error = document.getElementById('error-name');
 
-    // 3. LIVE VALIDATION: Email-i
-    emailInput.addEventListener('input', function() {
-        const error = document.getElementById('error-email');
-        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
-        
-        if (isValid) {
-            hideError(this, error);
-        } else {
-            showError(this, error);
-        }
-    });
+            // Kushti: Duhen të paktën 2 fjalë, dhe secila mbi 2 karaktere
+            const isComplete = parts.length >= 2 && parts.every(p => p.length >= 2);
 
-    // 4. LIVE VALIDATION: Password (8+ karaktere, 1 e Madhe, 1 Numër)
-    passInput.addEventListener('input', function() {
-        const error = document.getElementById('error-pass');
-        const hasUpper = /[A-Z]/.test(this.value);
-        const hasNum = /\d/.test(this.value);
-        const isLong = this.value.length >= 8;
-
-        if (hasUpper && hasNum && isLong) {
-            hideError(this, error);
-        } else {
-            showError(this, error);
-        }
-    });
+            if (isComplete) {
+                if (typeof hideError === 'function') hideError(this, error);
+            } else {
+                // Korigjim: Mos shfaq "ShowError" nëse përdoruesi sapo ka filluar të shkruajë
+                // Shfaqet vetëm nëse ka shkruar diçka dhe e ka lënë përgjysmë (p.sh. pas 10 karaktereve)
+                if (val.length > 10) {
+                    if (typeof showError === 'function') showError(this, error);
+                }
+            }
+        });
+    }
 });
 
-// Funksionet ndihmëse për UI të butë
+
+        // 3. LIVE VALIDATION: Email-i (Korigjim: Validim pas një vonese të vogël ose @)
+emailInput.addEventListener('input', function() {
+    const error = document.getElementById('error-email');
+    const val = this.value.trim();
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    
+    if (isValid) {
+        if (typeof hideError === 'function') hideError(this, error);
+    } else {
+        // Shfaqim gabimin vetëm nëse përdoruesi ka shkruar @ ose ka kaluar 10 karaktere
+        if (val.includes('@') || val.length > 10) {
+            if (typeof showError === 'function') showError(this, error);
+        }
+    }
+});
+
+// 4. LIVE VALIDATION: Password (8+ karaktere, 1 e Madhe, 1 Numër)
+passInput.addEventListener('input', function() {
+    const error = document.getElementById('error-pass');
+    const val = this.value;
+    const hasUpper = /[A-Z]/.test(val);
+    const hasNum = /\d/.test(val);
+    const isLong = val.length >= 8;
+
+    if (hasUpper && hasNum && isLong) {
+        if (typeof hideError === 'function') hideError(this, error);
+    } else {
+        // Shfaqim gabimin live vetëm nëse ka filluar të shkruajë seriozisht
+        if (val.length > 5) {
+            if (typeof showError === 'function') showError(this, error);
+        }
+    }
+});
+
+// FUNKSIONET NDIHMËSE PËR UI TË BUTË (Korigjim: Shtuar tranzicionet CSS)
 function showError(input, msg) {
+    if (!msg || !input) return;
+    
+    msg.style.transition = "all 0.3s ease"; // Siguron lëvizje të butë
     msg.style.opacity = "1";
     msg.style.transform = "translateY(0)";
-    input.parentElement.style.borderBottomColor = "#ef4444"; // E kuqe (Error)
+    
+    if (input.parentElement) {
+        input.parentElement.style.transition = "border-color 0.3s ease";
+        input.parentElement.style.borderBottomColor = "#ef4444"; // E kuqe (Error)
+    }
 }
 
 function hideError(input, msg) {
-    msg.style.opacity = "0";
-    msg.style.transform = "translateY(-5px)";
-    input.parentElement.style.borderBottomColor = "#6366f1"; // Vjollcë (Success)
-}
+    if (!msg || !input) return;
 
+    msg.style.transition = "all 0.3s ease";
+    msg.style.opacity = "0";
+    msg.style.transform = "translateY(-5px)"; // Efekt "ngritjeje" kur zhduket
+    
+    if (input.parentElement) {
+        input.parentElement.style.transition = "border-color 0.3s ease";
+        input.parentElement.style.borderBottomColor = "#6366f1"; // Indigo (Success)
+    }
+}
 
 
 
@@ -1217,4 +1400,5 @@ function hideError(input, msg) {
     </script>
 </body>
 </html>
+
 
