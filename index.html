@@ -1226,6 +1226,113 @@ const modeObserver = {
 
 
 
+        
+
+
+        /* ============================================================
+   RECOVERY SYSTEM MODULE (MODAL & LOGIC)
+   ============================================================ */
+
+/**
+ * 1. Aktivizimi i Modal-it
+ * Ky funksion thirret kur klikohet linku "Harruat fjalëkalimin?"
+ */
+function initRecoverySequence() {
+    const emailInput = document.getElementById('a-email');
+    const modal = document.getElementById('recovery-modal');
+    const displayEmail = document.getElementById('recovery-email-display');
+    const subTitle = document.getElementById('auth-sub-title');
+
+    // Kontrolli i emailit: Duhet të jetë i shënuar që të vazhdojmë
+    if (!emailInput.value.includes('@') || emailInput.value.length < 5) {
+        if (subTitle) {
+            subTitle.innerText = "SHËNONI EMAIL-IN TUAJ PËR TË VAZHDUAR";
+            subTitle.style.color = "#ef4444";
+        }
+        // Nëse ke funksionin shakeForm(), thirru këtu
+        if (typeof shakeForm === 'function') shakeForm();
+        return;
+    }
+
+    // Shfaqim email-in te Modali për konfirmim vizual
+    if (displayEmail) displayEmail.innerText = `Llogaria: ${emailInput.value}`;
+
+    // Hapja e Modalit me animacion
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            modal.style.opacity = "1";
+            const card = modal.querySelector('.auth-card');
+            if (card) card.style.transform = "scale(1)";
+        }, 10);
+    }
+}
+
+/**
+ * 2. Mbyllja e Modal-it
+ */
+function closeRecoveryModal() {
+    const modal = document.getElementById('recovery-modal');
+    if (modal) {
+        modal.style.opacity = "0";
+        const card = modal.querySelector('.auth-card');
+        if (card) card.style.transform = "scale(0.95)";
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+}
+
+/**
+ * 3. Ruajtja e Fjalëkalimit të Ri (Lidhja me LocalStorage)
+ */
+function saveNewPassword() {
+    const email = document.getElementById('a-email').value;
+    const newPass = document.getElementById('new-pass').value;
+    const confirmPass = document.getElementById('confirm-new-pass').value;
+
+    // Validimi i thjeshtë
+    if (newPass.length < 8) {
+        alert("Fjalëkalimi duhet të ketë së paku 8 karaktere!");
+        return;
+    }
+    if (newPass !== confirmPass) {
+        alert("Fjalëkalimet nuk përputhen!");
+        return;
+    }
+
+    // Marrim përdoruesit nga Sistemi (LocalStorage)
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    const userIndex = users.findIndex(u => u.email === email);
+
+    if (userIndex !== -1) {
+        // Përditësojmë fjalëkalimin
+        users[userIndex].password = newPass;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        alert("Fjalëkalimi u ndryshua me sukses! Tani mund të hyni.");
+        closeRecoveryModal();
+    } else {
+        alert("Ky email nuk u gjet në sistemin tonë!");
+    }
+}
+
+/**
+ * 4. EVENT LISTENER (Lidhja fizike me HTML)
+ * Kjo bën që klikimi mbi <a> të aktivizojë procesin
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const recLink = document.getElementById('recovery-link');
+    if (recLink) {
+        recLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            initRecoverySequence();
+        });
+    }
+});
 
         
 
@@ -1235,6 +1342,7 @@ const modeObserver = {
     </script>
 </body>
 </html>
+
 
 
 
