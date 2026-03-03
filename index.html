@@ -345,11 +345,7 @@ input:-webkit-autofill:focus {
                 </div>
             </div>
 
-            <div id="recovery-link" class="hidden justify-end mt-6">
-                <span onclick="recoveryFlow()" class="text-[8px] font-black text-slate-500 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase">
-                    Harruat fjalëkalimin?
-                </span>
-            </div>
+        
 
             <button id="auth-submit-btn" onclick="processAuth()" class="w-full btn-premium py-6 mt-12 uppercase text-[11px] tracking-[0.2em] transition-all">
                 Krijo Llogarinë
@@ -358,8 +354,15 @@ input:-webkit-autofill:focus {
             <div class="mt-8 text-center">
                 <span id="switch-trigger" onclick="toggleMode()" class="text-[9px] font-black text-slate-600 hover:text-white cursor-pointer transition-all tracking-widest uppercase">
                     Kaloni në Log In
-                </span>
-            </div>
+                </span>   
+             </div>
+
+<div id="recovery-link" class="hidden justify-end mt-2" style="display: none;">
+    <a href="#" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase p-1">
+        Harruat fjalëkalimin?
+    </a>
+</div>
+            
         </div>
     </div>
 </div>
@@ -1264,6 +1267,16 @@ function processAuth() {
         // Regjistrimi në LocalStorage
         localStorage.setItem('user_cred', JSON.stringify({ name: n, email: e, pass: p }));
     } else {
+
+
+// Brenda toggleMode()
+if (mode === 'login') {
+    document.getElementById('recovery-link-container').style.display = 'flex';
+} else {
+    document.getElementById('recovery-link-container').style.display = 'none';
+}
+
+        
         // Kontrolli i kredencialeve ekzistuese
         const cred = JSON.parse(localStorage.getItem('user_cred'));
         if (!cred || e !== cred.email || p !== cred.pass) {
@@ -1395,12 +1408,109 @@ function hideError(input, msg) {
 
 
 
+
+
+        
+
+
+/* --- RECOVERY MODULE: MENAXHIMI I STATE-IT DHE AKSESIT --- */
+
+/**
+ * Funksioni kryesor që aktivizon modalitetin e rikthimit.
+ * Ky funksion ka akses në të gjithë sistemin dhe ndryshon 
+ * logjikën e butonit kryesor përkohësisht.
+ */
+function initRecoverySequence() {
+    const mainTitle = document.getElementById('auth-main-title');
+    const subTitle = document.getElementById('auth-sub-title');
+    const btn = document.querySelector('.btn-premium');
+    const fieldName = document.getElementById('field-name');
+    const recoveryLink = document.getElementById('recovery-link');
+    const emailInput = document.getElementById('a-email');
+    const switchTrigger = document.getElementById('switch-trigger');
+
+    // 1. Kontrolli i emailit para se të nisim
+    if (!emailInput.value.includes('@')) {
+        subTitle.innerText = "SHËNONI EMAIL-IN PËR TË VAZHDUAR";
+        subTitle.style.color = "#ef4444";
+        shakeForm();
+        return;
+    }
+
+
+
+// Brenda initRecoverySequence()
+document.getElementById('recovery-link-container').style.display = 'none'; 
+// Kjo e fsheh vetveten sapo klikohet, që të mos rrijë aty gjatë procesit të rikthimit.
+
+
+    
+    // 2. Transformimi i UI në "Recovery State"
+    mainTitle.innerHTML = 'RECOVERY<span class="text-indigo-500">.</span>';
+    subTitle.innerText = "SISTEMI PO VERIFIKON IDENTITETIN TUAJ";
+    subTitle.style.color = "#6366f1";
+    
+    // Fshehim elementet që nuk duhen gjatë recovery
+    if(fieldName) fieldName.style.display = "none";
+    if(recoveryLink) recoveryLink.style.display = "none";
+    
+    // Ndryshojmë tekstin e switch-it për t'u kthyer pas
+    switchTrigger.innerText = "← KTHEHU TE LOG IN";
+    switchTrigger.onclick = () => {
+        location.reload(); // Mënyra më e pastër për të resetuar state-in
+    };
+
+    // 3. Aktivizojmë rrjedhën e rikthimit (nga kodi që kemi bërë më parë)
+    // Këtu bëhet lidhja me funksionin async recoveryFlow
+    if (typeof recoveryFlow === "function") {
+        recoveryFlow(); 
+    }
+}
+
+// Lidhim eventin me elementin HTML (Harruat fjalëkalimin?)
+document.getElementById('recovery-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    initRecoverySequence();
+});
+
+/* --- OBSERVER: MONITORIMI I MODE-IT (Siguria) --- */
+/**
+ * Ky bllok monitoron nëse modaliteti ndryshon dhe 
+ * garanton që Recovery Link shfaqet VETËM në Log In.
+ */
+const modeObserver = {
+    updateUI: function(currentMode) {
+        const link = document.getElementById('recovery-link');
+        if (!link) return;
+
+        if (currentMode === 'login') {
+            link.classList.remove('hidden');
+            link.style.display = 'flex';
+            link.style.animation = 'fade-in 0.5s ease forwards';
+        } else {
+            link.classList.add('hidden');
+            link.style.display = 'none';
+        }
+    }
+};
+
+// Integrimi i këtij moduli te funksioni yt toggleMode()
+// Shto këtë rresht brenda toggleMode(): modeObserver.updateUI(mode);
+
+
+
+
+
+
+        
+
         
 
 
     </script>
 </body>
 </html>
+
 
 
 
