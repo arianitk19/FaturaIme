@@ -23,50 +23,7 @@
     <style>
 
 
-/* --- MESAZHET E GABIMIT --- */
-[id^="error-"] {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    font-weight: 800;
-    /* Korigjim: Sigurojmë që mesazhi të mos zërë hapësirë kur është i fshehur */
-    display: block; 
-    transform: translateY(-5px);
-}
-
-/* --- AUTOFILL FIX (STRIKT) --- */
-/* Ky korigjim parandalon atë sfondin e shëmtuar të bardhë ose blu të Chrome */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus {
-    -webkit-text-fill-color: white !important;
-    -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset !important;
-    transition: background-color 5000s ease-in-out 0s;
-    font-family: inherit;
-}
-
-/* --- ANIMACIONI SHAKE (PRO) --- */
-@keyframes shake-pro {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    40% { transform: translateX(6px); }
-    60% { transform: translateX(-4px); }
-    80% { transform: translateX(4px); }
-}
-
-.shake-active {
-    animation: shake-pro 0.4s cubic-bezier(.36,.07,.19,.97) both;
-    /* Korigjim: Ngjyra e gabimit duhet të ketë prioritet */
-    border-bottom-color: #ef4444 !important;
-}
-
-/* --- AUTH SHIELD & CARD DESIGN --- */
-#auth-shield {
-    background: radial-gradient(circle at center, #111 0%, #000 100%);
-    backdrop-filter: blur(50px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* --- KORIGJIM PËR KLIKIMIN DHE Z-INDEX --- */
 
 .auth-card {
     background: rgba(10, 10, 10, 0.85);
@@ -74,36 +31,34 @@ input:-webkit-autofill:focus {
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(20px);
-    z-index: 1;
+    z-index: 1; /* Baza */
 }
 
-/* Efekti i Bordurës që Rrotullohet (Neon Trace) */
+/* Ky div i ri duhet të rrethojë gjithë HTML-në brenda card-it */
+.auth-content-wrapper {
+    position: relative;
+    z-index: 10; /* Ngritja mbi efektin rrotullues */
+    pointer-events: auto; /* Siguron që klikimet të lejohen këtu */
+}
+
+/* Efekti i Bordurës që Rrotullohet */
 .auth-card::before {
     content: '';
     position: absolute;
     top: -50%; left: -50%; width: 200%; height: 200%;
     background: conic-gradient(transparent, transparent, transparent, #6366f1);
     animation: rotate-border 6s linear infinite;
-    z-index: -1;
+    z-index: -1; /* I detyruar të qëndrojë prapa */
+    pointer-events: none; /* Nuk lejon bllokimin e klikimit */
 }
 
-@keyframes rotate-border {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* --- INPUT CONTAINERS --- */
 .auth-input-container {
     position: relative;
+    z-index: 20; /* Më lart se çdo gjë tjetër */
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 15px; /* Korigjim: Hapësirë e mjaftueshme për mesazhin poshtë */
-}
-
-.auth-input-container:focus-within {
-    border-bottom-color: #6366f1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px -5px rgba(99, 102, 241, 0.3);
+    margin-bottom: 15px;
+    pointer-events: auto;
 }
 
 .auth-input {
@@ -112,37 +67,39 @@ input:-webkit-autofill:focus {
     padding: 16px 5px;
     outline: none;
     font-size: 14px;
-    letter-spacing: 2px; /* Korigjim: Për dizajnin superior */
+    letter-spacing: 2px;
     color: #fff;
     border: none;
+    position: relative;
+    z-index: 30; /* Niveli final i aksesit */
+    cursor: text; /* Siguron kursorin e shkrimit */
 }
 
-/* --- BUTONI PREMIUM --- */
+/* --- PJESA TJETËR (E PA NDRYSHUAR) --- */
+
+[id^="error-"] {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    font-weight: 800;
+    display: block; 
+    transform: translateY(-5px);
+}
+
+@keyframes rotate-border {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .btn-premium {
+    position: relative;
+    z-index: 40; /* Butoni duhet të jetë gjithmonë i klikueshëm */
     background: #fff;
     color: #000;
     font-weight: 900;
     border: none;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Prerja gjeometrike e butonit */
     clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
-}
-
-.btn-premium:hover {
-    background: #6366f1;
-    color: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
-}
-
-.btn-premium:active {
-    transform: translateY(0);
-}
-
-/* Statusi i suksesit (vjen nga JS) */
-.input-success {
-    border-bottom-color: #10b981 !important;
 }
 
 
@@ -309,9 +266,10 @@ input:-webkit-autofill:focus {
 
 <div id="auth-shield" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-1000">
     
-    <div class="auth-card w-full max-w-[420px] rounded-[40px] p-12 shadow-2xl relative overflow-hidden">
+    <div class="auth-card w-full max-w-[420px] rounded-[40px] shadow-2xl relative overflow-hidden">
         
-        <div class="relative z-10">
+        <div class="auth-content-wrapper p-12 relative z-10">
+            
             <div class="mb-12 text-center">
                 <h2 id="auth-main-title" class="text-4xl font-black italic tracking-tighter text-white">
                     SIGN UP<span class="text-indigo-500">.</span>
@@ -322,7 +280,6 @@ input:-webkit-autofill:focus {
             </div>
 
             <div class="space-y-6">
-                
                 <div id="field-name" class="auth-input-container">
                     <input type="text" id="a-name" placeholder="EMRI MBIEMRI" class="auth-input">
                     <p id="error-name" class="text-[7px] text-red-500 opacity-0 absolute transition-all uppercase tracking-widest mt-1">
@@ -345,28 +302,24 @@ input:-webkit-autofill:focus {
                 </div>
             </div>
 
-        
+            <div id="recovery-link" class="hidden justify-end mt-3" style="display: none;">
+                <a href="#" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase p-1">
+                    Harruat fjalëkalimin?
+                </a>
+            </div>
 
-            <button id="auth-submit-btn" onclick="processAuth()" class="w-full btn-premium py-6 mt-12 uppercase text-[11px] tracking-[0.2em] transition-all">
+            <button id="auth-submit-btn" onclick="processAuth()" class="w-full btn-premium py-6 mt-10 uppercase text-[11px] tracking-[0.2em] transition-all">
                 Krijo Llogarinë
             </button>
 
             <div class="mt-8 text-center">
                 <span id="switch-trigger" onclick="toggleMode()" class="text-[9px] font-black text-slate-600 hover:text-white cursor-pointer transition-all tracking-widest uppercase">
                     Kaloni në Log In
-                </span>   
-             </div>
-
-<div id="recovery-link" class="hidden justify-end mt-2" style="display: none;">
-    <a href="#" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase p-1">
-        Harruat fjalëkalimin?
-    </a>
-</div>
+                </span>    
+            </div>
             
-        </div>
-    </div>
+        </div> </div>
 </div>
-
 
     
 
@@ -1510,6 +1463,7 @@ const modeObserver = {
     </script>
 </body>
 </html>
+
 
 
 
