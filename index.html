@@ -605,24 +605,69 @@ async function startFaceID() {
         }
 
         function initChart() {
-            const ctx = document.getElementById('appChart').getContext('2d');
-            db.chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['', '', '', '', '', ''],
-                    datasets: [{
-                        data: [0,0,0,0,0,0],
-                        borderColor: '#6366f1',
-                        borderWidth: 3,
-                        tension: 0.5,
-                        pointRadius: 0,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                    }]
-                },
-                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-            });
+    const ctx = document.getElementById('appChart').getContext('2d');
+
+    // 1. MARRIM TË DHËNAT REALE: Marrim 7 shpenzimet e fundit
+    // I kthejmë mbrapsht (.reverse) që e fundit të jetë në fund të grafikut
+    const lastExpenses = db.expenses.slice(0, 7).reverse();
+    
+    // Kriojmë etiketat (datat) dhe vlerat (shumat)
+    const labels = lastExpenses.map(e => e.date.split(',')[0]); // Vetëm data pa orën
+    const dataValues = lastExpenses.map(e => e.amount);
+
+    // 2. MBROJTJA: Nëse nuk ka të dhëna, shfaqim një vijë të rrafshët fillestare
+    const finalLabels = labels.length ? labels : ['', '', '', '', '', ''];
+    const finalData = dataValues.length ? dataValues : [0, 0, 0, 0, 0, 0];
+
+    // 3. PASTRIMI: Nëse grafiku ekziston, e fshijmë para se ta bëjmë të riun
+    if (db.chart instanceof Chart) {
+        db.chart.destroy();
+    }
+
+    // 4. NDËRTIMI I GRAFIKUT PREMIUM
+    db.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: finalLabels,
+            datasets: [{
+                label: 'Shpenzimet',
+                data: finalData,
+                borderColor: '#6366f1', // Indigo Premium
+                borderWidth: 4,
+                tension: 0.4, // Lakim perfekt i vijës
+                pointRadius: 4, // Pikat që tregojnë ku është bërë pagesa
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#6366f1',
+                pointBorderWidth: 2,
+                fill: true,
+                // Efekti i hies (gradient) poshtë vijës
+                backgroundColor: 'rgba(99, 102, 241, 0.1)' 
+            }]
+        },
+        options: { 
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: '#111',
+                    titleFont: { size: 10 },
+                    bodyFont: { size: 12, weight: 'bold' },
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y.toFixed(2) + ' €';
+                        }
+                    }
+                }
+            }, 
+            scales: { 
+                x: { display: false }, 
+                y: { display: false, beginAtZero: true } 
+            } 
         }
+    });
+}
 
         function renderUI() {
             const total = db.expenses.reduce((s, a) => s + a.amount, 0);
@@ -1546,6 +1591,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
