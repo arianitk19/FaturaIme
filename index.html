@@ -604,117 +604,147 @@ async function startFaceID() {
             document.getElementById('selectedIcon').value = icon;
         }
 
+
         function initChart() {
     const ctx = document.getElementById('appChart').getContext('2d');
-
-    // 1. MARRIM TË DHËNAT REALE: Marrim 7 shpenzimet e fundit
-    // I kthejmë mbrapsht (.reverse) që e fundit të jetë në fund të grafikut
-    const lastExpenses = db.expenses.slice(0, 7).reverse();
     
-    // Kriojmë etiketat (datat) dhe vlerat (shumat)
-    const labels = lastExpenses.map(e => e.date.split(',')[0]); // Vetëm data pa orën
-    const dataValues = lastExpenses.map(e => e.amount);
+    // Marrim 10 shpenzimet e fundit dhe i kthejmë mbrapsht për rrjedhë kronologjike
+    const lastData = [...db.expenses].slice(0, 10).reverse();
+    const labels = lastData.map(e => e.cat); 
+    const amounts = lastData.map(e => e.amount);
 
-    // 2. MBROJTJA: Nëse nuk ka të dhëna, shfaqim një vijë të rrafshët fillestare
-    const finalLabels = labels.length ? labels : ['', '', '', '', '', ''];
-    const finalData = dataValues.length ? dataValues : [0, 0, 0, 0, 0, 0];
-
-    // 3. PASTRIMI: Nëse grafiku ekziston, e fshijmë para se ta bëjmë të riun
     if (db.chart instanceof Chart) {
-        db.chart.destroy();
+        db.chart.destroy(); // Pastrimi i memories
     }
 
-    // 4. NDËRTIMI I GRAFIKUT PREMIUM
     db.chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: finalLabels,
+            labels: labels.length ? labels : ['', '', '', '', ''],
             datasets: [{
-                label: 'Shpenzimet',
-                data: finalData,
-                borderColor: '#6366f1', // Indigo Premium
+                data: amounts.length ? amounts : [0, 0, 0, 0, 0],
+                borderColor: '#6366f1',
                 borderWidth: 4,
-                tension: 0.4, // Lakim perfekt i vijës
-                pointRadius: 4, // Pikat që tregojnë ku është bërë pagesa
+                tension: 0.4,
+                pointRadius: 5,
                 pointBackgroundColor: '#fff',
-                pointBorderColor: '#6366f1',
-                pointBorderWidth: 2,
                 fill: true,
-                // Efekti i hies (gradient) poshtë vijës
-                backgroundColor: 'rgba(99, 102, 241, 0.1)' 
+                backgroundColor: 'rgba(99, 102, 241, 0.1)'
             }]
         },
-        options: { 
+        options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { 
-                legend: { display: false },
-                tooltip: {
-                    enabled: true,
-                    backgroundColor: '#111',
-                    titleFont: { size: 10 },
-                    bodyFont: { size: 12, weight: 'bold' },
-                    callbacks: {
-                        label: function(context) {
-                            return context.parsed.y.toFixed(2) + ' €';
-                        }
-                    }
-                }
-            }, 
-            scales: { 
-                x: { display: false }, 
-                y: { display: false, beginAtZero: true } 
-            } 
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { display: false, beginAtZero: true } },
+            animation: { duration: 600 } // Animacion i shpejtë dhe i lëmuar
         }
     });
 }
 
-        function renderUI() {
-            const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-            const remaining = db.limit - total;
-            document.getElementById('mainBalance').innerText = `${total.toFixed(2)} €`;
-            document.getElementById('limitText').innerText = `${db.limit} €`;
-            document.getElementById('remainingText').innerText = `${remaining.toFixed(2)} €`;
-            document.getElementById('remainingText').style.color = remaining < 0 ? '#ef4444' : '#10b981';
+       function renderUI() {
+    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
+    const remaining = db.limit - total;
 
-            const container = document.getElementById('listContainer');
-            container.innerHTML = db.expenses.length ? '' : '<p class="text-center opacity-20 py-10">Zbrazët</p>';
-            
-            db.expenses.slice(0, 10).forEach(exp => {
-                container.innerHTML += `
-                    <div class="glass-panel p-6 flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center">
-                                ${iconMap[exp.icon] || iconMap.food}
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-xs uppercase tracking-widest">${exp.cat}</h4>
-                                <p class="text-[9px] opacity-50 font-medium">${exp.date}</p>
-                            </div>
-                        </div>
-                        <span class="font-bold text-sm">-${exp.amount.toFixed(2)} €</span>
-                    </div>`;
-            });
-            db.chart.data.datasets[0].data = db.expenses.map(e => e.amount).reverse().slice(-10);
-            db.chart.update();
-        }
+    // Përditësimi i vlerave kryesore
+    document.getElementById('mainBalance').innerText = `${total.toFixed(2)} €`;
+    document.getElementById('limitText').innerText = `${db.limit} €`;
+    const remEl = document.getElementById('remainingText');
+    remEl.innerText = `${remaining.toFixed(2)} €`;
+    remEl.style.color = remaining < 0 ? '#ef4444' : '#10b981';
+
+    const container = document.getElementById('listContainer');
+    container.innerHTML = ''; // Pastrim i plotë
+
+    if (db.expenses.length === 0) {
+        container.innerHTML = '<p class="text-center opacity-20 py-10 uppercase text-[10px] tracking-widest">Nuk ka shënime</p>';
+    }
+
+    // Renditja e listës
+    db.expenses.slice(0, 10).forEach((exp, index) => {
+        const row = document.createElement('div');
+        row.className = "glass-panel p-6 flex justify-between items-center mb-4 group animate-in fade-in transition-all hover:bg-white/[0.02]";
+        
+        row.innerHTML = `
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center">
+                    ${iconMap[exp.icon] || iconMap.food}
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs uppercase tracking-widest">${exp.cat}</h4>
+                    <p class="text-[9px] opacity-50 font-medium">${exp.date}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <input type="number" step="0.01" value="${exp.amount}" 
+                    onchange="updateExpense(${index}, this.value)"
+                    class="bg-transparent text-right font-bold text-sm outline-none w-20 focus:text-indigo-400 border-b border-transparent focus:border-indigo-500/30 transition-all">
+                
+                <button onclick="deleteExpense(${index})" class="opacity-0 group-hover:opacity-100 p-2 text-red-500/50 hover:text-red-500 transition-all">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </div>
+        `;
+        container.appendChild(row);
+    });
+
+    // PËRDITËSIMI I GRAFIKUT (RELACIONI PERFEKT)
+    if(db.chart) {
+        // Marrim 10 vlerat e fundit, i kthejmë mbrapsht për rrjedhë kronologjike
+        const chartValues = db.expenses.slice(0, 10).map(e => e.amount).reverse();
+        const chartLabels = db.expenses.slice(0, 10).map(e => e.cat).reverse();
+        
+        db.chart.data.labels = chartLabels.length ? chartLabels : ['', '', '', '', ''];
+        db.chart.data.datasets[0].data = chartValues.length ? chartValues : [0, 0, 0, 0, 0];
+        db.chart.update('none'); // Update i shpejtë pa animacion që të mos "dridhet"
+    }
+}
+
+        // EDITIMI I SHUMËS DIREKT NGA LISTA
+function updateExpense(index, newVal) {
+    const val = parseFloat(newVal);
+    if (isNaN(val) || val < 0) return renderUI();
+
+    db.expenses[index].amount = val;
+    saveAndRefresh();
+}
+
+// FSHIRJA E NJË PAGESE SPECIFIKE
+function deleteExpense(index) {
+    db.expenses.splice(index, 1);
+    saveAndRefresh();
+}
+
+// FUNKSIONI QË RUAJNË DHE RIFRESKOJNË ÇDO GJË
+function saveAndRefresh() {
+    localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
+    renderUI();
+}
 
         function submitExpense() {
-            const amt = document.getElementById('inpAmount').value;
-            const cat = document.getElementById('selectedCat').value;
-            const icon = document.getElementById('selectedIcon').value;
-            if(!amt) return;
-            db.expenses.unshift({ 
-                amount: parseFloat(amt), 
-                cat: cat, 
-                icon: icon,
-                date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
-            });
-            localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
-            hideModal('addModal');
-            document.getElementById('inpAmount').value = '';
-            renderUI();
-        }
+    const amt = document.getElementById('inpAmount').value;
+    const cat = document.getElementById('selectedCat').value;
+    const icon = document.getElementById('selectedIcon').value;
+    
+    if(!amt || amt <= 0) {
+        shakeForm(); // Funksioni që bëmë më herët për gabim
+        return;
+    }
+
+    db.expenses.unshift({ 
+        amount: parseFloat(amt), 
+        cat: cat, 
+        icon: icon,
+        // Shtojmë orën dhe minutën për listën
+        date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+    });
+
+    saveAndRefresh();
+    hideModal('addModal');
+    document.getElementById('inpAmount').value = '';
+}
+
+        
 
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
@@ -1591,6 +1621,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
