@@ -660,9 +660,9 @@ async function startFaceID() {
         container.innerHTML = '<p class="text-center opacity-20 py-10 uppercase text-[10px] tracking-widest">Nuk ka shënime</p>';
     }
 
-   db.expenses.slice(0, 10).forEach((exp, index) => {
+ db.expenses.slice(0, 10).forEach((exp, index) => {
     const row = document.createElement('div');
-    row.className = "glass-panel p-6 flex justify-between items-center mb-4 group transition-all hover:bg-white/[0.05]";
+    row.className = "glass-panel p-6 flex justify-between items-center mb-4 group animate-in fade-in transition-all hover:bg-white/[0.02]";
     
     row.innerHTML = `
         <div class="flex items-center gap-4">
@@ -670,61 +670,60 @@ async function startFaceID() {
                 ${iconMap[exp.icon] || iconMap.food}
             </div>
             <div>
-                <h4 class="font-bold text-xs uppercase tracking-widest">${exp.cat}</h4>
-                <p class="text-[9px] opacity-50 font-medium">${exp.date}</p>
+                <h4 class="font-bold text-[10px] uppercase tracking-widest">${exp.cat}</h4>
+                <p class="text-[8px] opacity-40 font-medium">${exp.date}</p>
             </div>
         </div>
-        <div class="flex items-center gap-2">
-            <span class="font-bold text-sm mr-2">-${exp.amount.toFixed(2)} €</span>
+        
+        <div class="flex items-center gap-4">
+            <span class="font-black text-sm text-white/90">-${exp.amount.toFixed(2)} €</span>
             
-            <button onclick="openEditMode(${index})" class="p-2 bg-indigo-500/10 hover:bg-indigo-500/20 rounded-xl transition-all group-hover:opacity-100">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5">
-                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="openEditMode(${index})" class="px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-[9px] font-bold uppercase rounded-lg border border-indigo-500/20 transition-all">
+                    Edito
+                </button>
 
-            <button onclick="deleteExpense(${index})" class="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-xl transition-all">
-                <svg width="14" height="14" fill="none" stroke="#ef4444" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
-            </button>
+                <button onclick="deleteExpense(${index})" class="p-2 text-red-500/20 hover:text-red-500 transition-all">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </button>
+            </div>
         </div>
     `;
     container.appendChild(row);
 });
 
-
-function openEditMode(index) {
+           function openEditMode(index) {
     const exp = db.expenses[index];
     
-    // 1. Plotësojmë fushat e modalit me vlerat aktuale
+    // 1. Mbushim fushat e modalit me vlerat aktuale të pagesës
     document.getElementById('inpAmount').value = exp.amount;
     document.getElementById('selectedCat').value = exp.cat;
     document.getElementById('selectedIcon').value = exp.icon;
 
-    // 2. Ndryshojmë funksionin e butonit "SHTO" në "RUAJ"
+    // 2. Ndryshojmë butonin e modalit që të bëjë "Përditëso"
     const submitBtn = document.querySelector('#addModal .btn-premium');
     const originalText = submitBtn.innerText;
-    submitBtn.innerText = "RUAJ NDRYSHIMIN";
+    submitBtn.innerText = "PËRDITËSO NDRYSHIMET";
     
     showModal('addModal');
 
-    // 3. Kur klikohet Ruaj
+    // 3. Logjika e ruajtjes së editimit
     submitBtn.onclick = function() {
-        const val = document.getElementById('inpAmount').value;
-        if(!val) return;
+        const newAmt = document.getElementById('inpAmount').value;
+        if(!newAmt || newAmt <= 0) return;
 
-        // Përditësojmë objektin në array
-        db.expenses[index].amount = parseFloat(val);
+        // Përditësojmë të dhënat në array
+        db.expenses[index].amount = parseFloat(newAmt);
         db.expenses[index].cat = document.getElementById('selectedCat').value;
         db.expenses[index].icon = document.getElementById('selectedIcon').value;
 
-        // Ruajmë në LocalStorage dhe rifreskojmë UI + Grafiku
+        // Ruajmë dhe rifreskojmë UI + Grafikun
         saveAndRefresh();
         hideModal('addModal');
 
-        // Kthejmë butonin në gjendjen normale
+        // Kthejmë butonin në gjendje normale për shtimet e reja
         submitBtn.innerText = originalText;
         submitBtn.onclick = submitExpense;
     };
@@ -1760,6 +1759,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
