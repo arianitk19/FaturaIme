@@ -744,6 +744,102 @@ function saveAndRefresh() {
     document.getElementById('inpAmount').value = '';
 }
 
+
+
+      function submitExpense() {
+    const amtInput = document.getElementById('inpAmount');
+    const amt = amtInput.value;
+    const cat = document.getElementById('selectedCat').value;
+    const icon = document.getElementById('selectedIcon').value;
+    
+    if(!amt || amt <= 0) {
+        if(typeof shakeForm === "function") shakeForm(); 
+        return;
+    }
+
+    // Shtohet në fillim të memories
+    db.expenses.unshift({ 
+        amount: parseFloat(amt), 
+        cat: cat, 
+        icon: icon,
+        date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+    });
+
+    saveAndRefresh();
+    hideModal('addModal');
+    amtInput.value = '';
+
+    // SHFAQJA E OPSIONIT TË EDITIMIT TË SHPEJTË
+    showQuickEditToast(0); // 0 sepse është i pari në listë (unshift)
+}
+
+
+
+
+        function showQuickEditToast(index) {
+    // Fshijmë ndonjë toast ekzistues që të mos mbingarkohet ekrani
+    const oldToast = document.querySelector('.quick-edit-toast');
+    if(oldToast) oldToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = "quick-edit-toast fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-indigo-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4";
+    toast.innerHTML = `
+        <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-tighter opacity-80">U shtua me sukses</span>
+            <span class="text-xs font-black">${db.expenses[index].amount} € - ${db.expenses[index].cat}</span>
+        </div>
+        <button onclick="openEditFromToast(${index}, this)" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all">
+            Edito
+        </button>
+    `;
+    document.body.appendChild(toast);
+
+    // Zhduket pas 5 sekondave
+    setTimeout(() => {
+        if(toast.parentElement) {
+            toast.classList.add('fade-out');
+            setTimeout(() => toast.remove(), 500);
+        }
+    }, 5000);
+}
+
+function openEditFromToast(index, btnElement) {
+    const exp = db.expenses[index];
+    btnElement.parentElement.remove(); // Heqim toast-in
+    
+    // Mbushim fushat e modalit me të dhënat që sapo dërguam
+    document.getElementById('inpAmount').value = exp.amount;
+    document.getElementById('selectedCat').value = exp.cat;
+    document.getElementById('selectedIcon').value = exp.icon;
+
+    // Ndryshojmë përkohësisht funksionin e butonit "SHTO" që të bëjë "UPDATE"
+    const submitBtn = document.querySelector('#addModal .btn-premium');
+    const originalText = submitBtn.innerText;
+    
+    submitBtn.innerText = "PËRDITËSO NDRYSHIMIN";
+    showModal('addModal');
+
+    submitBtn.onclick = function() {
+        // Përditësojmë vlerat
+        db.expenses[index].amount = parseFloat(document.getElementById('inpAmount').value);
+        db.expenses[index].cat = document.getElementById('selectedCat').value;
+        db.expenses[index].icon = document.getElementById('selectedIcon').value;
+        
+        saveAndRefresh();
+        hideModal('addModal');
+        
+        // Kthejmë butonin në gjendjen normale për herën tjetër
+        submitBtn.innerText = originalText;
+        submitBtn.onclick = submitExpense;
+    };
+}
+
+
+
+        
+
+        
+        
         
 
         function downloadPDF() {
@@ -1621,6 +1717,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
