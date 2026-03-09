@@ -660,9 +660,10 @@ async function startFaceID() {
         container.innerHTML = '<p class="text-center opacity-20 py-10 uppercase text-[10px] tracking-widest">Nuk ka shënime</p>';
     }
 
- db.expenses.slice(0, 10).forEach((exp, index) => {
+
+           db.expenses.slice(0, 10).forEach((exp, index) => {
     const row = document.createElement('div');
-    row.className = "glass-panel p-6 flex justify-between items-center mb-4 group animate-in fade-in transition-all hover:bg-white/[0.02]";
+    row.className = "glass-panel p-5 flex justify-between items-center mb-4 group animate-in fade-in transition-all hover:bg-white/[0.03]";
     
     row.innerHTML = `
         <div class="flex items-center gap-4">
@@ -675,25 +676,24 @@ async function startFaceID() {
             </div>
         </div>
         
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
             <span class="font-black text-sm text-white/90">-${exp.amount.toFixed(2)} €</span>
             
-            <div class="flex items-center gap-2">
-                <button onclick="openEditMode(${index})" class="px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-[9px] font-bold uppercase rounded-lg border border-indigo-500/20 transition-all">
-                    Edito
+            <div class="flex items-center gap-1">
+                <button onclick="openEditFromToast(${index})" class="p-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-xl transition-all" title="Edito">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </button>
-
+                
                 <button onclick="deleteExpense(${index})" class="p-2 text-red-500/20 hover:text-red-500 transition-all">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </button>
             </div>
         </div>
     `;
     container.appendChild(row);
 });
-
+           
+           
            function openEditMode(index) {
     const exp = db.expenses[index];
     
@@ -816,61 +816,56 @@ function saveAndRefresh() {
 }
 
 
-
-
-        function showQuickEditToast(index) {
-    // Fshijmë ndonjë toast ekzistues që të mos mbingarkohet ekrani
+         function showQuickEditToast(index) {
     const oldToast = document.querySelector('.quick-edit-toast');
     if(oldToast) oldToast.remove();
 
     const toast = document.createElement('div');
-    toast.className = "quick-edit-toast fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-indigo-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4";
+    // E zhvendosim anash (right-6) që të mos jetë mbi listë në mes
+    toast.className = "quick-edit-toast fixed bottom-6 right-6 z-[100] bg-indigo-600 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-right-full";
     toast.innerHTML = `
         <div class="flex flex-col">
-            <span class="text-[10px] font-bold uppercase tracking-tighter opacity-80">U shtua me sukses</span>
-            <span class="text-xs font-black">${db.expenses[index].amount} € - ${db.expenses[index].cat}</span>
+            <span class="text-[9px] font-black uppercase opacity-70 italic">Sapo u shtua</span>
+            <span class="text-xs font-bold">${db.expenses[index].amount}€</span>
         </div>
-        <button onclick="openEditFromToast(${index}, this)" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all">
+        <button onclick="this.parentElement.remove(); openEditFromToast(${index})" class="bg-white text-indigo-600 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-sm">
             Edito
         </button>
     `;
     document.body.appendChild(toast);
-
-    // Zhduket pas 5 sekondave
-    setTimeout(() => {
-        if(toast.parentElement) {
-            toast.classList.add('fade-out');
-            setTimeout(() => toast.remove(), 500);
-        }
-    }, 5000);
+    setTimeout(() => { if(toast.parentElement) toast.remove(); }, 4000);
 }
 
-function openEditFromToast(index, btnElement) {
+        
+
+
+        function openEditFromToast(index) {
     const exp = db.expenses[index];
-    btnElement.parentElement.remove(); // Heqim toast-in
     
-    // Mbushim fushat e modalit me të dhënat që sapo dërguam
+    // Mbushim modalin
     document.getElementById('inpAmount').value = exp.amount;
     document.getElementById('selectedCat').value = exp.cat;
     document.getElementById('selectedIcon').value = exp.icon;
 
-    // Ndryshojmë përkohësisht funksionin e butonit "SHTO" që të bëjë "UPDATE"
     const submitBtn = document.querySelector('#addModal .btn-premium');
     const originalText = submitBtn.innerText;
     
     submitBtn.innerText = "PËRDITËSO NDRYSHIMIN";
     showModal('addModal');
 
+    // Kur konfirmon editimin
     submitBtn.onclick = function() {
-        // Përditësojmë vlerat
-        db.expenses[index].amount = parseFloat(document.getElementById('inpAmount').value);
+        const amt = document.getElementById('inpAmount').value;
+        if(!amt) return;
+
+        db.expenses[index].amount = parseFloat(amt);
         db.expenses[index].cat = document.getElementById('selectedCat').value;
         db.expenses[index].icon = document.getElementById('selectedIcon').value;
         
-        saveAndRefresh();
+        saveAndRefresh(); // Kjo do të bëjë që edhe Line Chart të përditësohet
         hideModal('addModal');
         
-        // Kthejmë butonin në gjendjen normale për herën tjetër
+        // Resetojmë butonin për shtimet e radhës
         submitBtn.innerText = originalText;
         submitBtn.onclick = submitExpense;
     };
@@ -1759,6 +1754,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
+
 
 
 
