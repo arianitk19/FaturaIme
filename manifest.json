@@ -1,31 +1,16 @@
 {
-  "name": "FaturaIME - Menaxhimi Financiar",
-  "short_name": "FaturaIME",
-  "description": "Platformë moderne për menaxhimin e faturave dhe shpenzimeve.",
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#020617",
-  "theme_color": "#6366f1",
-  "orientation": "portrait",
-  "categories": ["finance", "utilities"],
-  "icons": [
-    {
-      "src": "https://img.icons8.com/ios-filled/192/FFFFFF/bill.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ]
+  "name": "FaturaIME",
+  "short_name": "FaturaIME",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
