@@ -1,16 +1,31 @@
 {
-  "name": "FaturaIME",
-  "short_name": "FaturaIME",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+
+  "name": "FaturaIME",
+
+  "short_name": "FaturaIME",
+
+  "start_url": "index.html",
+
+  "display": "standalone",
+
+  "background_color": "#000000",
+
+  "theme_color": "#000000",
+
+  "orientation": "portrait",
+
+  "icons": [
+
+    {
+
+      "src": "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png",
+
+      "sizes": "512x512",
+
+      "type": "image/png"
+
+    }
+
+  ]
+
 }
