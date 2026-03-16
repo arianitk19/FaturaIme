@@ -28,20 +28,15 @@
     <style>
 
 
-body {
-    /* 1. Tipografia dhe Ngjyrat dinamike */
-    font-family: 'Space Grotesk', sans-serif;
-    background: var(--bg); /* Përdor variablën, jo #000 */
-    color: var(--text);
-    
-    /* 2. Sjellja e faqes (UX) */
-    overflow-x: hidden;
-    -webkit-tap-highlight-color: transparent; /* Fix për mobile */
-    
-    /* 3. Animacionet e tranzicionit */
-    transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  body {
+
+        background: var(--bg);
+
+        color: var(--text);
+
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    }               
 
 
 
@@ -67,6 +62,23 @@ body {
         color: var(--text);
     }
 
+
+
+body {
+
+    font-family: 'Space Grotesk', sans-serif;
+
+    background: #000;
+
+    color: #fff;
+
+    overflow-x: hidden;
+
+    /* Heq hijen gri që krijohet kur klikon në mobile */
+
+    -webkit-tap-highlight-color: transparent;
+
+}
 
 
     @keyframes flash-glow {
@@ -1450,9 +1462,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
+
+
+
+
+
+
+
+function updateSystemIcon(colorType) {
+    const iconMap = {
+        'indigo': 'https://img.icons8.com/ios-filled/512/6366f1/bill.png',
+        'black': 'https://img.icons8.com/ios-filled/512/000000/bill.png',
+        'white': 'https://img.icons8.com/ios-filled/512/FFFFFF/bill.png'
+    };
+
+    const newSrc = iconMap[colorType];
+    
+    // Ndrysho Favicon
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+    }
+    link.href = newSrc;
+
+    // Ndrysho Apple Touch Icon (për iOS)
+    let appleIcon = document.querySelector("link[rel~='apple-touch-icon']");
+    if (!appleIcon) {
+        appleIcon = document.createElement('link');
+        appleIcon.rel = 'apple-touch-icon';
+        document.head.appendChild(appleIcon);
+    }
+    appleIcon.href = newSrc;
+    
+    localStorage.setItem('sys_icon_choice', colorType);
+}
+
+
+
+
 </script>
    
 </body>
 </html>
-
 
