@@ -9,6 +9,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.min.js"></script>
+
+
     <link rel="manifest" href="manifest.json">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,20 +26,70 @@
 
 
     <style>
+
+
+body {
+    /* 1. Tipografia dhe Ngjyrat dinamike */
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg); /* Përdor variablën, jo #000 */
+    color: var(--text);
+    
+    /* 2. Sjellja e faqes (UX) */
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent; /* Fix për mobile */
+    
+    /* 3. Animacionet e tranzicionit */
+    transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+
+    :root {
+        --bg: #0f172a;
+        --text: #ffffff;
+        --glass: rgba(255, 255, 255, 0.03);
+        --border: rgba(255, 255, 255, 0.08);
+    }
+
+    [data-theme="light"] {
+        --bg: #f1f5f9;
+        --text: #0f172a;
+        --glass: rgba(0, 0, 0, 0.03);
+        --border: rgba(0, 0, 0, 0.1);
+    }
+
+   
+
+    .glass-panel {
+        background: var(--glass);
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
+
+
+
+    @keyframes flash-glow {
+        0% { background: rgba(99, 102, 241, 0); box-shadow: 0 0 0px rgba(99, 102, 241, 0); }
+        50% { background: rgba(99, 102, 241, 0.3); box-shadow: 0 0 25px rgba(99, 102, 241, 0.5); }
+        100% { background: rgba(255, 255, 255, 0.02); box-shadow: 0 0 0px rgba(99, 102, 241, 0); }
+    }
+
+    .scan-success-flash {
+        animation: flash-glow 1s ease-out;
+        border-color: #6366f1 !important;
+        color: #fff !important;
+    }
+
+
+
 /* --- AUTH SUPERIOR DESIGN & SYSTEM CONFIG --- */
 :root {
     --accent: #6366f1;
     --accent-glow: rgba(99, 102, 241, 0.4);
 }
 
-body {
-    font-family: 'Space Grotesk', sans-serif;
-    background: #000;
-    color: #fff;
-    overflow-x: hidden;
-    /* Heq hijen gri që krijohet kur klikon në mobile */
-    -webkit-tap-highlight-color: transparent;
-}
+
 
 /* --- AUTH SHIELD & BACKDROP --- */
 #auth-shield {
@@ -222,11 +276,210 @@ body {
     display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.8);
     border-radius: 32px; z-index: 50; flex-direction: column; align-items: center; justify-content: center;
 }
+
+/* Shto këtë klasë që JS do ta përdorë për ta zhdukur intro-n */
+.hidden-intro {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transition: all 1s ease-out;
+}
+
+
+/* --- CHART DYNAMIC SYSTEM --- */
+#chart-container {
+    max-height: 0;       /* Fillon i mbyllur */
+    opacity: 0;          /* I padukshëm */
+    overflow: hidden;    /* Parandalon daljen e grafikut jashtë kornizës gjatë hapjes */
+    transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); /* Efekt hapje premium Apple-style */
+    margin-bottom: 0;
+}
+
+/* Kjo klasë do të shtohet/hiqet automatikisht nga JS */
+.chart-active {
+    max-height: 250px !important; 
+    opacity: 1 !important;
+    margin-bottom: 2.5rem !important;
+}
+
+#appChart {
+    width: 100% !important;
+    height: 180px !important;
+    filter: drop-shadow(0 10px 15px rgba(99, 102, 241, 0.2)); /* Shkëlqim i lehtë nën vijën e grafikut */
+}
+
+
+
+#appChart {
+    transition: filter 0.5s ease;
+}
+
+/* Kjo do të aplikohet përmes JS nëse dëshiron më vonë */
+.chart-danger {
+    filter: drop-shadow(0 10px 15px rgba(239, 68, 68, 0.4)) !important;
+}
+
+
+
+
+
+
+
+   
+    /* Keypad Buttons */
+    .num-key {
+        width: 4rem; /* 64px */
+        height: 4rem;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 300;
+        color: white;
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: auto;
+        margin-right: auto;
+        cursor: pointer;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .num-key:active {
+        background-color: rgba(99, 102, 241, 0.2);
+        transform: scale(0.9);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    /* PIN Dots */
+    .dot {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 9999px;
+        border: 2px solid rgba(99, 102, 241, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .dot.active {
+        background-color: #6366f1;
+        border-color: #6366f1;
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+        transform: scale(1.25);
+    }
+
+    /* Animations */
+    @keyframes shake-pin {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-10px); }
+        40%, 80% { transform: translateX(10px); }
+    }
+    
+    .shake { 
+        animation: shake-pin 0.4s cubic-bezier(.36,.07,.19,.97) both; 
+    }
+
+    /* Unlock Transition */
+    #auth-shield.unlocked {
+        opacity: 0;
+        transform: scale(1.5);
+        filter: blur(40px);
+        pointer-events: none;
+    }
+
+    /* Light Mode Support */
+    [data-theme="light"] #auth-shield {
+        background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%) !important;
+    }
+
+    [data-theme="light"] .num-key {
+        background-color: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.05);
+        color: #0f172a;
+    }
+
+    [data-theme="light"] #auth-title {
+        color: #0f172a;
+    }
+
+    [data-theme="light"] .dot {
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+
+
+
+
+
+
 </style>
   
     
 </head>
 <body class="antialiased">
+
+
+
+
+
+
+
+
+<div id="auth-shield" class="fixed inset-0 z-[999] bg-[#020617] flex flex-col items-center justify-around py-16 px-6 backdrop-blur-3xl transition-all duration-1000">
+    
+    <div class="text-center">
+        <div class="relative inline-block mb-8">
+            <div class="absolute inset-0 bg-indigo-500 blur-3xl opacity-20 animate-pulse"></div>
+            <div id="lock-container" class="relative w-24 h-24 glass-panel rounded-[32px] flex items-center justify-center border-white/10 shadow-2xl">
+                <svg id="lock-svg" class="w-10 h-10 text-indigo-400 transition-all duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="lock-path" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+        <h2 id="auth-title" class="text-2xl font-black tracking-tight text-white mb-2">Sistemi i Siguruar</h2>
+        <p id="auth-subtitle" class="text-[10px] uppercase tracking-[0.4em] text-indigo-400 font-bold opacity-80">Identifikimi i Pronarit</p>
+    </div>
+
+    <div class="flex gap-6" id="pin-visualizer">
+        <div class="dot w-4 h-4 rounded-full border-2 border-indigo-500/30 transition-all duration-300"></div>
+        <div class="dot w-4 h-4 rounded-full border-2 border-indigo-500/30 transition-all duration-300"></div>
+        <div class="dot w-4 h-4 rounded-full border-2 border-indigo-500/30 transition-all duration-300"></div>
+        <div class="dot w-4 h-4 rounded-full border-2 border-indigo-500/30 transition-all duration-300"></div>
+    </div>
+
+    <div class="w-full max-w-[320px]">
+        <div class="grid grid-cols-3 gap-6 mb-8">
+            <button onclick="SecureVault.input(1)" class="num-key">1</button>
+            <button onclick="SecureVault.input(2)" class="num-key">2</button>
+            <button onclick="SecureVault.input(3)" class="num-key">3</button>
+            <button onclick="SecureVault.input(4)" class="num-key">4</button>
+            <button onclick="SecureVault.input(5)" class="num-key">5</button>
+            <button onclick="SecureVault.input(6)" class="num-key">6</button>
+            <button onclick="SecureVault.input(7)" class="num-key">7</button>
+            <button onclick="SecureVault.input(8)" class="num-key">8</button>
+            <button onclick="SecureVault.input(9)" class="num-key">9</button>
+            <div class="w-16 h-16"></div>
+            <button onclick="SecureVault.input(0)" class="num-key">0</button>
+            <button onclick="SecureVault.delete()" class="num-key text-indigo-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414A2 2 0 0010.828 19H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" stroke-width="2"/></svg>
+            </button>
+        </div>
+        
+        <button onclick="SecureVault.initiateRecovery()" class="w-full text-center text-[9px] font-black uppercase tracking-[0.3em] text-white/20 hover:text-indigo-400 transition-all duration-300">
+            Kam harruar PIN-in
+        </button>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
 
     <div id="menu-overlay" onclick="toggleMenu()"></div>
 
@@ -240,165 +493,265 @@ body {
 
 
 
-<div id="auth-shield" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 transition-all duration-1000">
-    
-    <div class="auth-card w-full max-w-[420px] rounded-[40px] shadow-2xl relative overflow-hidden">
-        
-        <div class="auth-content-wrapper p-12 relative z-10">
-            
-            <div class="mb-12 text-center">
-                <h2 id="auth-main-title" class="text-4xl font-black italic tracking-tighter text-white">
-                    SIGN UP<span class="text-indigo-500">.</span>
-                </h2>
-                <p id="auth-sub-title" class="text-[9px] uppercase tracking-[0.5em] text-slate-500 mt-2 font-bold italic">
-                    Krijoni një llogari për të nisur eksperiencën tuaj
-                </p>
-            </div>
 
-            <div class="space-y-6">
-                <div id="field-name" class="auth-input-container">
-                    <input type="text" id="a-name" placeholder="EMRI MBIEMRI" class="auth-input">
-                    <p id="error-name" class="text-[7px] text-red-500 opacity-0 absolute transition-all uppercase tracking-widest mt-1">
-                        Shënoni emrin dhe mbiemrin 
-                    </p>
-                </div>
-                
-                <div id="field-email" class="auth-input-container">
-                    <input type="email" id="a-email" placeholder="EMAIL ADRESA" class="auth-input">
-                    <p id="error-email" class="text-[7px] text-red-500 opacity-0 absolute transition-all uppercase tracking-widest mt-1">
-                        Email adresa nuk është valide
-                    </p>
+
+<div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5 z-[1000] flex flex-col">
+
+    <div class="flex-grow space-y-8 mt-12">
+
+        <h3 class="text-slate-500 font-bold text-[10px] uppercase tracking-[0.3em]">Menuja Kryesore</h3>
+
+        <div class="space-y-3">
+
+            <button onclick="location.reload()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn group hover:bg-white/[0.05] transition-all">
+
+                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500/20 transition-all">
+
+                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2"/></svg>
+
                 </div>
 
-                <div id="field-pass" class="auth-input-container">
-                    <input type="password" id="a-pass" placeholder="PASSWORD" class="auth-input">
-                    <p id="error-pass" class="text-[7px] text-red-500 opacity-0 absolute transition-all uppercase tracking-widest mt-1">
-                        Min. 8 karaktere (1 shkronjë e madhe & 1 numër)
-                    </p>
-                </div>
-            </div>
+                <span class="text-sm font-semibold tracking-wide">Dashboard</span>
 
-            <div id="recovery-link" class="hidden justify-end mt-3" style="display: none;">
-                <a href="#" class="text-[8px] font-black text-slate-700 hover:text-indigo-400 cursor-pointer transition-all tracking-[0.2em] uppercase p-1">
-                    Harruat fjalëkalimin?
-                </a>
-            </div>
-
-            <button id="auth-submit-btn" onclick="processAuth()" class="w-full btn-premium py-6 mt-10 uppercase text-[11px] tracking-[0.2em] transition-all">
-                Krijo Llogarinë
             </button>
 
-            <div class="mt-8 text-center">
-                <span id="switch-trigger" onclick="toggleMode()" class="text-[9px] font-black text-slate-600 hover:text-white cursor-pointer transition-all tracking-widest uppercase">
-                    Kaloni në Log In
-                </span>    
-            </div>
-            
-        </div> </div>
-</div>
+            <button onclick="downloadPDF()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn group hover:bg-white/[0.05] transition-all">
+
+                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500/20 transition-all">
+
+                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586"/></svg>
+
+                </div>
+
+                <span class="text-sm font-semibold tracking-wide">Eksporto PDF</span>
+
+            </button>
+
+            <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn group hover:bg-white/[0.05] transition-all">
+
+                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500/20 transition-all">
+
+                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>
+
+                </div>
+
+                <span class="text-sm font-semibold tracking-wide">Cakto Limitin</span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="mt-auto pt-8 border-t border-white/5">
+
+        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[0.4em] mb-5 text-center">Valuta</p>
+
+        
+
+        <div class="grid grid-cols-2 gap-2 bg-white/5 p-2 rounded-[24px] border border-white/5">
+
+            <button id="curr-EUR" onclick="changeSystemCurrency('EUR', '€')" class="cur-btn flex flex-col items-center justify-center py-4 rounded-[18px] transition-all duration-500 group">
+
+                <span class="text-[12px] font-black">EUR</span>
+
+                <span class="text-[10px] opacity-40 font-bold group-hover:opacity-100 italic">Euro</span>
+
+            </button>
+
+            <button id="curr-USD" onclick="changeSystemCurrency('USD', '$')" class="cur-btn flex flex-col items-center justify-center py-4 rounded-[18px] transition-all duration-500 group">
+
+                <span class="text-[12px] font-black">USD</span>
+
+                <span class="text-[10px] opacity-40 font-bold group-hover:opacity-100 italic">Dollar</span>
+
+            </button>
+
+            <button id="curr-CHF" onclick="changeSystemCurrency('CHF', 'Fr')" class="cur-btn flex flex-col items-center justify-center py-4 rounded-[18px] transition-all duration-500 group">
+
+                <span class="text-[12px] font-black">CHF</span>
+
+                <span class="text-[10px] opacity-40 font-bold group-hover:opacity-100 italic">SUI</span>
+
+            </button>
+
+            <button id="curr-ALL" onclick="changeSystemCurrency('ALL', 'L')" class="cur-btn flex flex-col items-center justify-center py-4 rounded-[18px] transition-all duration-500 group">
+
+                <span class="text-[12px] font-black">AL</span>
+
+                <span class="text-[10px] opacity-40 font-bold group-hover:opacity-100 italic">Lek</span>
+
+            </button>
+
+        </div>
+
+
+
+<div class="mt-8 px-2">
+
+    <span class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] block mb-4">Pamja e Sistemit</span>
 
     
 
+    <div class="flex items-center justify-between glass-panel p-3 rounded-2xl mb-4">
 
-    <div id="face-id-screen">
-        <div id="scanner-wrapper" class="relative w-32 h-32 border-4 border-white/5 rounded-[40px] flex items-center justify-center transition-all duration-500">
-            <div id="scan-line" class="hidden"></div>
-            <svg id="face-icon" class="w-16 h-16 text-white/20 transition-colors duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M9 3H5a2 2 0 00-2 2v4m14-6h4a2 2 0 012 2v4M5 19h4a2 2 0 01-2-2v-4m14 6h-4a2 2 0 00-2-2v-4M8 11l2 2 4-4" />
-            </svg>
+        <span class="text-[10px] font-bold uppercase opacity-60">Tema</span>
+
+        <button onclick="updateAppTheme()" id="theme-btn" class="w-10 h-6 bg-indigo-600/20 rounded-full relative transition-all duration-500">
+
+            <div id="theme-ball" class="absolute left-1 top-1 w-4 h-4 bg-indigo-500 rounded-full transition-all duration-500"></div>
+
+        </button>
+
+    </div>
+
+
+
+    <div class="glass-panel p-3 rounded-2xl">
+
+        <span class="text-[10px] font-bold uppercase opacity-60 block mb-3">Ikona e App (System)</span>
+
+        <div class="flex gap-3 justify-between">
+
+            <button onclick="updateSystemIcon('indigo')" class="w-12 h-12 rounded-[12px] bg-[#6366f1] flex items-center justify-center border-2 border-transparent active:scale-90 transition-all shadow-lg">
+
+                <img src="https://img.icons8.com/ios-filled/50/FFFFFF/bill.png" class="w-6 h-6">
+
+            </button>
+
+            <button onclick="updateSystemIcon('black')" class="w-12 h-12 rounded-[12px] bg-[#000000] flex items-center justify-center border-2 border-transparent active:scale-90 transition-all shadow-lg">
+
+                <img src="https://img.icons8.com/ios-filled/50/6366f1/bill.png" class="w-6 h-6">
+
+            </button>
+
+            <button onclick="updateSystemIcon('white')" class="w-12 h-12 rounded-[12px] bg-[#FFFFFF] flex items-center justify-center border-2 border-transparent active:scale-90 transition-all shadow-lg">
+
+                <img src="https://img.icons8.com/ios-filled/50/000000/bill.png" class="w-6 h-6">
+
+            </button>
+
         </div>
-        <p id="auth-status" class="mt-8 text-xs font-bold tracking-[0.3em] text-white/30 uppercase italic">Identifikimi është i nevojshëm</p>
+
     </div>
 
-    <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-80 bg-black/95 p-8 border-r border-white/5">
-        <div class="mt-12 space-y-8">
-            <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest">Menuja Kryesore</h3>
-            <div class="space-y-4">
-                <button onclick="location.reload()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2" stroke-width="2"/></svg>
-                    <span class="font-medium">Dashboard</span>
-                </button>
-                <button onclick="downloadPDF()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586" stroke-width="2"/></svg>
-                    <span class="font-medium">Eksporto PDF</span>
-                </button>
-                <button onclick="showLimitModal()" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" stroke-width="2"/></svg>
-                    <span class="font-medium">Cakto Limitin</span>
-                </button>
-
-            <button onclick="window.location.href='biznesi.html'" class="w-full flex items-center gap-4 p-4 glass-panel ios-btn">
-    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="font-medium">Biznesi Im</span>
-</button>
-
-
-<div id="page-transition" style="position:fixed; inset:0; background:#000; z-index:10000; opacity:0; pointer-events:none; transition: opacity 0.3s ease;"></div>
-                
-
-
-<div class="mt-10 pt-10 border-t border-white/5">
-    <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[0.4em] mb-6 text-center">Valuta e Sistemit</p>
-    <div class="flex flex-wrap justify-center gap-3">
-        <button onclick="changeSystemCurrency('EUR', '€')" class="cur-btn active glass-panel px-4 py-2 text-[10px] font-bold border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.2)]">EUR €</button>
-        <button onclick="changeSystemCurrency('USD', '$')" class="cur-btn glass-panel px-4 py-2 text-[10px] font-bold opacity-40 hover:opacity-100 transition-all">USD $</button>
-        <button onclick="changeSystemCurrency('CHF', 'Fr')" class="cur-btn glass-panel px-4 py-2 text-[10px] font-bold opacity-40 hover:opacity-100 transition-all">CHF Fr</button>
-        <button onclick="changeSystemCurrency('ALL', 'L')" class="cur-btn glass-panel px-4 py-2 text-[10px] font-bold opacity-40 hover:opacity-100 transition-all">ALL L</button>
-    </div>
 </div>
 
+
+
+        <button onclick="clearAll()" class="w-full mt-6 py-3 text-[10px] font-bold text-red-500/50 hover:text-red-500 uppercase tracking-widest transition-all">
+
+            Fshi të dhënat
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
 <style>
-    .cur-btn.active { 
-        border: 1px solid #6366f1 !important; 
-        opacity: 1 !important; 
-        color: #fff;
-        background: rgba(99, 102, 241, 0.1);
+    /* Stili i butonave të valutës */
+    .cur-btn {
+        background: transparent;
+        color: rgba(255, 255, 255, 0.3);
+        border: 1px solid transparent;
+    }
+
+    /* Butoni Aktiv - Ultra Modern */
+    .cur-btn.active {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 
+            0 10px 20px rgba(0, 0, 0, 0.2), 
+            inset 0 0 10px rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        transform: scale(0.98); /* Efekt shtypjeje iOS */
+    }
+
+    .cur-btn.active span:last-child {
+        color: #6366f1; /* Ngjyra e emrit të valutës kur është aktiv */
+        opacity: 1;
+    }
+
+    /* Animacioni i Sidebar-it */
+    #sidebar {
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 </style>
 
 
+   <div id="main-app" class="max-w-md mx-auto min-h-screen px-6 pt-16 pb-24 opacity-0 translate-y-4 transition-all duration-1000">
+    
+    <div class="flex justify-between items-center mb-10">
+        <button onclick="toggleMenu()" class="w-12 h-12 glass-panel flex flex-col items-center justify-center gap-1.5 active:scale-90 transition-all">
+            <div class="w-6 h-0.5 bg-white rounded-full"></div>
+            <div class="w-4 h-0.5 bg-white/50 rounded-full self-start ml-3"></div>
+            <div class="w-6 h-0.5 bg-white rounded-full"></div>
+        </button>
+        
+        <div class="flex items-center gap-3">
+            <div class="text-right">
+                <h1 class="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">fatura</h1>
+                <p class="text-xs font-bold opacity-80">IME <span class="text-[8px] opacity-40">PRO</span></p>
             </div>
-            <button onclick="clearAll()" class="mt-20 text-red-500 text-xs font-bold uppercase tracking-widest opacity-40">Fshi të dhënat</button>
+            <div id="mini-app-icon" class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <img src="https://img.icons8.com/ios-filled/50/FFFFFF/bill.png" class="w-5 h-5">
+            </div>
         </div>
     </div>
 
-    <div id="main-app" class="max-w-md mx-auto min-h-screen px-6 pt-16 pb-24">
-        <div class="flex justify-between items-center mb-12">
-            <button onclick="toggleMenu()" class="ios-btn">
-                <div class="w-8 h-1 bg-white mb-1.5 rounded-full"></div>
-                <div class="w-5 h-1 bg-white rounded-full"></div>
-            </button>
-            <div class="text-right">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sistemi</p>
-                <p class="font-bold text-sm">Gati</p>
-            </div>
-        </div>
+    <div class="relative group">
+        <div class="glass-panel p-8 mb-8 bg-gradient-to-br from-white/[0.05] to-transparent relative overflow-hidden border-white/[0.1]">
+            
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-600/20 blur-[50px] rounded-full"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600/10 blur-[50px] rounded-full"></div>
 
-        <div class="glass-panel p-10 mb-10 bg-gradient-to-br from-[#111] to-[#000] relative overflow-hidden">
             <div class="relative z-10">
-                <span class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.3em]">Totali i Shpenzuar</span>
-                <h2 id="mainBalance" class="text-6xl font-bold mt-2 tracking-tighter italic">0.00 €</h2>
-                <div class="flex gap-10 mt-10">
-                    <div>
-                        <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Limit</p>
-                       <p id="limitText" class="font-bold">0 €</p>
+                <div class="flex justify-between items-start">
+                    <span class="text-[10px] text-white/40 font-black uppercase tracking-[0.2em]">Bilanci Total</span>
+                    <div class="px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                        <span class="text-[8px] font-bold text-emerald-500 uppercase">Live Sync</span>
                     </div>
-                    <div>
-                        <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Mbetja</p>
-                        <p id="remainingText" class="font-bold text-emerald-500">0 €</p>
+                </div>
+
+                <h2 id="mainBalance" class="text-5xl font-black mt-4 tracking-tighter text-white">0.00 €</h2>
+                
+                <div class="mt-8 mb-6">
+                    <div class="flex justify-between text-[9px] uppercase font-bold mb-2 opacity-50">
+                        <span>Përdorimi i Limitit</span>
+                        <span id="limitPercent">0%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div id="limitBar" class="h-full bg-indigo-500 transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.05]">
+                        <p class="text-[8px] text-white/30 font-black uppercase mb-1">Limit Mujor</p>
+                        <p id="limitText" class="text-sm font-bold">0 €</p>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.05]">
+                        <p class="text-[8px] text-white/30 font-black uppercase mb-1">Mbetja</p>
+                        <p id="remainingText" class="text-sm font-bold text-emerald-400">0 €</p>
                     </div>
                 </div>
             </div>
-            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 blur-[60px]"></div>
         </div>
+    </div>
 
-        <div class="mb-10 opacity-60">
-            <canvas id="appChart" height="180"></canvas>
-        </div>
+        
+<div id="chart-container" class="mb-10 opacity-0 overflow-hidden transition-all duration-1000 ease-in-out" style="max-height: 0;">
+    <canvas id="appChart" height="180"></canvas>
+</div>
 
-        <div class="space-y-4" id="listContainer"></div>
+<div class="space-y-4" id="listContainer"></div>
 
         <button onclick="showAddModal()" class="fixed bottom-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(99,102,241,0.4)] ios-btn z-40 border-4 border-black">
             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"/></svg>
@@ -417,7 +770,7 @@ body {
             <div class="w-12 h-1.5 bg-white/10 mx-auto mb-10 rounded-full"></div>
             
             <div class="flex justify-between items-center mb-6">
-                <p class="text-indigo-500 font-bold text-xs uppercase">Shuma në Euro</p>
+                <p class="text-indigo-500 font-bold text-xs uppercase">Shuma</p>
                 <button onclick="document.getElementById('ai-camera-input').click()" class="flex items-center gap-2 bg-indigo-600/20 px-4 py-2 rounded-full border border-indigo-500/30 ios-btn">
                     <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-width="2"/><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke-width="2"/></svg>
                     <span class="text-[10px] font-bold text-indigo-400 uppercase">Skano Faturën</span>
@@ -457,1318 +810,649 @@ body {
             </div>
             <input type="hidden" id="selectedCat" value="Ushqim">
             <input type="hidden" id="selectedIcon" value="food">
-            <button onclick="submitExpense()" class="w-full bg-white text-black p-6 rounded-2xl font-black text-lg mt-6 ios-btn uppercase">Konfirmo</button>
+           <button id="submitBtn" onclick="submitExpense()" class="w-full bg-white text-black p-6 rounded-2xl font-black text-lg mt-6 ios-btn uppercase">
+   Konfirmo
+</button>
         </div>
     </div>
 
+<script>
+    // 1. KONFIGURIMI I IKONAVE
+    const iconMap = {
+        food: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
+        travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
+        bill: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
+        style: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
+        health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
+        assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
+    };
 
-    
-    <script>
-        // REGJISTRI I IKONAVE PER DASHBOARD
-        const iconMap = {
-            food: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5"/></svg>`,
-            travel: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>`,
-            bill: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-7.6-11.7M16 5l3 3m0 0l3 3m-3-3l-3 3m3-3H9"/></svg>`,
-            style: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z"/></svg>`,
-            health: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
-            assets: `<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/></svg>`
-        };
+    // 2. DATABASE DHE SHTETI I SISTEMIT
+    let db = {
+        expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
+        limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 500,
+        chart: null
+    };
 
-       let db = {
-    expenses: JSON.parse(localStorage.getItem('f_pro_v3')) || [],
-    // Tani e merr nga memoria, nese s'ka asgje e nis nga 0 (jo 1000)
-    limit: parseFloat(localStorage.getItem('f_pro_lim_v3')) || 0, 
-    chart: null
-};
+    let currentCurrency = { code: 'EUR', symbol: '€', rate: 1 };
+    let editIndex = null; // Variabla kyçe për editimin që do të kontrollohet nga butoni
 
-
-   window.onload = () => {
-    // Kontrollojmë nëse përdoruesi është verifikuar një herë gjatë këtij sesioni
-    const isVerified = sessionStorage.getItem('app_verified');
-
-    if (isVerified === 'true') {
-        // NËSE ËSHTË VERIFIKUAR: Hiqi pengesat menjëherë pa vonesa
-        const intro = document.getElementById('intro-screen');
-        const faceId = document.getElementById('face-id-screen');
-        if(intro) intro.remove();
-        if(faceId) faceId.remove();
-
-        // Shfaq Dashboard-in direkt
-        const mainApp = document.getElementById('main-app');
-        mainApp.style.opacity = '1';
-        mainApp.style.transform = 'translateY(0)';
-        mainApp.style.transition = 'none'; // Pa animacion për shpejtësi maksimale
-        document.body.style.overflow = 'auto';
-        
+    // 3. LOAD & INITIALIZATION
+    window.onload = () => {
+        renderUI();
         initChart();
-        renderUI();
-    } else {
-        // NËSE ËSHTË HERËA E PARË: Shfaq Intro-n dhe FaceID normalisht
-        setTimeout(() => {
-            const intro = document.getElementById('intro-screen');
-            if(intro) {
-                intro.style.opacity = '0';
-                setTimeout(() => {
-                    intro.remove();
-                    startFaceID();
-                }, 1000);
-            }
-        }, 2500);
-    }
-};
-
-async function startFaceID() { 
-    const screen = document.getElementById('face-id-screen'); 
-    const wrapper = document.getElementById('scanner-wrapper'); 
-    const status = document.getElementById('auth-status'); 
-    
-    screen.style.display = 'flex'; 
-    wrapper.classList.add('scanning-active'); 
-    status.innerText = "Skanimi..."; 
-
-    setTimeout(unlockApp, 2500); 
-
-    function unlockApp() { 
-        // Shënoje në memorie që u krye FaceID për këtë sesion
-        sessionStorage.setItem('app_verified', 'true');
-
-        wrapper.classList.remove('scanning-active'); 
-        screen.classList.add('auth-success'); 
-        status.innerText = "U identifikua"; 
-        status.style.color = "#10b981"; 
-
-        setTimeout(() => { 
-            screen.style.opacity = "0"; 
-            screen.style.transform = "scale(1.2)"; 
-            setTimeout(() => { 
-                screen.remove(); 
-                document.getElementById('main-app').style.opacity = '1'; 
-                document.getElementById('main-app').style.transform = 'translateY(0)'; 
-                document.body.style.overflow = 'auto'; 
-                initChart(); 
-                renderUI(); 
-            }, 800); 
-        }, 1000); 
-    } 
-}
-        
-        
-        // AI SCANNER LOGIC
-        async function performAIScan(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const loader = document.getElementById('ai-loader');
-            loader.style.display = 'flex';
-
-            try {
-                const result = await Tesseract.recognize(file, 'eng+sqi', {
-                    logger: m => console.log(m)
-                });
-
-                const text = result.data.text;
-                // Regex kërkon për shuma si: 10.50, 100,00, 5.20 EUR etj.
-                const priceRegex = /\d+[\.,]\d{2}/g;
-                const matches = text.match(priceRegex);
-
-                if (matches) {
-                    // Konvertojmë në numra float dhe gjejmë vlerën maksimale (zakonisht TOTALI)
-                    const prices = matches.map(p => parseFloat(p.replace(',', '.')));
-                    const total = Math.max(...prices);
-                    document.getElementById('inpAmount').value = total;
-                } else {
-                    alert("Skaneri nuk gjeti dot një shumë të qartë. Provoni një foto më të afërt.");
-                }
-            } catch (error) {
-                console.error(error);
-                alert("Gabim gjatë skanimit.");
-            } finally {
-                loader.style.display = 'none';
-            }
-        }
-
-        function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('menu-overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-        }
-
-        function showAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
-        function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function setCat(cat, icon, el) {
-            document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
-            document.getElementById('selectedCat').value = cat;
-            document.getElementById('selectedIcon').value = icon;
-        }
-
-
-        function initChart() {
-    const ctx = document.getElementById('appChart').getContext('2d');
-    
-    // Marrim 10 shpenzimet e fundit dhe i kthejmë mbrapsht për rrjedhë kronologjike
-    const lastData = [...db.expenses].slice(0, 10).reverse();
-    const labels = lastData.map(e => e.cat); 
-    const amounts = lastData.map(e => e.amount);
-
-    if (db.chart instanceof Chart) {
-        db.chart.destroy(); // Pastrimi i memories
-    }
-
-    db.chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels.length ? labels : ['', '', '', '', ''],
-            datasets: [{
-                data: amounts.length ? amounts : [0, 0, 0, 0, 0],
-                borderColor: '#6366f1',
-                borderWidth: 4,
-                tension: 0.4,
-                pointRadius: 5,
-                pointBackgroundColor: '#fff',
-                fill: true,
-                backgroundColor: 'rgba(99, 102, 241, 0.1)'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { x: { display: false }, y: { display: false, beginAtZero: true } },
-            animation: { duration: 600 } // Animacion i shpejtë dhe i lëmuar
-        }
-    });
-}
-
-       function renderUI() {
-    const total = db.expenses.reduce((s, a) => s + a.amount, 0);
-    const remaining = db.limit - total;
-
-    // Përditësimi i vlerave kryesore
-    document.getElementById('mainBalance').innerText = `${total.toFixed(2)} €`;
-    document.getElementById('limitText').innerText = `${db.limit} €`;
-    const remEl = document.getElementById('remainingText');
-    remEl.innerText = `${remaining.toFixed(2)} €`;
-    remEl.style.color = remaining < 0 ? '#ef4444' : '#10b981';
-
-    const container = document.getElementById('listContainer');
-    container.innerHTML = ''; // Pastrim i plotë
-
-    if (db.expenses.length === 0) {
-        container.innerHTML = '<p class="text-center opacity-20 py-10 uppercase text-[10px] tracking-widest">Nuk ka shënime</p>';
-    }
-
-
-           db.expenses.slice(0, 10).forEach((exp, index) => {
-    const row = document.createElement('div');
-    row.className = "glass-panel p-5 flex justify-between items-center mb-4 group animate-in fade-in transition-all hover:bg-white/[0.03]";
-    
-    row.innerHTML = `
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center">
-                ${iconMap[exp.icon] || iconMap.food}
-            </div>
-            <div>
-                <h4 class="font-bold text-[10px] uppercase tracking-widest">${exp.cat}</h4>
-                <p class="text-[8px] opacity-40 font-medium">${exp.date}</p>
-            </div>
-        </div>
-        
-        <div class="flex items-center gap-3">
-            <span class="font-black text-sm text-white/90">-${exp.amount.toFixed(2)} €</span>
-            
-            <div class="flex items-center gap-1">
-                <button onclick="openEditFromToast(${index})" class="p-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-xl transition-all" title="Edito">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                
-                <button onclick="deleteExpense(${index})" class="p-2 text-red-500/20 hover:text-red-500 transition-all">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </button>
-            </div>
-        </div>
-    `;
-    container.appendChild(row);
-});
-           
-           
-           function openEditMode(index) {
-    const exp = db.expenses[index];
-    
-    // 1. Mbushim fushat e modalit me vlerat aktuale të pagesës
-    document.getElementById('inpAmount').value = exp.amount;
-    document.getElementById('selectedCat').value = exp.cat;
-    document.getElementById('selectedIcon').value = exp.icon;
-
-    // 2. Ndryshojmë butonin e modalit që të bëjë "Përditëso"
-    const submitBtn = document.querySelector('#addModal .btn-premium');
-    const originalText = submitBtn.innerText;
-    submitBtn.innerText = "PËRDITËSO NDRYSHIMET";
-    
-    showModal('addModal');
-
-    // 3. Logjika e ruajtjes së editimit
-    submitBtn.onclick = function() {
-        const newAmt = document.getElementById('inpAmount').value;
-        if(!newAmt || newAmt <= 0) return;
-
-        // Përditësojmë të dhënat në array
-        db.expenses[index].amount = parseFloat(newAmt);
-        db.expenses[index].cat = document.getElementById('selectedCat').value;
-        db.expenses[index].icon = document.getElementById('selectedIcon').value;
-
-        // Ruajmë dhe rifreskojmë UI + Grafikun
-        saveAndRefresh();
-        hideModal('addModal');
-
-        // Kthejmë butonin në gjendje normale për shtimet e reja
-        submitBtn.innerText = originalText;
-        submitBtn.onclick = submitExpense;
     };
-}
 
-           
-    // PËRDITËSIMI I GRAFIKUT (RELACIONI PERFEKT)
-    if(db.chart) {
-        // Marrim 10 vlerat e fundit, i kthejmë mbrapsht për rrjedhë kronologjike
-        const chartValues = db.expenses.slice(0, 10).map(e => e.amount).reverse();
-        const chartLabels = db.expenses.slice(0, 10).map(e => e.cat).reverse();
+    function renderUI() {
+        const totalBase = db.expenses.reduce((s, a) => s + a.amount, 0);
+        const limitBase = db.limit;
         
-        db.chart.data.labels = chartLabels.length ? chartLabels : ['', '', '', '', ''];
-        db.chart.data.datasets[0].data = chartValues.length ? chartValues : [0, 0, 0, 0, 0];
-        db.chart.update('none'); // Update i shpejtë pa animacion që të mos "dridhet"
-    }
-}
-
-        // EDITIMI I SHUMËS DIREKT NGA LISTA
-function updateExpense(index, newVal) {
-    const val = parseFloat(newVal);
-    if (isNaN(val) || val < 0) return renderUI();
-
-    db.expenses[index].amount = val;
-    saveAndRefresh();
-}
-
-// FSHIRJA E NJË PAGESE SPECIFIKE
-function deleteExpense(index) {
-    db.expenses.splice(index, 1);
-    saveAndRefresh();
-}
-
-// FUNKSIONI QË RUAJNË DHE RIFRESKOJNË ÇDO GJË
-function saveAndRefresh() {
-    localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
-    renderUI();
-}
-
-        function submitExpense() {
-    const amt = document.getElementById('inpAmount').value;
-    const cat = document.getElementById('selectedCat').value;
-    const icon = document.getElementById('selectedIcon').value;
-    
-    if(!amt || amt <= 0) {
-        shakeForm(); // Funksioni që bëmë më herët për gabim
-        return;
-    }
-
-    db.expenses.unshift({ 
-        amount: parseFloat(amt), 
-        cat: cat, 
-        icon: icon,
-        // Shtojmë orën dhe minutën për listën
-        date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
-    });
-
-    saveAndRefresh();
-    hideModal('addModal');
-    document.getElementById('inpAmount').value = '';
-}
-
-
-
-      function submitExpense() {
-    const amtInput = document.getElementById('inpAmount');
-    const amt = amtInput.value;
-    const cat = document.getElementById('selectedCat').value;
-    const icon = document.getElementById('selectedIcon').value;
-    
-    if(!amt || amt <= 0) {
-        if(typeof shakeForm === "function") shakeForm(); 
-        return;
-    }
-
-    // Shtohet në fillim të memories
-    db.expenses.unshift({ 
-        amount: parseFloat(amt), 
-        cat: cat, 
-        icon: icon,
-        date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
-    });
-
-    saveAndRefresh();
-    hideModal('addModal');
-    amtInput.value = '';
-
-    // SHFAQJA E OPSIONIT TË EDITIMIT TË SHPEJTË
-    showQuickEditToast(0); // 0 sepse është i pari në listë (unshift)
-}
-
-
-         function showQuickEditToast(index) {
-    const oldToast = document.querySelector('.quick-edit-toast');
-    if(oldToast) oldToast.remove();
-
-    const toast = document.createElement('div');
-    // E zhvendosim anash (right-6) që të mos jetë mbi listë në mes
-    toast.className = "quick-edit-toast fixed bottom-6 right-6 z-[100] bg-indigo-600 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-right-full";
-    toast.innerHTML = `
-        <div class="flex flex-col">
-            <span class="text-[9px] font-black uppercase opacity-70 italic">Sapo u shtua</span>
-            <span class="text-xs font-bold">${db.expenses[index].amount}€</span>
-        </div>
-        <button onclick="this.parentElement.remove(); openEditFromToast(${index})" class="bg-white text-indigo-600 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-sm">
-            Edito
-        </button>
-    `;
-    document.body.appendChild(toast);
-    setTimeout(() => { if(toast.parentElement) toast.remove(); }, 4000);
-}
-
-        
-
-
-        function openEditFromToast(index) {
-    const exp = db.expenses[index];
-    
-    // Mbushim modalin
-    document.getElementById('inpAmount').value = exp.amount;
-    document.getElementById('selectedCat').value = exp.cat;
-    document.getElementById('selectedIcon').value = exp.icon;
-
-    const submitBtn = document.querySelector('#addModal .btn-premium');
-    const originalText = submitBtn.innerText;
-    
-    submitBtn.innerText = "PËRDITËSO NDRYSHIMIN";
-    showModal('addModal');
-
-    // Kur konfirmon editimin
-    submitBtn.onclick = function() {
-        const amt = document.getElementById('inpAmount').value;
-        if(!amt) return;
-
-        db.expenses[index].amount = parseFloat(amt);
-        db.expenses[index].cat = document.getElementById('selectedCat').value;
-        db.expenses[index].icon = document.getElementById('selectedIcon').value;
-        
-        saveAndRefresh(); // Kjo do të bëjë që edhe Line Chart të përditësohet
-        hideModal('addModal');
-        
-        // Resetojmë butonin për shtimet e radhës
-        submitBtn.innerText = originalText;
-        submitBtn.onclick = submitExpense;
-    };
-}
-
-
-
-        
-
-        
-        
-        
-
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 40, 'F');
-            doc.setTextColor(255, 255, 255); doc.text("RAPORTI FINANCIAR PRO", 15, 25);
-            const rows = db.expenses.map(e => [e.date, e.cat, `${e.amount} EUR`]);
-            doc.autoTable({ startY: 50, head: [['Data', 'Kategoria', 'Shuma']], body: rows });
-            doc.save('Raporti_FaturaIme.pdf');
-        }
-
-       function showLimitModal() {
-    let l = prompt("Sa dëshiron ta kesh limitin tënd mujor?", db.limit);
-    
-    // Nëse përdoruesi shkruan diçka dhe shtyp OK
-    if (l !== null && l !== "") {
-        let shumaere = parseFloat(l);
-        
-        if (!isNaN(shumaere)) {
-            db.limit = shumaere;
-            localStorage.setItem('f_pro_lim_v3', shumaere);
-            renderUI(); // Kjo e përditëson Dashboard-in menjëherë
-        } else {
-            alert("Ju lutem shkruani një numër të vlefshëm!");
-        }
-    }
-}
-        
-        function clearAll() { if(confirm("A jeni i sigurt qe deshironi te fshini te dhenat?")) { db.expenses = []; localStorage.clear(); renderUI(); } }
-
-
-
-        
-let mode = 'signup';
-
-// 1. Kontrolli i sesionit (I saktë, i mbrojtur nga null)
-(function() {
-    if(localStorage.getItem('faturaime_locked') === 'false') {
-        const shield = document.getElementById('auth-shield');
-        if(shield) shield.remove();
-        document.body.style.overflow = 'auto';
-    }
-})();
-
-// 2. Formatimi i emrit (KORIGJIM: Parandalimi i kërcimit të kursorit)
-const nameInput = document.getElementById('a-name');
-if (nameInput) {
-    nameInput.addEventListener('input', function() {
-        let selectionStart = this.selectionStart; // Ruajmë pozicionin e kursorit
-        let words = this.value.split(' ');
-        for (let i = 0; i < words.length; i++) {
-            if (words[i].length > 0) {
-                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
-            }
-        }
-        this.value = words.join(' ');
-        this.setSelectionRange(selectionStart, selectionStart); // Rikthejmë kursorin ku ishte
-    });
-}
-
-// 3. Ndërrimi i modalitetit (Shtuar: Menaxhimi i Linkut Recovery nëse ekziston)
-function toggleMode() {
-    mode = (mode === 'signup') ? 'login' : 'signup';
-    
-    const title = document.getElementById('auth-main-title');
-    const fieldName = document.getElementById('field-name');
-    const trigger = document.getElementById('switch-trigger');
-    const recovery = document.getElementById('recovery-link'); // Referencë për linkun e fjalëkalimit
-
-    if (title) title.innerHTML = mode === 'signup' ? 'SIGN UP<span class="text-indigo-500">.</span>' : 'LOG IN<span class="text-indigo-500">.</span>';
-    if (fieldName) fieldName.style.display = mode === 'signup' ? 'block' : 'none';
-    if (trigger) trigger.innerText = mode === 'signup' ? 'Kaloni në Log In' : 'Krijo një llogari të re';
-    if (recovery) recovery.style.display = mode === 'login' ? 'flex' : 'none';
-}
-
-// 4. Procesi i Autentikimit (KORIGJIM: Shtuar variabla e munguar btn te Error)
-function processAuth() {
-    const btn = document.querySelector('.btn-premium');
-    const nameEl = document.getElementById('a-name');
-    const emailEl = document.getElementById('a-email');
-    const passEl = document.getElementById('a-pass');
-
-    if (!btn || !emailEl || !passEl) return;
-
-    const n = nameEl.value.trim();
-    const e = emailEl.value.toLowerCase().trim();
-    const p = passEl.value;
-
-    // VALIDIMI STRIKT
-    const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(e);
-    const hasUpperCase = /[A-Z]/.test(p);
-    const hasNumber = /\d/.test(p);
-    const isPassLong = p.length >= 8;
-    const isNameComplete = n.split(/\s+/).filter(word => word.length > 0).length >= 2;
-
-    // Feedback vizual fillestar
-    const originalText = btn.innerHTML;
-    btn.innerHTML = "VERIFIKIMI...";
-    btn.style.opacity = "0.7";
-    btn.style.pointerEvents = "none";
-
-    setTimeout(() => {
-        // Funksion i brendshëm për të thirrur gabimin duke kaluar butonin si referencë
-        const triggerError = () => {
-            if (typeof authError === 'function') {
-                authError(btn); // Kalojmë butonin te funksioni i gabimit
-            } else {
-                btn.innerHTML = originalText;
-                btn.style.opacity = "1";
-                btn.style.pointerEvents = "all";
-            }
-        };
-
-        if (!isEmailValid) return triggerError();
-
-        if (mode === 'signup') {
-            if (!isNameComplete || !hasUpperCase || !hasNumber || !isPassLong) {
-                return triggerError();
-            }
-            localStorage.setItem('user_cred', JSON.stringify({name: n, email: e, pass: p}));
-        } else {
-            const cred = JSON.parse(localStorage.getItem('user_cred'));
-            if (!cred || e !== cred.email || p !== cred.pass) {
-                return triggerError();
-            }
-        }
-
-        if (typeof accessGranted === 'function') {
-            accessGranted();
-        }
-    }, 800);
-}
-
-        
-
-   // KORIGJIM: Shtova 'btn' si parametër që funksioni të dijë cilin buton të resetoje
-function authError(btn) {
-    // Nëse btn nuk vjen si parametër, e kërkojmë në DOM
-    const targetBtn = btn || document.querySelector('.btn-premium');
-    
-    shakeForm();
-    
-    if (targetBtn) {
-        targetBtn.innerHTML = mode === 'signup' ? "KRIJO LLOGARI" : "HYNI";
-        targetBtn.style.opacity = "1";
-        targetBtn.style.pointerEvents = "all";
-    }
-
-    // Haptic Feedback
-    if(window.navigator.vibrate) window.navigator.vibrate([50, 30, 50]);
-}
-
-function shakeForm() {
-    const card = document.querySelector('.auth-card');
-    if (!card) return;
-
-    // Dridhja me ngjyrë të kuqe për gabim
-    card.style.transition = "border-color 0.2s ease";
-    card.style.borderColor = 'rgba(239, 68, 68, 0.5)'; 
-    card.style.animation = 'shake 0.4s cubic-bezier(.36,.07,.19,.97) both';
-    
-    if(window.navigator.vibrate) window.navigator.vibrate(100); 
-
-    setTimeout(() => {
-        card.style.animation = '';
-        // KORIGJIM: Kthimi në transparencën origjinale pas dridhjes
-        card.style.borderColor = 'rgba(255, 255, 255, 0.03)';
-    }, 400);
-}
-
-function accessGranted() {
-    // 1. Shënohet suksesi
-    localStorage.setItem('faturaime_locked', 'false');
-    
-    const card = document.querySelector('.auth-card');
-    const shield = document.getElementById('auth-shield');
-    const btn = document.querySelector('.btn-premium');
-
-    // KORIGJIM: Feedback vizual edhe në buton për suksesin
-    if(btn) {
-        btn.innerHTML = "SUKSES";
-        btn.style.background = "#10b981";
-    }
-
-    // 2. Efekti vizual i suksesit (Bordura bëhet e gjelbër)
-    if (card) {
-        card.style.transition = "all 0.5s ease";
-        card.style.borderColor = "#10b981";
-        card.style.boxShadow = "0 0 40px rgba(16, 185, 129, 0.2)";
-    }
-
-    setTimeout(() => {
-        if (shield) {
-            // 3. Tranzicioni "Cinematic" i daljes
-            shield.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
-            shield.style.filter = 'blur(30px)';
-            shield.style.opacity = '0';
-            shield.style.transform = 'scale(1.15)'; 
-            
-            setTimeout(() => {
-                shield.remove();
-                document.body.style.overflow = 'auto';
-                
-                // Nisja e proceseve të radhës (FaceID)
-                if(typeof startFaceID === "function") startFaceID();
-            }, 800);
-        }
-    }, 400); 
-}
-
-
-
-
-
-
-
-
-async function recoveryFlow() {
-    const emailEl = document.getElementById('a-email');
-    const subTitle = document.getElementById('auth-sub-title');
-    const mainTitle = document.getElementById('auth-main-title');
-    const btn = document.querySelector('.btn-premium');
-    const nameField = document.getElementById('field-name');
-    const nameInput = document.getElementById('a-name');
-
-    if (!emailEl || !subTitle || !mainTitle || !btn) return;
-
-    const email = emailEl.value.trim().toLowerCase();
-
-    // 1. Validimi i Email-it (Strikt pa Alert)
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        subTitle.innerText = "SHËNONI EMAIL-IN PËR VERIFIKIM";
-        subTitle.style.color = "#ef4444";
-        if (typeof shakeForm === 'function') shakeForm();
-        return;
-    }
-
-    const cred = JSON.parse(localStorage.getItem('user_cred'));
-
-    if (cred && email === cred.email) {
-        // 2. Simulimi i dërgimit të kodit
-        mainTitle.innerHTML = 'VERIFIKIMI<span class="text-indigo-500">.</span>';
-        subTitle.innerText = "KODI U DËRGUA NË EMAIL-IN TUAJ";
-        subTitle.style.color = "#6366f1";
-
-        const generatedCode = Math.floor(100000 + Math.random() * 900000);
-        console.log("DEBUG: Kodi i sigurisë është: " + generatedCode);
-
-        // Transformimi i UI: Përdorim fushën e emrit për Kodin
-        if (nameField && nameInput) {
-            nameField.style.display = "block";
-            nameInput.type = "text"; // Sigurohemi që është tekst për kodin
-            nameInput.placeholder = "SHËNONI KODIN 6-SHIFROR";
-            nameInput.value = "";
-            nameInput.focus();
-        }
-        
-        btn.innerText = "VERIFIKO KODIN";
-
-        // NDRYSHIMI I FUNKSIONIT TË BUTONIT (Faza e Kodit)
-        btn.onclick = function() {
-            if (nameInput.value == generatedCode) {
-                // 3. Kod i saktë - Kalojmë te Fjalëkalimi i Ri
-                subTitle.innerText = "ID U KONFIRMUA. SHËNONI PASS E RI";
-                subTitle.style.color = "#10b981";
-                nameInput.placeholder = "FJALËKALIMI I RI";
-                nameInput.type = "password"; 
-                nameInput.value = "";
-                nameInput.focus();
-                btn.innerText = "PËRDITËSO";
-
-                // NDRYSHIMI I FUNKSIONIT TË BUTONIT (Faza Finale)
-                btn.onclick = function() {
-                    const newPass = nameInput.value;
-                    const hasUpperCase = /[A-Z]/.test(newPass);
-                    const hasNumber = /\d/.test(p = newPass);
-                    const isPassLong = newPass.length >= 8;
-
-                    if (hasUpperCase && hasNumber && isPassLong) {
-                        cred.pass = newPass;
-                        localStorage.setItem('user_cred', JSON.stringify(cred));
-                        
-                        mainTitle.innerHTML = 'SUKSES<span class="text-indigo-500">.</span>';
-                        subTitle.innerText = "FJALËKALIMI U NDRYSHUA ME SUKSES";
-                        subTitle.style.color = "#10b981";
-                        
-                        // Korigjim: Pastrojmë onclick-un që të mos ketë loop
-                        btn.onclick = null;
-                        
-                        setTimeout(() => {
-                            location.reload(); // Rifreskim i pastër i sistemit
-                        }, 1500);
-                    } else {
-                        subTitle.innerText = "PASS DUHET TË JETË STRIKT (8+ CHAR, 1 CAP, 1 NR)";
-                        subTitle.style.color = "#ef4444";
-                        if (typeof shakeForm === 'function') shakeForm();
-                    }
-                };
-            } else {
-                subTitle.innerText = "KOD I PASAKTË. TENTONI PËRSËRI";
-                subTitle.style.color = "#ef4444";
-                if (typeof shakeForm === 'function') shakeForm();
-            }
-        };
-
-    } else {
-        subTitle.innerText = "KY EMAIL NUK EKZISTON NË SISTEM";
-        subTitle.style.color = "#ef4444";
-        if (typeof shakeForm === 'function') shakeForm();
-    }
-}
-
-
-
-
-
-let currentCurrency = { code: 'EUR', symbol: '€', rate: 1 };
-
-async function changeSystemCurrency(code, symbol) {
-    // 1. Update UI Buttons
-    document.querySelectorAll('.cur-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.innerText.includes(code));
-    });
-
-    // 2. Fetch Live Rate if not EUR
-    if (code === 'EUR') {
-        currentCurrency = { code: 'EUR', symbol: '€', rate: 1 };
-        renderUI();
-    } else {
-        try {
-            const res = await fetch(`https://api.exchangerate-api.com/v4/latest/EUR`);
-            const data = await res.json();
-            currentCurrency = { 
-                code: code, 
-                symbol: symbol, 
-                rate: data.rates[code] 
-            };
-            renderUI();
-        } catch (e) {
-            alert("Sistemi: Gabim në përditësimin e valutës live.");
-        }
-    }
-}
-
-// PERDITESIMI I RENDER_UI (Modifiko funksionin tend ekzistues)
-function renderUI() {
-    const totalBase = db.expenses.reduce((s, a) => s + a.amount, 0);
-    const limitBase = db.limit;
-    
-    // Konvertimi i vlerave per shfaqje
-    const totalConverted = (totalBase * currentCurrency.rate).toFixed(2);
-    const limitConverted = (limitBase * currentCurrency.rate).toFixed(2);
-    const remainingConverted = (limitConverted - totalConverted).toFixed(2);
-
-    // Update Dashboard
-    document.getElementById('mainBalance').innerText = `${totalConverted} ${currentCurrency.symbol}`;
-    document.getElementById('limitText').innerText = `${limitConverted} ${currentCurrency.symbol}`;
-    document.getElementById('remainingText').innerText = `${remainingConverted} ${currentCurrency.symbol}`;
-    
-    // Update List Container (Shpenzimet ne listen poshte)
-    const container = document.getElementById('listContainer');
-    container.innerHTML = db.expenses.length ? '' : '<p class="text-center opacity-20 py-10">Zbrazët</p>';
-    
-    db.expenses.forEach(exp => {
-        const val = (exp.amount * currentCurrency.rate).toFixed(2);
-        container.innerHTML += `
-            <div class="glass-panel p-6 flex justify-between items-center mb-4">
+        const totalConverted = (totalBase * currentCurrency.rate).toFixed(2);
+        const limitConverted = (limitBase * currentCurrency.rate).toFixed(2);
+        const remainingConverted = (limitConverted - totalConverted).toFixed(2);
+
+        document.getElementById('mainBalance').innerText = `${totalConverted} ${currentCurrency.symbol}`;
+        document.getElementById('limitText').innerText = `${limitConverted} ${currentCurrency.symbol}`;
+        const remEl = document.getElementById('remainingText');
+        remEl.innerText = `${remainingConverted} ${currentCurrency.symbol}`;
+        remEl.style.color = (limitBase - totalBase) < 0 ? '#ef4444' : '#10b981';
+
+        const container = document.getElementById('listContainer');
+        container.innerHTML = db.expenses.length ? '' : '<p class="text-center opacity-20 py-10 uppercase text-[10px] tracking-widest">Nuk ka shënime</p>';
+
+        db.expenses.slice(0, 10).forEach((exp, index) => {
+            const val = (exp.amount * currentCurrency.rate).toFixed(2);
+            const row = document.createElement('div');
+            row.className = "glass-panel p-5 flex justify-between items-center mb-4 group animate-in fade-in transition-all hover:bg-white/[0.03]";
+            row.innerHTML = `
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center">
-                        ${iconMap[exp.icon] || ''}
-                    </div>
+                    <div class="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center">${iconMap[exp.icon] || ''}</div>
                     <div>
-                        <h4 class="font-bold text-xs uppercase tracking-widest">${exp.cat}</h4>
-                        <p class="text-[9px] opacity-50 font-medium">${exp.date}</p>
+                        <h4 class="font-bold text-[10px] uppercase tracking-widest">${exp.cat}</h4>
+                        <p class="text-[8px] opacity-40 font-medium">${exp.date}</p>
                     </div>
                 </div>
-                <span class="font-bold text-sm">-${val} ${currentCurrency.symbol}</span>
-            </div>`;
-    });
-}
+                <div class="flex items-center gap-3">
+                    <span class="font-black text-sm text-white/90">-${val} ${currentCurrency.symbol}</span>
+                    <div class="flex items-center gap-1">
+                        <button onclick="openEditFromToast(${index})" class="p-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-xl transition-all">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button onclick="deleteExpense(${index})" class="p-2 text-red-500/20 hover:text-red-500 transition-all">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                </div>`;
+            container.appendChild(row);
+        });
 
-
-
-
-
-
-function goTo(page) {
-    const overlay = document.getElementById('page-transition');
-    overlay.style.pointerEvents = 'all';
-    overlay.style.opacity = '1'; // Ekrani bëhet i zi
-
-    setTimeout(() => {
-        window.location.href = page;
-    }, 300); // Koha e animacionit
-}
-
-// Kur faqja ngarkohet, bëje overlay-in transparent
-window.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('page-transition');
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-        overlay.style.pointerEvents = 'none';
-    }, 300);
-});
-        
-
-
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const fields = [
-        { id: 'a-name', error: 'error-name', check: (val) => val.trim().split(/\s+/).filter(w => w.length > 0).length >= 2 },
-        { id: 'a-email', error: 'error-email', check: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim()) },
-        { id: 'a-pass', error: 'error-pass', check: (val) => val.length >= 8 && /[A-Z]/.test(val) && /\d/.test(val) }
-    ];
-
-    fields.forEach(field => {
-        const input = document.getElementById(field.id);
-        const errorMsg = document.getElementById(field.error);
-
-        // Kontrolli nëse elementet ekzistojnë në DOM para se të shtojmë eventet
-        if (input && errorMsg) {
-            
-            // 1. Kontrolli kur përdoruesi largohet nga rubrika (Blur)
-            input.addEventListener('blur', () => {
-                // Shfaqim gabimin vetëm nëse ka shkruar diçka dhe nuk është valid
-                if (input.value.length > 0 && !field.check(input.value)) {
-                    showError(input, errorMsg);
-                } else if (field.check(input.value)) {
-                    hideError(input, errorMsg);
-                }
-            });
-
-            // 2. Kontrolli ndërsa shkruan (Input)
-            input.addEventListener('input', () => {
-                // Sapo plotësohet kushti, e heqim gabimin automatikisht
-                if (field.check(input.value)) {
-                    hideError(input, errorMsg);
-                }
-            });
-        }
-    });
-});
-
-// FUNKSIONET E FEEDBACK-UT VIZUAL
-function showError(input, msg) {
-    if (!input || !msg) return;
-    
-    msg.style.opacity = "1";
-    msg.style.transform = "translateY(0)"; // Opsionale: shtoni pak lëvizje
-    
-    // Korigjim: Sigurohemi që prindi ekziston për të ndryshuar border-in
-    if (input.parentElement) {
-        input.parentElement.style.borderBottomColor = "#ef4444"; // Red-500
-    }
-    
-    if(window.navigator.vibrate) window.navigator.vibrate(10); 
-}
-
-function hideError(input, msg) {
-    if (!input || !msg) return;
-
-    msg.style.opacity = "0";
-    
-    if (input.parentElement) {
-        // Kthehet në ngjyrën origjinale të sistemit tënd (Indigo-500)
-        input.parentElement.style.borderBottomColor = "#6366f1"; 
-    }
-}
-
-
-
-
-
-     /* EKZEKUTIMI I AUTENTIKIMIT (FINAL CHECK)
-   Ky funksion lidh Validimin, UI-në dhe Autorizimin
-*/
-function processAuth() {
-    // 1. Marrja e vlerave me pastrim hapësirash (Trim)
-    const nameInput = document.getElementById('a-name');
-    const emailInput = document.getElementById('a-email');
-    const passInput = document.getElementById('a-pass');
-
-    if (!emailInput || !passInput) return; // Siguri nëse elementet mungojnë
-
-    const n = nameInput ? nameInput.value.trim() : "";
-    const e = emailInput.value.trim().toLowerCase();
-    const p = passInput.value;
-
-    // 2. Logjika e Validimit Strikt
-    const isNameValid = n.split(/\s+/).filter(w => w.length > 0).length >= 2;
-    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-    const isPassValid = p.length >= 8 && /[A-Z]/.test(p) && /\d/.test(p);
-
-    // 3. Kontrolli i Gabimeve (Korigjim: Validimi i emrit bëhet VETËM në Signup)
-    let hasError = false;
-
-    if (mode === 'signup' && !isNameValid) {
-        showError(nameInput, document.getElementById('error-name'));
-        hasError = true;
-    }
-    
-    if (!isEmailValid) {
-        showError(emailInput, document.getElementById('error-email'));
-        hasError = true;
-    }
-    
-    if (!isPassValid) {
-        showError(passInput, document.getElementById('error-pass'));
-        hasError = true;
+        updateChartData();
     }
 
-    // 4. Ekzekutimi i Feedback-ut në rast gabimi
-    if (hasError) {
-        if (typeof shakeForm === 'function') shakeForm();
-        return; // Ndalohet procesi këtu
-    }
+    // 4. CHART LOGIC
+    function initChart() {
+        const ctx = document.getElementById('appChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
 
-    // 5. Verifikimi i llogarisë (Log In vs Sign Up)
-    if (mode === 'signup') {
-        // Regjistrimi në LocalStorage
-        localStorage.setItem('user_cred', JSON.stringify({ name: n, email: e, pass: p }));
-    } else {
-
-
-// Brenda toggleMode()
-if (mode === 'login') {
-    document.getElementById('recovery-link-container').style.display = 'flex';
-} else {
-    document.getElementById('recovery-link-container').style.display = 'none';
-}
-
-        
-        // Kontrolli i kredencialeve ekzistuese
-        const cred = JSON.parse(localStorage.getItem('user_cred'));
-        if (!cred || e !== cred.email || p !== cred.pass) {
-            // Gabim në kredenciale (Email ose Pass i pasaktë)
-            if (typeof shakeForm === 'function') shakeForm();
-            // Shfaqim një mesazh specifik në subtitle për vërejtje
-            const subTitle = document.getElementById('auth-sub-title');
-            if (subTitle) {
-                subTitle.innerText = "EMAIL OSE FJALËKALIM I PASAKTË";
-                subTitle.style.color = "#ef4444";
-            }
-            return;
-        }
-    }
-
-    // 6. NËSE ÇDO GJË ËSHTË 10/10
-    if (typeof accessGranted === 'function') {
-        accessGranted();
-    }
-}
-
-
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const nameInput = document.getElementById('a-name');
-    const emailInput = document.getElementById('a-email');
-    const passInput = document.getElementById('a-pass');
-
-    // 1. STRIKT: Blloko hapësirat te Email-i (Korigjim: Përdorim 'key' për pajtueshmëri maksimale)
-    if (emailInput) {
-        emailInput.addEventListener('keydown', (e) => {
-            if (e.key === " " || e.code === "Space") {
-                e.preventDefault();
+        db.chart = new Chart(ctx, {
+            type: 'line',
+            data: { 
+                labels: [], 
+                datasets: [{ 
+                    data: [], 
+                    borderColor: '#6366f1', 
+                    borderWidth: 4, 
+                    tension: 0.4, 
+                    fill: true, 
+                    backgroundColor: gradient,
+                    pointRadius: 0,
+                    pointHoverRadius: 6
+                }] 
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { legend: { display: false } }, 
+                scales: { 
+                    x: { display: false }, 
+                    y: { display: false, beginAtZero: true } 
+                } 
             }
         });
     }
 
-    // 2. LIVE VALIDATION: Emri & Mbiemri (Korigjim: Validim inteligjent që nuk pengon shkrimin)
-    if (nameInput) {
-        nameInput.addEventListener('input', function() {
-            const val = this.value.trim();
-            const parts = val.split(/\s+/).filter(p => p.length > 0);
-            const error = document.getElementById('error-name');
+    function updateChartData() {
+        const container = document.getElementById('chart-container');
+        if (!container || !db.chart) return;
 
-            // Kushti: Duhen të paktën 2 fjalë, dhe secila mbi 2 karaktere
-            const isComplete = parts.length >= 2 && parts.every(p => p.length >= 2);
+        if (db.expenses.length > 0) {
+            container.classList.add('chart-active');
+            const totalBase = db.expenses.reduce((s, a) => s + a.amount, 0);
+            const isOverLimit = totalBase > db.limit;
+            const themeColor = isOverLimit ? '#ef4444' : '#6366f1';
+            const bgColor = isOverLimit ? 'rgba(239, 68, 68, 0.2)' : 'rgba(99, 102, 241, 0.2)';
 
-            if (isComplete) {
-                if (typeof hideError === 'function') hideError(this, error);
-            } else {
-                // Korigjim: Mos shfaq "ShowError" nëse përdoruesi sapo ka filluar të shkruajë
-                // Shfaqet vetëm nëse ka shkruar diçka dhe e ka lënë përgjysmë (p.sh. pas 10 karaktereve)
-                if (val.length > 10) {
-                    if (typeof showError === 'function') showError(this, error);
-                }
-            }
-        });
-    }
-});
-
-
-        // 3. LIVE VALIDATION: Email-i (Korigjim: Validim pas një vonese të vogël ose @)
-emailInput.addEventListener('input', function() {
-    const error = document.getElementById('error-email');
-    const val = this.value.trim();
-    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-    
-    if (isValid) {
-        if (typeof hideError === 'function') hideError(this, error);
-    } else {
-        // Shfaqim gabimin vetëm nëse përdoruesi ka shkruar @ ose ka kaluar 10 karaktere
-        if (val.includes('@') || val.length > 10) {
-            if (typeof showError === 'function') showError(this, error);
-        }
-    }
-});
-
-// 4. LIVE VALIDATION: Password (8+ karaktere, 1 e Madhe, 1 Numër)
-passInput.addEventListener('input', function() {
-    const error = document.getElementById('error-pass');
-    const val = this.value;
-    const hasUpper = /[A-Z]/.test(val);
-    const hasNum = /\d/.test(val);
-    const isLong = val.length >= 8;
-
-    if (hasUpper && hasNum && isLong) {
-        if (typeof hideError === 'function') hideError(this, error);
-    } else {
-        // Shfaqim gabimin live vetëm nëse ka filluar të shkruajë seriozisht
-        if (val.length > 5) {
-            if (typeof showError === 'function') showError(this, error);
-        }
-    }
-});
-
-// FUNKSIONET NDIHMËSE PËR UI TË BUTË (Korigjim: Shtuar tranzicionet CSS)
-function showError(input, msg) {
-    if (!msg || !input) return;
-    
-    msg.style.transition = "all 0.3s ease"; // Siguron lëvizje të butë
-    msg.style.opacity = "1";
-    msg.style.transform = "translateY(0)";
-    
-    if (input.parentElement) {
-        input.parentElement.style.transition = "border-color 0.3s ease";
-        input.parentElement.style.borderBottomColor = "#ef4444"; // E kuqe (Error)
-    }
-}
-
-function hideError(input, msg) {
-    if (!msg || !input) return;
-
-    msg.style.transition = "all 0.3s ease";
-    msg.style.opacity = "0";
-    msg.style.transform = "translateY(-5px)"; // Efekt "ngritjeje" kur zhduket
-    
-    if (input.parentElement) {
-        input.parentElement.style.transition = "border-color 0.3s ease";
-        input.parentElement.style.borderBottomColor = "#6366f1"; // Indigo (Success)
-    }
-}
-
-
-
-
-
-
-
-
-        
-
-
-/* --- RECOVERY MODULE: MENAXHIMI I STATE-IT DHE AKSESIT --- */
-
-/**
- * Funksioni kryesor që aktivizon modalitetin e rikthimit.
- * Ky funksion ka akses në të gjithë sistemin dhe ndryshon 
- * logjikën e butonit kryesor përkohësisht.
- */
-function initRecoverySequence() {
-    const mainTitle = document.getElementById('auth-main-title');
-    const subTitle = document.getElementById('auth-sub-title');
-    const btn = document.querySelector('.btn-premium');
-    const fieldName = document.getElementById('field-name');
-    const recoveryLink = document.getElementById('recovery-link');
-    const emailInput = document.getElementById('a-email');
-    const switchTrigger = document.getElementById('switch-trigger');
-
-    // 1. Kontrolli i emailit para se të nisim
-    if (!emailInput.value.includes('@')) {
-        subTitle.innerText = "SHËNONI EMAIL-IN PËR TË VAZHDUAR";
-        subTitle.style.color = "#ef4444";
-        shakeForm();
-        return;
-    }
-
-
-
-// Brenda initRecoverySequence()
-document.getElementById('recovery-link-container').style.display = 'none'; 
-// Kjo e fsheh vetveten sapo klikohet, që të mos rrijë aty gjatë procesit të rikthimit.
-
-
-    
-    // 2. Transformimi i UI në "Recovery State"
-    mainTitle.innerHTML = 'RECOVERY<span class="text-indigo-500">.</span>';
-    subTitle.innerText = "SISTEMI PO VERIFIKON IDENTITETIN TUAJ";
-    subTitle.style.color = "#6366f1";
-    
-    // Fshehim elementet që nuk duhen gjatë recovery
-    if(fieldName) fieldName.style.display = "none";
-    if(recoveryLink) recoveryLink.style.display = "none";
-    
-    // Ndryshojmë tekstin e switch-it për t'u kthyer pas
-    switchTrigger.innerText = "← KTHEHU TE LOG IN";
-    switchTrigger.onclick = () => {
-        location.reload(); // Mënyra më e pastër për të resetuar state-in
-    };
-
-    // 3. Aktivizojmë rrjedhën e rikthimit (nga kodi që kemi bërë më parë)
-    // Këtu bëhet lidhja me funksionin async recoveryFlow
-    if (typeof recoveryFlow === "function") {
-        recoveryFlow(); 
-    }
-}
-
-// Lidhim eventin me elementin HTML (Harruat fjalëkalimin?)
-document.getElementById('recovery-link').addEventListener('click', (e) => {
-    e.preventDefault();
-    initRecoverySequence();
-});
-
-/* --- OBSERVER: MONITORIMI I MODE-IT (Siguria) --- */
-/**
- * Ky bllok monitoron nëse modaliteti ndryshon dhe 
- * garanton që Recovery Link shfaqet VETËM në Log In.
- */
-const modeObserver = {
-    updateUI: function(currentMode) {
-        const link = document.getElementById('recovery-link');
-        if (!link) return;
-
-        if (currentMode === 'login') {
-            link.classList.remove('hidden');
-            link.style.display = 'flex';
-            link.style.animation = 'fade-in 0.5s ease forwards';
+            const lastExpenses = [...db.expenses].slice(0, 7).reverse();
+            db.chart.data.labels = lastExpenses.map(e => e.cat);
+            db.chart.data.datasets[0].data = lastExpenses.map(e => parseFloat((e.amount * currentCurrency.rate).toFixed(2)));
+            db.chart.data.datasets[0].borderColor = themeColor;
+            db.chart.data.datasets[0].backgroundColor = bgColor;
+            db.chart.update();
         } else {
-            link.classList.add('hidden');
-            link.style.display = 'none';
+            container.classList.remove('chart-active');
         }
+    }
+
+    // 5. VEPRIMET KRYESORE (SUBMIT, EDIT, DELETE)
+    // Ky funksion tani është i nderlidhur me butonin Konfirmo
+    function submitExpense() {
+        const amtInput = document.getElementById('inpAmount');
+        const amt = parseFloat(amtInput.value);
+        if(!amt || amt <= 0) return;
+
+        if (editIndex !== null) {
+            // ZBATIMI I EDITIMIT REAL
+            db.expenses[editIndex].amount = amt;
+            db.expenses[editIndex].cat = document.getElementById('selectedCat').value;
+            db.expenses[editIndex].icon = document.getElementById('selectedIcon').value;
+            
+            editIndex = null; // Kthehemi në gjendje shto
+            document.querySelector('.ios-btn').innerText = "Konfirmo";
+        } else {
+            // SHTIM I RI
+            db.expenses.unshift({ 
+                amount: amt, 
+                cat: document.getElementById('selectedCat').value, 
+                icon: document.getElementById('selectedIcon').value,
+                date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+            });
+            showQuickEditToast(0);
+        }
+
+        saveAndRefresh();
+        hideModal('addModal');
+        amtInput.value = '';
+    }
+
+    function openEditFromToast(index) {
+        editIndex = index; // Këtu përcaktohet rreshti për editim
+        const exp = db.expenses[index];
+
+        // Mbushim fushat e formës
+        document.getElementById('inpAmount').value = exp.amount;
+        document.getElementById('selectedCat').value = exp.cat;
+        document.getElementById('selectedIcon').value = exp.icon;
+
+        // Ndryshojmë tekstin e butonit Konfirmo
+        const btn = document.querySelector('.ios-btn');
+        if(btn) btn.innerText = "Përditëso";
+        
+        showAddModal();
+    }
+
+    function deleteExpense(index) {
+        if(confirm("Fshi këtë shënim?")) {
+            db.expenses.splice(index, 1);
+            saveAndRefresh();
+        }
+    }
+
+    function saveAndRefresh() {
+        localStorage.setItem('f_pro_v3', JSON.stringify(db.expenses));
+        renderUI();
+    }
+
+    // 6. VALUTAT DHE MODALET
+    async function changeSystemCurrency(code, symbol) {
+        if (code !== 'EUR') {
+            try {
+                const res = await fetch(`https://api.exchangerate-api.com/v4/latest/EUR`);
+                const data = await res.json();
+                currentCurrency = { code, symbol, rate: data.rates[code] };
+            } catch (e) { alert("Sistemi: Gabim në valutë."); }
+        } else {
+            currentCurrency = { code: 'EUR', symbol: '€', rate: 1 };
+        }
+        renderUI();
+    }
+
+    function showQuickEditToast(index) {
+        const old = document.querySelector('.quick-edit-toast'); 
+        if(old) old.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = "quick-edit-toast fixed bottom-6 right-6 z-[100] bg-indigo-600 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-right-full";
+        
+        const displayAmt = (db.expenses[index].amount * currentCurrency.rate).toFixed(2);
+        
+        toast.innerHTML = `
+            <div>
+                <span class="text-[9px] block opacity-70 uppercase tracking-tighter">Shtuar me sukses</span>
+                <span class="text-xs font-bold">${displayAmt}${currentCurrency.symbol}</span>
+            </div>
+            <button onclick="this.parentElement.remove(); openEditFromToast(${index})" class="bg-white text-indigo-600 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase hover:bg-opacity-90 transition-all">
+                Edito
+            </button>`;
+            
+        document.body.appendChild(toast);
+        setTimeout(() => { if(toast) toast.remove(); }, 4000);
+    }
+
+    function showLimitModal() {
+        let l = prompt("Vendos limitin tënd mujor:", db.limit);
+        if (l && !isNaN(l)) { 
+            db.limit = parseFloat(l); 
+            localStorage.setItem('f_pro_lim_v3', db.limit); 
+            renderUI();
+        }
+    }
+
+    // 7. UI UTILS
+    function clearAll() { if(confirm("Fshi të gjitha të dhënat?")) { db.expenses = []; localStorage.clear(); location.reload(); } }
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('menu-overlay').classList.toggle('active'); }
+    function showAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
+    
+    function hideModal(id) { 
+        document.getElementById(id).classList.add('hidden'); 
+        if(id === 'addModal') {
+            editIndex = null; // Resetojmë gjendjen kur mbyllet që të mos editohet gabimisht rreshti
+            const btn = document.querySelector('.ios-btn');
+            if(btn) btn.innerText = "Konfirmo";
+            document.getElementById('inpAmount').value = '';
+        }
+    }
+
+    function setCat(cat, icon, el) { 
+        document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected')); 
+        el.classList.add('selected'); 
+        document.getElementById('selectedCat').value = cat; 
+        document.getElementById('selectedIcon').value = icon; 
+    }
+
+    // 8. INTRO SCREEN LOGIC
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            const intro = document.getElementById('intro-screen');
+            const mainApp = document.getElementById('main-app');
+            const authShield = document.getElementById('auth-shield');
+
+            if (intro) {
+                intro.classList.add('hidden-intro');
+                setTimeout(() => intro.remove(), 1000);
+            }
+
+            if (mainApp) {
+                mainApp.style.opacity = "1";
+                mainApp.style.transform = "translateY(0)";
+            }
+            
+            if (authShield) {
+                authShield.style.display = 'none'; 
+            }
+        }, 3500);
+    });
+
+
+
+async function performAIScan(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const scanBtn = event.target.previousElementSibling;
+    const originalText = scanBtn.innerHTML;
+    
+    // UI Feedback: Butoni bëhet "Loading"
+    scanBtn.innerHTML = `<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" stroke-width="4"/></svg>`;
+    scanBtn.classList.add('opacity-50');
+
+    try {
+        const worker = await Tesseract.createWorker('eng');
+        const { data: { text } } = await worker.recognize(file);
+        await worker.terminate();
+
+        // Regex i avancuar për të gjetur numrat në formate si: 12.50 ose 12,50
+        const regexTotal = /(total|shuma|amount|totaal|suma)[\s:]+([\d.,]+)/i;
+        const match = text.match(regexTotal) || text.match(/\d+[\.,]\d{2}/g);
+
+        if (match) {
+            let foundAmount = Array.isArray(match) ? match[match.length - 1] : match[2];
+            foundAmount = foundAmount.replace(',', '.');
+            
+            const amountField = document.getElementById('inpAmount');
+            if(amountField) {
+                amountField.value = parseFloat(foundAmount);
+                
+                // --- SHTESAT E PERSOSURA ---
+                
+                // 1. Haptic Feedback (Vibrimi)
+                if (window.navigator.vibrate) {
+                    window.navigator.vibrate(40); // Një goditje e shkurtër "Apple-like"
+                }
+
+                // 2. Flash Effect & Glow
+                amountField.classList.add('scan-success-flash');
+                setTimeout(() => amountField.classList.remove('scan-success-flash'), 1000);
+            }
+        } else {
+            alert("Nuk u gjet asnjë shumë. Provo një foto më të qartë.");
+        }
+    } catch (error) {
+        console.error("Skanimi dështoi:", error);
+    } finally {
+        scanBtn.innerHTML = originalText;
+        scanBtn.classList.remove('opacity-50');
+    }
+}
+
+
+
+async function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // --- DIZAJNI I LOGOS "faturaIME" ---
+    // Simboli (Një katror i rrumbullakosur indigo)
+    doc.setFillColor(99, 102, 241);
+    doc.roundedRect(14, 15, 10, 10, 2, 2, 'F');
+    
+    // Teksti i Logos
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(30, 41, 59); // Slate 800
+    doc.text("fatura", 28, 23);
+    
+    doc.setTextColor(99, 102, 241); // Indigo 600
+    doc.text("IME", 47, 23);
+
+    // Linja dekorative nën logo
+    doc.setDrawColor(226, 232, 240); // Slate 200
+    doc.line(14, 32, 196, 32);
+
+    // --- INFORMACIONET E RAPORTIT ---
+    doc.setFontSize(8);
+    doc.setTextColor(100);
+    doc.setFont("helvetica", "normal");
+    const dateNow = new Date().toLocaleDateString('sq-AL', { day: 'numeric', month: 'long', year: 'numeric' });
+    doc.text(`DATA E GJENERIMIT: ${dateNow.toUpperCase()}`, 14, 40);
+    doc.text(`VALUTA E SISTEMIT: ${currentCurrency.code}`, 14, 44);
+
+    // --- TABELA E SHPENZIMEVE ---
+    const tableRows = [];
+    db.expenses.forEach(exp => {
+        // Përcaktimi i emrit të marketit/shërbimit nëse ekziston, përndryshe kategoria
+        const description = exp.cat.toUpperCase();
+        const rowData = [
+            exp.date,
+            description,
+            `${(exp.amount * currentCurrency.rate).toFixed(2)} ${currentCurrency.symbol}`
+        ];
+        tableRows.push(rowData);
+    });
+
+    doc.autoTable({
+        startY: 50,
+        head: [['DATA', 'PËRSHKRIMI I KATEGORISË', 'SHUMA']],
+        body: tableRows,
+        theme: 'striped',
+        headStyles: { 
+            fillColor: [30, 41, 59], 
+            fontSize: 9, 
+            fontStyle: 'bold', 
+            halign: 'left',
+            cellPadding: 4
+        },
+        bodyStyles: { 
+            fontSize: 9, 
+            cellPadding: 4,
+            textColor: [51, 65, 85]
+        },
+        columnStyles: {
+            0: { cellWidth: 35 },
+            2: { halign: 'right', fontStyle: 'bold' }
+        },
+        alternateRowStyles: { fillColor: [248, 250, 252] },
+        margin: { left: 14, right: 14 }
+    });
+
+    // --- TOTALI DHE PIKA FINALE ---
+    const finalY = doc.lastAutoTable.finalY + 15;
+    const totalBase = db.expenses.reduce((s, a) => s + a.amount, 0);
+    const totalConverted = (totalBase * currentCurrency.rate).toFixed(2);
+
+    // Kutia e Totalit
+    doc.setFillColor(99, 102, 241);
+    doc.roundedRect(130, finalY - 8, 66, 12, 1, 1, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.text(`TOTALI: ${totalConverted} ${currentCurrency.symbol}`, 135, finalY);
+
+    // Footer - Gjeneruar nga AI
+    doc.setTextColor(148, 163, 184); // Slate 400
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "italic");
+    doc.text("Ky raport është gjeneruar automatikisht nga sistemi faturaIME dhe është i vlefshëm pa vulë.", 14, 285);
+
+    // Save & Haptic
+    doc.save(`Raporti_faturaIME_${currentCurrency.code}.pdf`);
+    if (window.navigator.vibrate) window.navigator.vibrate([50, 30, 50]);
+}
+
+
+
+
+
+
+
+// 1. NDRYSHIMI I IKONËS SË SISTEMIT (iOS & Android)
+function updateSystemIcon(style) {
+    let iconUrl = "";
+    
+    // Përcaktojmë URL-të e ikonave bazuar në stilin e zgjedhur
+    if(style === 'indigo') iconUrl = "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png";
+    if(style === 'black') iconUrl = "https://img.icons8.com/ios-filled/512/6366f1/bill.png";
+    if(style === 'white') iconUrl = "https://img.icons8.com/ios-filled/512/000000/bill.png";
+
+    // Gjejmë ose krijojmë elementet e ikonave në <head>
+    let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+    let favicon = document.querySelector('link[rel="icon"]');
+
+    if (appleIcon) appleIcon.href = iconUrl;
+    if (favicon) favicon.href = iconUrl;
+
+    // Ruajmë preferencën
+    localStorage.setItem('app-system-icon', style);
+    
+    // Feedback vizual
+    if (window.navigator.vibrate) window.navigator.vibrate([40, 40]);
+    alert("Ikona u ndryshua! Nëse e keni shtuar në Home Screen, mund të duhet pak kohë që sistemi ta rifreskojë.");
+}
+
+// 2. NDRYSHIMI I TEMËS (DARK / LIGHT)
+function updateAppTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') !== 'light';
+    const newTheme = isDark ? 'light' : 'dark';
+    
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('app-theme', newTheme);
+    
+    // Animacioni i butonit (Toggle)
+    const ball = document.getElementById('theme-ball');
+    if (newTheme === 'light') {
+        ball.style.transform = 'translateX(16px)';
+        ball.style.backgroundColor = '#ffffff';
+    } else {
+        ball.style.transform = 'translateX(0px)';
+        ball.style.backgroundColor = '#6366f1';
+    }
+
+    if (window.navigator.vibrate) window.navigator.vibrate(30);
+}
+
+// 3. LOAD PREFERENCES (Shtoje këtë te window.onload)
+function loadPreferences() {
+    const savedIcon = localStorage.getItem('app-system-icon');
+    if(savedIcon) updateSystemIcon(savedIcon);
+    
+    const savedTheme = localStorage.getItem('app-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// Shtoje këtë brenda funksionit renderUI()
+const percent = Math.min((totalBase / limitBase) * 100, 100);
+const limitBar = document.getElementById('limitBar');
+if(limitBar) {
+    limitBar.style.width = percent + '%';
+    limitBar.style.backgroundColor = percent > 90 ? '#ef4444' : '#6366f1';
+}
+document.getElementById('limitPercent').innerText = Math.round(percent) + '%';
+
+
+
+
+
+
+
+
+
+const SecureVault = {
+    currentPin: "",
+    pinKey: "f_pro_secure_pin",
+    emailKey: "f_pro_recovery_mail",
+
+    init() {
+        const hasPin = localStorage.getItem(this.pinKey);
+        document.getElementById('auth-title').innerText = hasPin ? "Mirësevini" : "Konfiguro Qasjen";
+        document.getElementById('auth-subtitle').innerText = hasPin ? "Shënoni kodin tuaj" : "Krijoni një PIN 4-shifror";
+    },
+
+    input(num) {
+        if (this.currentPin.length < 4) {
+            this.currentPin += num;
+            this.haptic(15);
+            this.updateDots();
+            if (this.currentPin.length === 4) setTimeout(() => this.verify(), 300);
+        }
+    },
+
+    delete() {
+        this.currentPin = this.currentPin.slice(0, -1);
+        this.haptic(10);
+        this.updateDots();
+    },
+
+    updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i < this.currentPin.length);
+        });
+    },
+
+    async verify() {
+        const storedPin = localStorage.getItem(this.pinKey);
+        const encodedInput = btoa(this.currentPin);
+
+        if (!storedPin) {
+            // KONFIGURIMI PËR HERË TË PARË
+            const email = prompt("Vendosni email-in tuaj për rimëkëmbje (E detyrueshme):");
+            if (email && email.includes('@')) {
+                localStorage.setItem(this.pinKey, encodedInput);
+                localStorage.setItem(this.emailKey, btoa(email));
+                this.accessGranted("Sistemi u rregullua");
+            } else {
+                alert("Email-i kërkohet për siguri.");
+                this.resetKeys();
+            }
+        } else {
+            // VERIFIKIMI NORMAL
+            if (storedPin === encodedInput) {
+                this.accessGranted("Qasja u lejua");
+            } else {
+                this.accessDenied();
+            }
+        }
+    },
+
+    accessGranted(msg) {
+        this.haptic([30, 50, 30]);
+        document.getElementById('auth-subtitle').innerText = msg;
+        document.getElementById('auth-subtitle').style.color = "#10b981";
+        
+        // Animacioni i drynit
+        document.getElementById('lock-path').setAttribute('d', 'M8 11V7a4 4 0 118 0v4m-8 0a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2v-6a2 2 0 00-2-2H8z');
+        document.getElementById('lock-container').style.borderColor = "#10b981";
+
+        setTimeout(() => {
+            document.getElementById('auth-shield').classList.add('unlocked');
+            // Mundëson scroll-in e faqes pas zhbllokimit
+            document.body.style.overflow = "auto";
+        }, 600);
+    },
+
+    accessDenied() {
+        this.haptic([100, 50, 100]);
+        const container = document.getElementById('pin-visualizer');
+        container.classList.add('shake');
+        setTimeout(() => {
+            container.classList.remove('shake');
+            this.resetKeys();
+        }, 500);
+    },
+
+    resetKeys() {
+        this.currentPin = "";
+        this.updateDots();
+    },
+
+    initiateRecovery() {
+        const storedEmail = localStorage.getItem(this.emailKey);
+        if (!storedEmail) return alert("Asnjë email nuk është konfiguruar.");
+
+        const emailInput = prompt("Vërtetoni email-in tuaj të rimëkëmbjes:");
+        if (btoa(emailInput) === storedEmail) {
+            const newPin = prompt("Email i saktë! Shënoni PIN-in e ri (4 shifra):");
+            if (newPin && newPin.length === 4) {
+                localStorage.setItem(this.pinKey, btoa(newPin));
+                alert("PIN u ndryshua. Ju lutem hyni.");
+                location.reload();
+            }
+        } else {
+            alert("Email i gabuar. Rimëkëmbja dështoi.");
+        }
+    },
+
+    haptic(pattern) {
+        if (window.navigator.vibrate) window.navigator.vibrate(pattern);
     }
 };
 
-// Integrimi i këtij moduli te funksioni yt toggleMode()
-// Shto këtë rresht brenda toggleMode(): modeObserver.updateUI(mode);
-
-
-
-
-
-        
-
-
-        /* ============================================================
-   RECOVERY SYSTEM MODULE (MODAL & LOGIC)
-   ============================================================ */
-
-/**
- * 1. Aktivizimi i Modal-it
- * Ky funksion thirret kur klikohet linku "Harruat fjalëkalimin?"
- */
-function initRecoverySequence() {
-    const emailInput = document.getElementById('a-email');
-    const modal = document.getElementById('recovery-modal');
-    const displayEmail = document.getElementById('recovery-email-display');
-    const subTitle = document.getElementById('auth-sub-title');
-
-    // Kontrolli i emailit: Duhet të jetë i shënuar që të vazhdojmë
-    if (!emailInput.value.includes('@') || emailInput.value.length < 5) {
-        if (subTitle) {
-            subTitle.innerText = "SHËNONI EMAIL-IN TUAJ PËR TË VAZHDUAR";
-            subTitle.style.color = "#ef4444";
-        }
-        // Nëse ke funksionin shakeForm(), thirru këtu
-        if (typeof shakeForm === 'function') shakeForm();
-        return;
-    }
-
-    // Shfaqim email-in te Modali për konfirmim vizual
-    if (displayEmail) displayEmail.innerText = `Llogaria: ${emailInput.value}`;
-
-    // Hapja e Modalit me animacion
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        setTimeout(() => {
-            modal.style.opacity = "1";
-            const card = modal.querySelector('.auth-card');
-            if (card) card.style.transform = "scale(1)";
-        }, 10);
-    }
-}
-
-/**
- * 2. Mbyllja e Modal-it
- */
-function closeRecoveryModal() {
-    const modal = document.getElementById('recovery-modal');
-    if (modal) {
-        modal.style.opacity = "0";
-        const card = modal.querySelector('.auth-card');
-        if (card) card.style.transform = "scale(0.95)";
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 300);
-    }
-}
-
-/**
- * 3. Ruajtja e Fjalëkalimit të Ri (Lidhja me LocalStorage)
- */
-function saveNewPassword() {
-    const email = document.getElementById('a-email').value;
-    const newPass = document.getElementById('new-pass').value;
-    const confirmPass = document.getElementById('confirm-new-pass').value;
-
-    // Validimi i thjeshtë
-    if (newPass.length < 8) {
-        alert("Fjalëkalimi duhet të ketë së paku 8 karaktere!");
-        return;
-    }
-    if (newPass !== confirmPass) {
-        alert("Fjalëkalimet nuk përputhen!");
-        return;
-    }
-
-    // Marrim përdoruesit nga Sistemi (LocalStorage)
-    let users = JSON.parse(localStorage.getItem('users')) || [];
-    const userIndex = users.findIndex(u => u.email === email);
-
-    if (userIndex !== -1) {
-        // Përditësojmë fjalëkalimin
-        users[userIndex].password = newPass;
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        alert("Fjalëkalimi u ndryshua me sukses! Tani mund të hyni.");
-        closeRecoveryModal();
-    } else {
-        alert("Ky email nuk u gjet në sistemin tonë!");
-    }
-}
-
-/**
- * 4. EVENT LISTENER (Lidhja fizike me HTML)
- * Kjo bën që klikimi mbi <a> të aktivizojë procesin
- */
+// Starto Vault-in
 document.addEventListener('DOMContentLoaded', () => {
-    const recLink = document.getElementById('recovery-link');
-    if (recLink) {
-        recLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            initRecoverySequence();
-        });
-    }
+    SecureVault.init();
+    // Ndalon scroll-in derisa të kryhet auth
+    document.body.style.overflow = "hidden";
 });
 
-        
-
-        
 
 
-    </script>
+
+</script>
+   
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
