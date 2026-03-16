@@ -433,6 +433,15 @@ body {
 
 
 
+  <div id="menu-overlay" onclick="toggleMenu()"></div>
+
+    <div id="intro-screen">
+        <div class="logo-box">
+            <h1 class="logo-text italic">FATURAIME.</h1>
+            <div class="light-sweep"></div>
+        </div>
+    </div>
+
 
 
 
@@ -484,23 +493,6 @@ body {
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-    <div id="menu-overlay" onclick="toggleMenu()"></div>
-
-    <div id="intro-screen">
-        <div class="logo-box">
-            <h1 class="logo-text italic">FATURAIME.</h1>
-            <div class="light-sweep"></div>
-        </div>
-    </div>
 
 
 
@@ -1318,12 +1310,6 @@ function loadPreferences() {
 
 
 
-
-
-
-
-
-
 // Shtoje këtë brenda funksionit renderUI()
 const percent = Math.min((totalBase / limitBase) * 100, 100);
 const limitBar = document.getElementById('limitBar');
@@ -1332,9 +1318,6 @@ if(limitBar) {
     limitBar.style.backgroundColor = percent > 90 ? '#ef4444' : '#6366f1';
 }
 document.getElementById('limitPercent').innerText = Math.round(percent) + '%';
-
-
-
 
 
 
@@ -1458,49 +1441,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ndalon scroll-in derisa të kryhet auth
     document.body.style.overflow = "hidden";
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-function updateSystemIcon(colorType) {
-    const iconMap = {
-        'indigo': 'https://img.icons8.com/ios-filled/512/6366f1/bill.png',
-        'black': 'https://img.icons8.com/ios-filled/512/000000/bill.png',
-        'white': 'https://img.icons8.com/ios-filled/512/FFFFFF/bill.png'
-    };
-
-    const newSrc = iconMap[colorType];
-    
-    // Ndrysho Favicon
-    let link = document.querySelector("link[rel~='icon']");
-    if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        document.head.appendChild(link);
-    }
-    link.href = newSrc;
-
-    // Ndrysho Apple Touch Icon (për iOS)
-    let appleIcon = document.querySelector("link[rel~='apple-touch-icon']");
-    if (!appleIcon) {
-        appleIcon = document.createElement('link');
-        appleIcon.rel = 'apple-touch-icon';
-        document.head.appendChild(appleIcon);
-    }
-    appleIcon.href = newSrc;
-    
-    localStorage.setItem('sys_icon_choice', colorType);
-}
-
 
 
 
