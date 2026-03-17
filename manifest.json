@@ -1,31 +1,19 @@
 {
-
   "name": "FaturaIME",
-
   "short_name": "FaturaIME",
-
-  "start_url": "index.html",
-
+  "description": "Menaxhimi i faturave dhe financave",
+  "start_url": "/",
   "display": "standalone",
-
   "background_color": "#000000",
-
-  "theme_color": "#000000",
-
+  "theme_color": "#4f46e5",
   "orientation": "portrait",
-
+  "scope": "/",
   "icons": [
-
     {
-
       "src": "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png",
-
       "sizes": "512x512",
-
-      "type": "image/png"
-
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-
   ]
-
 }
