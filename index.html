@@ -584,13 +584,7 @@ body {
                         <div id="theme-ball" class="w-4 h-4 bg-indigo-500 rounded-full transition-all duration-300"></div>
                     </button>
                 </div>
-                <div class="space-y-3 pt-2 border-t border-white/5">
-                    <span class="text-[10px] font-bold text-white/40 block">Ikona e Aplikacionit</span>
-                    <div class="flex justify-between gap-2">
-                        <button onclick="updateSystemIcon('indigo')" class="flex-1 h-12 rounded-xl bg-[#6366f1] flex items-center justify-center border-2 border-white/10 active:scale-95 transition-all shadow-lg shadow-indigo-500/20"></button>
-                        <button onclick="updateSystemIcon('black')" class="flex-1 h-12 rounded-xl bg-black flex items-center justify-center border-2 border-white/10 active:scale-95 transition-all"></button>
-                        <button onclick="updateSystemIcon('white')" class="flex-1 h-12 rounded-xl bg-white flex items-center justify-center border-2 border-black/5 active:scale-95 transition-all"></button>
-                    </div>
+              
                 </div>
             </div>
         </section>
@@ -1261,29 +1255,6 @@ async function downloadPDF() {
 
 
 
-// 1. NDRYSHIMI I IKONËS SË SISTEMIT (iOS & Android)
-function updateSystemIcon(style) {
-    let iconUrl = "";
-    
-    // Përcaktojmë URL-të e ikonave bazuar në stilin e zgjedhur
-    if(style === 'indigo') iconUrl = "https://img.icons8.com/ios-filled/512/FFFFFF/bill.png";
-    if(style === 'black') iconUrl = "https://img.icons8.com/ios-filled/512/6366f1/bill.png";
-    if(style === 'white') iconUrl = "https://img.icons8.com/ios-filled/512/000000/bill.png";
-
-    // Gjejmë ose krijojmë elementet e ikonave në <head>
-    let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
-    let favicon = document.querySelector('link[rel="icon"]');
-
-    if (appleIcon) appleIcon.href = iconUrl;
-    if (favicon) favicon.href = iconUrl;
-
-    // Ruajmë preferencën
-    localStorage.setItem('app-system-icon', style);
-    
-    // Feedback vizual
-    if (window.navigator.vibrate) window.navigator.vibrate([40, 40]);
-    alert("Ikona u ndryshua! Nëse e keni shtuar në Home Screen, mund të duhet pak kohë që sistemi ta rifreskojë.");
-}
 
 // 2. NDRYSHIMI I TEMËS (DARK / LIGHT)
 function updateAppTheme() {
@@ -1329,39 +1300,6 @@ if(limitBar) {
 }
 document.getElementById('limitPercent').innerText = Math.round(percent) + '%';
 
-
-
-
-
-function updateSystemIcon(colorType) {
-    const iconMap = {
-        'indigo': 'https://img.icons8.com/ios-filled/512/6366f1/bill.png',
-        'black': 'https://img.icons8.com/ios-filled/512/000000/bill.png',
-        'white': 'https://img.icons8.com/ios-filled/512/FFFFFF/bill.png'
-    };
-
-    const newSrc = iconMap[colorType];
-    
-    // Ndrysho Favicon
-    let link = document.querySelector("link[rel~='icon']");
-    if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        document.head.appendChild(link);
-    }
-    link.href = newSrc;
-
-    // Ndrysho Apple Touch Icon (për iOS)
-    let appleIcon = document.querySelector("link[rel~='apple-touch-icon']");
-    if (!appleIcon) {
-        appleIcon = document.createElement('link');
-        appleIcon.rel = 'apple-touch-icon';
-        document.head.appendChild(appleIcon);
-    }
-    appleIcon.href = newSrc;
-    
-    localStorage.setItem('sys_icon_choice', colorType);
-}
 
 
 
