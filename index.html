@@ -576,17 +576,22 @@ body {
 
 
 
-<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10 mt-4">
-    <div class="flex flex-col">
-        <span class="text-[10px] text-white font-black uppercase tracking-widest">Njoftimet e Sistemit</span>
-        <span id="notif-status" class="text-[8px] text-white/40 uppercase font-bold">Statusi: I panjohur</span>
+<div class="mt-8 p-6 bg-white/5 border border-white/10 rounded-[32px] backdrop-blur-xl">
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h3 class="text-[11px] font-black text-white uppercase tracking-[0.2em]">Sistemi i Njoftimeve</h3>
+            <p id="notif-status" class="text-[9px] text-white/40 uppercase font-bold mt-1 tracking-widest text-red-500">Statusi: I Ndaluar</p>
+        </div>
+        <div class="relative inline-block w-10 h-6">
+            <button id="toggle-notif-btn" onclick="toggleNotifications()" class="w-full h-full bg-white text-black text-[9px] font-black uppercase rounded-xl transition-all active:scale-90">
+                Lejo
+            </button>
+        </div>
     </div>
-    <button id="toggle-notif-btn" onclick="toggleNotifications()" class="px-4 py-2 rounded-xl bg-white text-black text-[9px] font-black uppercase transition-all active:scale-95 shadow-lg">
-        Lejo
-    </button>
+    <p class="text-[10px] text-white/60 leading-relaxed italic">Aktivizoni njoftimet për të marrë raporte në kohë reale mbi gjendjen tuaj financiare.</p>
 </div>
-
         
+
 
         <section class="space-y-3">
             <span class="text-[9px] text-white/30 font-black uppercase tracking-widest ml-2">Personalizimi</span>
@@ -1543,91 +1548,94 @@ async function downloadCardImage() {
 
 
    
-// 1. Regjistrimi dhe Lidhja e Service Worker
-let swRegistration = null; // Emri duhet të jetë unik
+let swRegistration = null;
 
+// 1. Regjistrimi i Service Worker (Lidhja Antenë-Televizor)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-            .then(registration => {
-                console.log('SW u lidh me sukses!');
-                swRegistration = registration; // Këtu u rregullua emri
-                updateNotifButtonUI(); 
-            })
-            .catch(err => {
-                console.error('Lidhja dështoi:', err);
-            });
+        navigator.serviceWorker.register('sw.js').then(reg => {
+            swRegistration = reg;
+            console.log("Mekanika e Njoftimeve: Gati.");
+            updateNotifUI();
+        });
     });
 }
 
-// 2. Funksioni për të ndërruar statusin (Lejo/Ndalo)
-async function toggleNotifications() {
-    if (!swRegistration) {
-        console.error("Service Worker nuk është gati.");
-        return;
-    }
-
-    if (Notification.permission !== 'granted') {
-        const permission = await Notification.requestPermission();
-        if (permission === 'granted') {
-            localStorage.setItem('notif_enabled', 'true');
-            // Dërgojmë njoftimin e parë pas lejimit
-            setTimeout(() => {
-                sendElitePush("Sistemi u aktivizua. Statusi juaj tani është: ELITE.");
-            }, 1000);
-        }
-    } else {
-        const isEnabled = localStorage.getItem('notif_enabled') === 'true';
-        localStorage.setItem('notif_enabled', !isEnabled);
-    }
-    updateNotifButtonUI();
-}
-
-// 3. Përditësimi i UI të butonit
-function updateNotifButtonUI() {
-    const btn = document.getElementById('toggle-notif-btn');
-    const statusText = document.getElementById('notif-status');
-    if(!btn || !statusText) return;
-
+// 2. Funksioni Universal për dërgimin e Njoftimit
+function sendElitePush(title, body, tag = 'general') {
     const isEnabled = localStorage.getItem('notif_enabled') === 'true';
-
-    if (Notification.permission === 'granted' && isEnabled) {
-        btn.innerText = "Ndalo";
-        btn.className = "px-4 py-2 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 text-[9px] font-black uppercase transition-all";
-        statusText.innerText = "Statusi: Aktiv";
-        statusText.style.color = "#4ade80"; // Green
-    } else {
-        btn.innerText = "Lejo";
-        btn.className = "px-4 py-2 rounded-xl bg-white text-black text-[9px] font-black uppercase transition-all shadow-lg";
-        statusText.innerText = "Statusi: I ndaluar";
-        statusText.style.color = "rgba(255,255,255,0.4)";
-    }
-}
-
-function sendElitePush(message) {
-    const isEnabled = localStorage.getItem('notif_enabled') === 'true';
-    
-    if (isEnabled && Notification.permission === 'granted') {
-        navigator.serviceWorker.ready.then(registration => {
-            if (registration.active) {
-                registration.active.postMessage({
-                    type: 'TRIGGER_REAL_PUSH', // U ndryshua këtu për t'u përputhur me sw.js
-                    body: message
-                });
-            }
+    if (isEnabled && Notification.permission === 'granted' && swRegistration) {
+        navigator.serviceWorker.ready.then(reg => {
+            reg.active.postMessage({
+                type: 'TRIGGER_REAL_PUSH',
+                title: title,
+                body: body,
+                tag: tag
+            });
         });
     }
 }
 
-// 5. Mirëseardhja ditore
+// 3. Mekanika e Butonit (Aktivizimi dhe Mirëseardhja)
+async function toggleNotifications() {
+    if (Notification.permission !== 'granted') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            localStorage.setItem('notif_enabled', 'true');
+            // MIRËSEARDHJA REALE (Vjen sekondën që shtyp butonin)
+            sendElitePush(
+                "SISTEMI ELITE U AKTIVIZUA", 
+                "Mirëseerdhët! Tani do të pranoni njoftime inteligjente për çdo veprim financiar.",
+                "welcome"
+            );
+        }
+    } else {
+        const isEnabled = localStorage.getItem('notif_enabled') === 'true';
+        const newState = !isEnabled;
+        localStorage.setItem('notif_enabled', newState);
+        
+        if (newState) {
+            sendElitePush("MIRËSEERDHËT PËRSËRI", "Sistemi i njoftimeve u rikthye në punë.");
+        }
+    }
+    updateNotifUI();
+}
+
+// 4. Përditësimi i UI (Ndryshimi i ngjyrave dhe tekstit)
+function updateNotifUI() {
+    const btn = document.getElementById('toggle-notif-btn');
+    const statusText = document.getElementById('notif-status');
+    if (!btn || !statusText) return;
+
+    const isEnabled = localStorage.getItem('notif_enabled') === 'true';
+
+    if (Notification.permission === 'granted' && isEnabled) {
+        btn.innerText = "NDALO";
+        btn.className = "px-4 py-2 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl text-[9px] font-black transition-all";
+        statusText.innerText = "Statusi: 100% Aktiv";
+        statusText.classList.replace('text-red-500', 'text-green-400');
+    } else {
+        btn.innerText = "LEJO";
+        btn.className = "px-4 py-2 bg-white text-black rounded-xl text-[9px] font-black transition-all shadow-lg";
+        statusText.innerText = "Statusi: I Ndaluar";
+        statusText.classList.replace('text-green-400', 'text-red-500');
+    }
+}
+
+// 5. NJOFTIMI AUTOMATIK DITOR (5 sekonda pas hapjes)
 document.addEventListener('DOMContentLoaded', () => {
+    const lastSeen = localStorage.getItem('last_daily_notif');
     const today = new Date().toDateString();
-    if (localStorage.getItem('last_notif_date') !== today) {
-        // Presim pak sa të ngarkohet swRegistration
+
+    if (lastSeen !== today) {
         setTimeout(() => {
-            sendElitePush("Mirëseerdhët në faturaIME Elite. Sistemi është gati.");
-            localStorage.setItem('last_notif_date', today);
-        }, 5000);
+            sendElitePush(
+                "KONTROLLI DITOR", 
+                "Mirëmëngjes! Mos harroni të skanoni faturat e sotme për të mbajtur bilancin në kontroll.",
+                "daily"
+            );
+            localStorage.setItem('last_daily_notif', today);
+        }, 8000); // Shfaqet pas 8 sekondave (më profesionale)
     }
 });
 </script>
