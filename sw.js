@@ -1,4 +1,4 @@
-// sw.js - Sistemi i Mesazheve në Prapavijë
+// sw.js - Sistemi i Mesazheve ELITE
 self.addEventListener('install', (e) => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
@@ -6,14 +6,15 @@ self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'TRIGGER_REAL_PUSH') {
         const options = {
             body: event.data.body,
-            icon: 'https://img.icons8.com/ios-filled/512/6366f1/bill.png', // Ikona jote
+            icon: 'https://img.icons8.com/ios-filled/512/6366f1/bill.png',
             badge: 'https://img.icons8.com/ios-filled/100/6366f1/bill.png',
-            vibrate: [200, 100, 200], // Dridhja fizike
+            vibrate: [200, 100, 200],
             tag: event.data.tag || 'faturaime-notif',
             renotify: true,
-            requireInteraction: true, // Qëndron në ekran derisa ta klikosh
+            requireInteraction: true,
+            data: { url: self.location.origin },
             actions: [
-                { action: 'open', title: 'Hap Aplikacionin' }
+                { action: 'open', title: 'Hap FaturaIME' }
             ]
         };
 
