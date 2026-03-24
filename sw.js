@@ -1,55 +1,34 @@
-// sw.js - Motori i Njoftimeve ELITE
+// sw.js - Sistemi i Mesazheve në Prapavijë
+self.addEventListener('install', (e) => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
-self.addEventListener('install', (event) => {
-    // Forcon instalimin e menjëhershëm pa pritur mbylljen e tab-eve të vjetra
-    self.skipWaiting(); 
-});
-
-self.addEventListener('activate', (event) => {
-    // Merr kontrollin e faqes menjëherë pas aktivizimit
-    event.waitUntil(self.clients.claim()); 
-});
-
-// Dëgjuesi i mesazheve nga index.html
 self.addEventListener('message', (event) => {
-    // Sigurohemi që tipi i mesazhit përputhet me atë që dërgojmë nga JS kryesor
     if (event.data && event.data.type === 'TRIGGER_REAL_PUSH') {
         const options = {
             body: event.data.body,
-            icon: 'https://img.icons8.com/ios-filled/512/6366f1/bill.png',
+            icon: 'https://img.icons8.com/ios-filled/512/6366f1/bill.png', // Ikona jote
             badge: 'https://img.icons8.com/ios-filled/100/6366f1/bill.png',
-            vibrate: [200, 100, 200], // Dridhje reale
-            tag: 'faturaime-alert',
+            vibrate: [200, 100, 200], // Dridhja fizike
+            tag: event.data.tag || 'faturaime-notif',
             renotify: true,
-            // KORRIGJIM: Përdorim self në vend të window
-            data: { url: self.location.origin }, 
+            requireInteraction: true, // Qëndron në ekran derisa ta klikosh
             actions: [
-                { action: 'open', title: 'Hap Panelin' }
+                { action: 'open', title: 'Hap Aplikacionin' }
             ]
         };
 
         event.waitUntil(
-            self.registration.showNotification('FATURAIME ELITE', options)
+            self.registration.showNotification(event.data.title || 'FATURAIME ELITE', options)
         );
     }
 });
 
-// Menaxhimi i klikimit mbi njoftim
 self.addEventListener('notificationclick', (event) => {
-    event.notification.close(); // Mbyll njoftimin pas klikimit
-
+    event.notification.close();
     event.waitUntil(
         clients.matchAll({ type: 'window' }).then((clientList) => {
-            // Nëse faqja është e hapur, fokusoje atë
-            for (const client of clientList) {
-                if (client.url === '/' && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            // Nëse nuk është e hapur, hape një dritare të re
-            if (clients.openWindow) {
-                return clients.openWindow('/');
-            }
+            if (clientList.length > 0) return clientList[0].focus();
+            return clients.openWindow('/');
         })
     );
 });
