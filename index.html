@@ -1604,7 +1604,6 @@ function updateNotifButtonUI() {
     }
 }
 
-// 4. Funksioni që komunikon me sw.js (TRIGGERI REAL)
 function sendElitePush(message) {
     const isEnabled = localStorage.getItem('notif_enabled') === 'true';
     
@@ -1612,7 +1611,7 @@ function sendElitePush(message) {
         navigator.serviceWorker.ready.then(registration => {
             if (registration.active) {
                 registration.active.postMessage({
-                    type: 'SEND_PUSH', // Ky duhet të jetë i njëjtë me atë në sw.js
+                    type: 'TRIGGER_REAL_PUSH', // U ndryshua këtu për t'u përputhur me sw.js
                     body: message
                 });
             }
