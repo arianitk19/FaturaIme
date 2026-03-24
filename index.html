@@ -575,6 +575,19 @@ body {
 </div>
 
 
+
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10 mt-4">
+    <div class="flex flex-col">
+        <span class="text-[10px] text-white font-black uppercase tracking-widest">Njoftimet e Sistemit</span>
+        <span id="notif-status" class="text-[8px] text-white/40 uppercase font-bold">Statusi: I panjohur</span>
+    </div>
+    <button id="toggle-notif-btn" onclick="toggleNotifications()" class="px-4 py-2 rounded-xl bg-white text-black text-[9px] font-black uppercase transition-all active:scale-95 shadow-lg">
+        Lejo
+    </button>
+</div>
+
+        
+
         <section class="space-y-3">
             <span class="text-[9px] text-white/30 font-black uppercase tracking-widest ml-2">Personalizimi</span>
             <div class="bg-white/[0.03] rounded-[28px] border border-white/5 p-4 space-y-5">
@@ -1513,6 +1526,95 @@ async function downloadCardImage() {
         btn.innerText = "PROVO PËRSËRI";
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let swRegistration = null;
+
+// 1. Regjistrimi i Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+        swRegistration = reg;
+        updateNotifButtonUI();
+    });
+}
+
+// 2. Funksioni për të ndërruar statusin (Lejo/Ndalo)
+async function toggleNotifications() {
+    const btn = document.getElementById('toggle-notif-btn');
+    
+    if (Notification.permission === 'default' || Notification.permission === 'denied') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            sendElitePush("Sistemi u aktivizua. Do të pranoni njoftime rreth statusit tuaj financiar.");
+            localStorage.setItem('notif_enabled', 'true');
+        } else {
+            alert("Ju lutem lejoni njoftimet nga cilësimet e browser-it.");
+        }
+    } else {
+        // Nëse janë të lejuara, simulojmë ndalimin përmes preferencës së përdoruesit
+        const isEnabled = localStorage.getItem('notif_enabled') === 'true';
+        localStorage.setItem('notif_enabled', !isEnabled);
+    }
+    updateNotifButtonUI();
+}
+
+// 3. Përditësimi i UI të butonit
+function updateNotifButtonUI() {
+    const btn = document.getElementById('toggle-notif-btn');
+    const statusText = document.getElementById('notif-status');
+    const isEnabled = localStorage.getItem('notif_enabled') === 'true';
+
+    if (Notification.permission === 'granted' && isEnabled) {
+        btn.innerText = "Ndalo";
+        btn.classList.replace('bg-white', 'bg-red-500/20');
+        btn.classList.add('text-red-500', 'border', 'border-red-500/50');
+        statusText.innerText = "Statusi: Aktiv";
+        statusText.classList.replace('text-white/40', 'text-green-400');
+    } else {
+        btn.innerText = "Lejo";
+        btn.className = "px-4 py-2 rounded-xl bg-white text-black text-[9px] font-black uppercase transition-all active:scale-95 shadow-lg";
+        statusText.innerText = "Statusi: I ndaluar";
+        statusText.classList.replace('text-green-400', 'text-white/40');
+    }
+}
+
+// 4. Funksioni universal për dërgimin e njoftimit (Vetëm nëse lejohet)
+function sendElitePush(message) {
+    const isEnabled = localStorage.getItem('notif_enabled') === 'true';
+    if (isEnabled && Notification.permission === 'granted' && swRegistration) {
+        navigator.serviceWorker.ready.then(reg => {
+            reg.active.postMessage({
+                type: 'SEND_PUSH',
+                body: message
+            });
+        });
+    }
+}
+
+// 5. Njoftimi i mirëseardhjes (vetëm 1 herë në ditë)
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date().toDateString();
+    if (localStorage.getItem('last_notif_date') !== today) {
+        setTimeout(() => {
+            sendElitePush("Mirëseerdhët në faturaIME Elite. Sistemi është gati për procesim.");
+            localStorage.setItem('last_notif_date', today);
+        }, 3000);
+    }
+});
 </script>
 </body>
 </html>
