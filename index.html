@@ -1542,13 +1542,19 @@ async function downloadCardImage() {
 
 
 
-    let swRegistration = null;
-
-// 1. Regjistrimi i Service Worker
+   
+// Kjo është lidhja e vërtetë për Service Worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-        swRegistration = reg;
-        updateNotifButtonUI();
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+            .then(registration => {
+                console.log('SW u regjistrua me sukses në scope:', registration.scope);
+                // Ruajmë regjistrimin globalisht që ta përdorim për njoftimet
+                window.swReg = registration;
+            })
+            .catch(err => {
+                console.error('Regjistrimi i SW dështoi:', err);
+            });
     });
 }
 
