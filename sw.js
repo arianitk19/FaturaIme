@@ -1,39 +1,35 @@
-// sw.js - Cikli i Jetës dhe Menaxhimi i Njoftimeve
+// sw.js
 self.addEventListener('install', (event) => {
-    self.skipWaiting();
+    self.skipWaiting(); 
 });
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(self.clients.claim());
+    event.waitUntil(self.clients.claim()); 
 });
 
-// Dëgjuesi i mesazheve nga aplikacioni
+// Ky funksion aktivizon njoftimin real në sistemin operativ
 self.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SEND_PUSH') {
+    if (event.data && event.data.type === 'TRIGGER_REAL_PUSH') {
         const options = {
             body: event.data.body,
             icon: 'https://img.icons8.com/ios-filled/512/6366f1/bill.png',
             badge: 'https://img.icons8.com/ios-filled/100/6366f1/bill.png',
-            vibrate: [100, 50, 100],
-            data: { url: '/' },
+            vibrate: [200, 100, 200], // Dridhja reale e telefonit
+            tag: 'faturaime-alert', // Parandalon njoftimet e përsëritura të panevojshme
+            renotify: true,
+            data: { url: window.location.origin },
             actions: [
-                { action: 'open', title: 'Hap FaturaIME' }
+                { action: 'open', title: 'Shiko Detajet' }
             ]
         };
 
-        event.waitUntil(
-            self.registration.showNotification('FATURAIME ELITE', options)
-        );
+        self.registration.showNotification('FATURAIME ELITE', options);
     }
 });
 
-// Hap aplikacionin kur klikohet njoftimi
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
     event.waitUntil(
-        clients.matchAll({ type: 'window' }).then((clientList) => {
-            if (clientList.length > 0) return clientList[0].focus();
-            return clients.openWindow('/');
-        })
+        clients.openWindow('/')
     );
 });
