@@ -1543,35 +1543,40 @@ async function downloadCardImage() {
 
 
    
-// Kjo është lidhja e vërtetë për Service Worker
+// 1. Regjistrimi dhe Lidhja e Service Worker
+let swRegistration = null; // Emri duhet të jetë unik
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
             .then(registration => {
-                console.log('SW u regjistrua me sukses në scope:', registration.scope);
-                // Ruajmë regjistrimin globalisht që ta përdorim për njoftimet
-                window.swReg = registration;
+                console.log('SW u lidh me sukses!');
+                swRegistration = registration; // Këtu u rregullua emri
+                updateNotifButtonUI(); 
             })
             .catch(err => {
-                console.error('Regjistrimi i SW dështoi:', err);
+                console.error('Lidhja dështoi:', err);
             });
     });
 }
 
 // 2. Funksioni për të ndërruar statusin (Lejo/Ndalo)
 async function toggleNotifications() {
-    const btn = document.getElementById('toggle-notif-btn');
-    
-    if (Notification.permission === 'default' || Notification.permission === 'denied') {
+    if (!swRegistration) {
+        console.error("Service Worker nuk është gati.");
+        return;
+    }
+
+    if (Notification.permission !== 'granted') {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-            sendElitePush("Sistemi u aktivizua. Do të pranoni njoftime rreth statusit tuaj financiar.");
             localStorage.setItem('notif_enabled', 'true');
-        } else {
-            alert("Ju lutem lejoni njoftimet nga cilësimet e browser-it.");
+            // Dërgojmë njoftimin e parë pas lejimit
+            setTimeout(() => {
+                sendElitePush("Sistemi u aktivizua. Statusi juaj tani është: ELITE.");
+            }, 1000);
         }
     } else {
-        // Nëse janë të lejuara, simulojmë ndalimin përmes preferencës së përdoruesit
         const isEnabled = localStorage.getItem('notif_enabled') === 'true';
         localStorage.setItem('notif_enabled', !isEnabled);
     }
@@ -1582,43 +1587,48 @@ async function toggleNotifications() {
 function updateNotifButtonUI() {
     const btn = document.getElementById('toggle-notif-btn');
     const statusText = document.getElementById('notif-status');
+    if(!btn || !statusText) return;
+
     const isEnabled = localStorage.getItem('notif_enabled') === 'true';
 
     if (Notification.permission === 'granted' && isEnabled) {
         btn.innerText = "Ndalo";
-        btn.classList.replace('bg-white', 'bg-red-500/20');
-        btn.classList.add('text-red-500', 'border', 'border-red-500/50');
+        btn.className = "px-4 py-2 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 text-[9px] font-black uppercase transition-all";
         statusText.innerText = "Statusi: Aktiv";
-        statusText.classList.replace('text-white/40', 'text-green-400');
+        statusText.style.color = "#4ade80"; // Green
     } else {
         btn.innerText = "Lejo";
-        btn.className = "px-4 py-2 rounded-xl bg-white text-black text-[9px] font-black uppercase transition-all active:scale-95 shadow-lg";
+        btn.className = "px-4 py-2 rounded-xl bg-white text-black text-[9px] font-black uppercase transition-all shadow-lg";
         statusText.innerText = "Statusi: I ndaluar";
-        statusText.classList.replace('text-green-400', 'text-white/40');
+        statusText.style.color = "rgba(255,255,255,0.4)";
     }
 }
 
-// 4. Funksioni universal për dërgimin e njoftimit (Vetëm nëse lejohet)
+// 4. Funksioni që komunikon me sw.js (TRIGGERI REAL)
 function sendElitePush(message) {
     const isEnabled = localStorage.getItem('notif_enabled') === 'true';
-    if (isEnabled && Notification.permission === 'granted' && swRegistration) {
-        navigator.serviceWorker.ready.then(reg => {
-            reg.active.postMessage({
-                type: 'SEND_PUSH',
-                body: message
-            });
+    
+    if (isEnabled && Notification.permission === 'granted') {
+        navigator.serviceWorker.ready.then(registration => {
+            if (registration.active) {
+                registration.active.postMessage({
+                    type: 'SEND_PUSH', // Ky duhet të jetë i njëjtë me atë në sw.js
+                    body: message
+                });
+            }
         });
     }
 }
 
-// 5. Njoftimi i mirëseardhjes (vetëm 1 herë në ditë)
+// 5. Mirëseardhja ditore
 document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toDateString();
     if (localStorage.getItem('last_notif_date') !== today) {
+        // Presim pak sa të ngarkohet swRegistration
         setTimeout(() => {
-            sendElitePush("Mirëseerdhët në faturaIME Elite. Sistemi është gati për procesim.");
+            sendElitePush("Mirëseerdhët në faturaIME Elite. Sistemi është gati.");
             localStorage.setItem('last_notif_date', today);
-        }, 3000);
+        }, 5000);
     }
 });
 </script>
