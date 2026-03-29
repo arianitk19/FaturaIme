@@ -32,48 +32,57 @@
 
 
 
+
 #fatura-card-capture {
+    background: #050505;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
     position: relative;
-    background: #020617;
-    transition: all 0.5s ease;
+    z-index: 1;
 }
 
-/* Efekti i vijave metalike */
-#fatura-card-capture::before {
-    content: "";
-    position: absolute;
-    inset: 0;
+/* Tekstura e Metalit */
+.card-metal-overlay {
     background-image: linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 4px 100%;
-    pointer-events: none;
+    background-size: 3px 100%;
 }
 
-/* Shkëlqimi që lëviz mbi kartë */
+/* Shkëlqimi Dinamik - Perfeksionuar */
 #fatura-card-capture::after {
     content: "";
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    inset: -150%;
     background: linear-gradient(
         45deg,
         transparent 45%,
         rgba(255, 255, 255, 0.05) 50%,
         transparent 55%
     );
-    animation: cardShine 5s infinite;
+    animation: cardShine 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     pointer-events: none;
+    z-index: 5;
 }
 
 @keyframes cardShine {
-    0% { transform: translateX(-50%) translateY(-50%); }
-    100% { transform: translateX(20%) translateY(20%); }
+    0% { transform: translate(-20%, -20%); }
+    100% { transform: translate(20%, 20%); }
 }
 
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
 
-
+/* Numri i Kartës - Efekt Metalik Real */
+#card-number {
+    background: linear-gradient(180deg, #FFFFFF 30%, #444444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+}
 
 
 
@@ -478,101 +487,80 @@ body {
 
 
 
-<section class="space-y-2">
-    <span class="text-[9px] text-white/30 font-black uppercase tracking-widest ml-2">Ekskluzive</span>
-    <div class="bg-indigo-600/5 rounded-[28px] border border-indigo-500/10 overflow-hidden p-1">
-        <button onclick="openPremiumCard()" class="w-full flex items-center gap-4 p-4 hover:bg-indigo-600/10 transition-all rounded-[24px] group">
-            <div class="w-10 h-10 rounded-2xl bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+<section class="p-4 space-y-2">
+    <span class="text-[9px] text-white/30 font-black uppercase tracking-[0.3em] ml-2">Ekskluzive</span>
+    <div class="bg-white/[0.02] rounded-[32px] border border-white/5 p-1 backdrop-blur-md">
+        <button onclick="openPremiumCard()" class="w-full flex items-center gap-4 p-4 hover:bg-indigo-600/10 transition-all rounded-[28px] group active:scale-[0.98]">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-600/20 group-hover:scale-110 transition-all duration-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
             </div>
             <div class="text-left">
-                <span class="text-sm font-bold text-white block">Krijo Kartën</span>
-                <span class="text-[8px] text-indigo-400 uppercase font-black tracking-tighter">faturaIME ID</span>
+                <span class="text-sm font-black text-white block tracking-tight">Krijo Kartën Elite</span>
+                <span class="text-[9px] text-indigo-400 uppercase font-black tracking-widest opacity-80">faturaIME Platinum ID</span>
+            </div>
+            <div class="ml-auto opacity-20 group-hover:opacity-100 transition-opacity">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
             </div>
         </button>
     </div>
 </section>
 
-<div id="id-card-modal" class="fixed inset-0 z-[5000] hidden items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-2xl" onclick="closeCardModal()"></div>
+<div id="id-card-modal" class="fixed inset-0 z-[5000] hidden items-center justify-center p-4 overflow-hidden">
+    <div class="absolute inset-0 bg-black/95 backdrop-blur-3xl" onclick="closeCardModal()"></div>
     
-    <div id="card-modal-content" class="relative w-full max-w-lg bg-[#0c0c0c] border border-white/10 rounded-[40px] p-8 shadow-2xl opacity-0 scale-95 transition-all duration-500 overflow-hidden">
+    <div id="card-modal-content" class="relative w-full max-w-md bg-transparent opacity-0 scale-95 transition-all duration-700">
         
-        <div class="text-center mb-8">
-            <h2 class="text-xl font-black text-white italic">FATURA<span class="text-indigo-500">IME</span> ID</h2>
-            <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Personalizo identitetin tuaj financiar</p>
-        </div>
+        <div id="fatura-card-capture" class="relative w-full aspect-[1.58/1] rounded-[35px] overflow-hidden shadow-2xl border border-white/5 mx-auto mb-10 transition-all duration-1000">
+            <div id="card-bg" class="absolute inset-0 bg-[#050505] transition-all duration-1000"></div>
+            <div class="card-metal-overlay absolute inset-0 pointer-events-none opacity-40"></div>
 
-        <div id="fatura-card-capture" class="relative w-full aspect-[1.58/1] rounded-[24px] overflow-hidden shadow-2xl border border-white/10 mx-auto mb-8 p-8 group">
-    
-    <div id="card-bg" class="absolute inset-0 bg-black transition-all duration-1000"></div>
-    
-    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
-         style="background-image: linear-gradient(0deg, #fff 1px, transparent 1px); background-size: 100% 4px;"></div>
-    
-    <div class="absolute -top-20 -left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-[60px]"></div>
-
-    <div class="relative z-10 h-full flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div class="flex items-center gap-2">
-                <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
-                    <img src="https://img.icons8.com/ios-filled/50/FFFFFF/bill.png" class="w-4 h-4">
+            <div class="relative z-10 h-full p-10 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
+                        <span class="text-white font-medium tracking-[0.4em] text-[10px] uppercase">fatura<span class="font-black text-indigo-500">IME</span></span>
+                    </div>
+                    <div class="text-[7px] text-white/20 font-black uppercase tracking-[0.5em] border border-white/10 px-2 py-1 rounded">Titanium Edition</div>
                 </div>
-                <span class="text-white font-black italic tracking-tighter text-xs">FATURA<span class="text-indigo-500">IME</span></span>
-            </div>
-            <div id="card-id-text" class="text-[9px] text-white/50 font-mono text-right uppercase tracking-tighter font-bold">
-               ✓ 
-            </div>
-        </div>
 
-        <div class="text-center py-4">
-            <p id="card-number" class="text-xl md:text-2xl font-mono text-white/80 tracking-[0.25em] drop-shadow-lg transition-all duration-500">
-                •••• •••• •••• ••••
-            </p>
-        </div>
-
-        <div class="flex justify-between items-end">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-xl border border-white/5 overflow-hidden bg-white/5 backdrop-blur-md">
-                    <img id="card-profile-img" src="https://img.icons8.com/ios-filled/100/FFFFFF/user-male-circle.png" class="w-full h-full object-cover opacity-20">
+                <div class="text-center">
+                    <p id="card-number" class="text-4xl font-light text-white tracking-[0.25em] opacity-20 transition-all duration-1000">•••• •••• •••• ••••</p>
                 </div>
-                <div>
-                    <p class="text-[6px] text-white/30 uppercase tracking-[0.2em] mb-0.5 font-bold">Authorized Holder</p>
-                    <p id="card-name-display" class="text-[10px] font-black text-white uppercase tracking-widest leading-none">EMRI MBIEMRI</p>
+
+                <div class="flex justify-between items-end">
+                    <div class="flex items-center gap-4">
+                        <div class="relative w-14 h-14 rounded-full border border-white/10 overflow-hidden bg-white/5 shadow-inner">
+                            <img id="card-profile-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' opacity='0.1'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" class="w-full h-full object-cover grayscale transition-all duration-700">
+                        </div>
+                        <div>
+                            <p id="card-name-display" class="text-[11px] font-black text-white uppercase tracking-[0.2em]">EMRI MBIEMRI</p>
+                            <p class="text-[7px] text-white/30 uppercase tracking-[0.1em] font-medium italic">Verified Elite Member</p>
+                        </div>
+                    </div>
+                    <div class="w-10 h-7 rounded bg-gradient-to-br from-yellow-500/20 to-transparent border border-yellow-500/10 opacity-50"></div>
                 </div>
             </div>
-            <div class="text-[6px] border border-white/10 px-2 py-1 rounded bg-white/5 text-white/20 font-bold uppercase tracking-widest">
-                Elite Member
-            </div>
         </div>
-    </div>
-</div>
 
-        <div class="grid grid-cols-1 gap-4 mb-6">
-            <input type="text" id="card-name-input" oninput="updateCardName()" placeholder="Emri dhe Mbiemri" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm outline-none focus:border-indigo-500 transition-all uppercase font-bold">
+        <div class="space-y-6 px-4">
+            <input type="text" id="card-name-input" oninput="updateCardName()" placeholder="SHKRUAJ EMRI DHE MBIEMRI" 
+                   class="w-full bg-white/[0.03] border-b border-white/10 p-4 text-white text-xs outline-none focus:border-indigo-500 transition-all uppercase font-bold tracking-[0.3em] text-center placeholder:text-white/10">
             
             <div class="flex gap-4">
-                <button onclick="document.getElementById('card-photo-input').click()" class="flex-1 bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 p-4 rounded-2xl text-[10px] font-black uppercase hover:bg-indigo-600/20 transition-all">
-                    Ngarko Foto
-                </button>
+                <button onclick="document.getElementById('card-photo-input').click()" class="flex-1 text-white/40 p-4 rounded-full text-[9px] font-black uppercase tracking-widest hover:text-white transition-all border border-white/5">+ FOTO</button>
                 <input type="file" id="card-photo-input" hidden accept="image/*" onchange="updateCardPhoto(event)">
                 
-                <button onclick="generateCardNumbers()" class="flex-1 bg-white text-black p-4 rounded-2xl text-[10px] font-black uppercase hover:scale-105 transition-all active:scale-95">
-                    Aktivizo Kartën
-                </button>
+                <button id="activate-btn" onclick="generateCardNumbers()" class="flex-[2] bg-white text-black p-4 rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">Aktivizo</button>
             </div>
+
+            <button onclick="downloadCardImage()" id="save-card-btn" class="hidden w-full bg-indigo-600 text-white p-5 rounded-full font-black text-[10px] uppercase tracking-[0.4em] shadow-[0_20px_50px_rgba(79,70,229,0.3)] active:scale-95 transition-all">
+                Shkarko Kartën 
+            </button>
         </div>
-
-        <button onclick="downloadCardImage()" id="save-card-btn" class="hidden w-full bg-indigo-600 text-white p-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-indigo-600/30 active:scale-95 transition-all">
-            Shkarko KARTEN
-        </button>
     </div>
-
-
 </div>
-
-
-
 
 
         <section class="space-y-3">
@@ -1337,14 +1325,15 @@ function updateSystemIcon(colorType) {
 
 
 
-
-
-// Hapja dhe mbyllja e modalit
+// 1. Menaxhimi i Modalit
 function openPremiumCard() {
     const modal = document.getElementById('id-card-modal');
     const content = document.getElementById('card-modal-content');
+    
+    document.body.style.overflow = 'hidden';
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    
     setTimeout(() => {
         content.classList.replace('opacity-0', 'opacity-100');
         content.classList.replace('scale-95', 'scale-100');
@@ -1354,182 +1343,138 @@ function openPremiumCard() {
 function closeCardModal() {
     const modal = document.getElementById('id-card-modal');
     const content = document.getElementById('card-modal-content');
+    
     content.classList.replace('opacity-100', 'opacity-0');
     content.classList.replace('scale-100', 'scale-95');
+    
     setTimeout(() => {
         modal.classList.replace('flex', 'hidden');
+        document.body.style.overflow = 'auto';
     }, 500);
 }
 
-// Përditësimi i Emrit dhe Fotos
+// 2. Personalizimi i Emrit
 function updateCardName() {
-    const val = document.getElementById('card-name-input').value;
-    document.getElementById('card-name-display').innerText = val || "EMRI MBIEMRI";
+    const input = document.getElementById('card-name-input');
+    const display = document.getElementById('card-name-display');
+    let val = input.value.trim();
+    
+    display.innerText = val !== "" ? val.toUpperCase() : "EMRI MBIEMRI";
+    
+    if (val.length > 15) {
+        display.style.letterSpacing = "0.1em";
+        display.style.fontSize = "11px";
+    } else {
+        display.style.letterSpacing = "0.25em";
+        display.style.fontSize = "13px";
+    }
+
+    display.style.filter = "brightness(1.8) drop-shadow(0 0 5px rgba(255,255,255,0.5))";
+    display.style.transition = "none";
+    
+    setTimeout(() => {
+        display.style.filter = "brightness(1) drop-shadow(0 0 0px transparent)";
+        display.style.transition = "all 0.4s ease";
+    }, 100);
 }
 
+// 3. Menaxhimi i Fotos
 function updateCardPhoto(event) {
     const file = event.target.files[0];
+    const img = document.getElementById('card-profile-img');
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = document.getElementById('card-profile-img');
+        reader.onload = (e) => {
             img.src = e.target.result;
-            img.classList.remove('opacity-50');
             img.style.opacity = "1";
-        }
+            img.style.filter = "grayscale(100%) brightness(1.2)";
+        };
         reader.readAsDataURL(file);
     }
 }
 
+// 4. Aktivizimi Mekanik
 function generateCardNumbers() {
     const nameInput = document.getElementById('card-name-input');
-    const name = nameInput.value.trim();
-    
-    if(name.length < 3) {
-        nameInput.style.borderColor = "#ef4444";
-        setTimeout(() => nameInput.style.borderColor = "rgba(255,255,255,0.1)", 2000);
+    if (nameInput.value.length < 3) {
+        nameInput.style.borderBottomColor = "#ef4444";
+        setTimeout(() => nameInput.style.borderBottomColor = "rgba(255,255,255,0.1)", 2000);
         return;
     }
 
     const numField = document.getElementById('card-number');
-    const nameDisplay = document.getElementById('card-name-display');
+    const btn = document.getElementById('activate-btn');
     const saveBtn = document.getElementById('save-card-btn');
-    const bg = document.getElementById('card-bg');
-    const activateBtn = event.currentTarget;
+    const cardBg = document.getElementById('card-bg');
 
-    activateBtn.disabled = true;
-    activateBtn.innerHTML = `VERIFIKIMI...`;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="animate-pulse tracking-widest">DUKE ANALIZUAR...</span>`;
 
-    let iterations = 0;
+    let steps = 0;
     const interval = setInterval(() => {
         const r = () => Math.floor(1000 + Math.random() * 8999);
         numField.innerText = `${r()} ${r()} ${r()} ${r()}`;
-        numField.style.opacity = "0.2";
+        numField.style.opacity = (Math.random() * 0.5 + 0.2).toString();
+        numField.style.transform = `scale(${0.98 + Math.random() * 0.04})`;
         
-        // Animacion i lehtë tek emri
-        nameDisplay.style.letterSpacing = (0.5 + Math.random() * 0.2) + "em";
-        
-        iterations++;
-
-        if(iterations > 20) {
+        steps++;
+        if (steps > 20) {
             clearInterval(interval);
+            numField.innerText = `4512 ${r()} ${r()} ${r()}`;
+            numField.style.opacity = "1";
+            numField.style.transform = "scale(1)";
+            numField.style.letterSpacing = "0.2em";
             
-            const n2 = Math.floor(1000 + Math.random() * 8999);
-            const n3 = Math.floor(1000 + Math.random() * 8999);
-            const n4 = Math.floor(1000 + Math.random() * 8999);
+            cardBg.style.background = "radial-gradient(circle at top right, #1e1b4b 0%, #050505 100%)";
             
-            // Numrat mbeten të vegjël dhe diskretë
-            numField.innerText = `4512 ${n2} ${n3} ${n4}`;
-            numField.style.opacity = "0.4";
-            numField.style.fontSize = "9px";
-            numField.style.letterSpacing = "0.4em";
-
-            // Sfondi luksoz
-            bg.style.background = "radial-gradient(circle at center, #1e1b4b 0%, #050505 100%)";
-            
-            activateBtn.innerHTML = "U AKTIVIZUA ✓";
-            activateBtn.className = "flex-1 bg-white text-black p-4 rounded-2xl text-[10px] font-black uppercase tracking-widest";
+            btn.innerText = "AKTIV ✓";
+            btn.style.background = "#10b981";
+            btn.style.color = "white";
             
             saveBtn.classList.remove('hidden');
+            saveBtn.classList.add('block', 'animate-fade-in-up');
         }
     }, 70);
 }
 
+// 5. Eksporti Ultra HD
 async function downloadCardImage() {
     const card = document.getElementById('fatura-card-capture');
     const btn = document.getElementById('save-card-btn');
     
-    btn.innerText = "PO PROCESOHET...";
+    btn.innerText = "DUKE RUAJTUR 8K...";
     btn.disabled = true;
 
     try {
         const canvas = await html2canvas(card, {
-            scale: 3,
+            scale: 5,
             useCORS: true,
             backgroundColor: null,
-            borderRadius: 24,
-            logging: false
+            logging: false,
+            removeContainer: true
         });
 
         const image = canvas.toDataURL("image/png", 1.0);
         const link = document.createElement('a');
-        link.download = `FaturaIME-EliteCard.png`;
+        link.download = `EliteID-${Date.now()}.png`;
         link.href = image;
+        
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         
-        btn.innerText = "✓ U RUAJT";
+        btn.innerText = "U RUAJT ✓";
         setTimeout(() => {
-            btn.innerText = "Shkarko si Foto (PNG)";
+            btn.innerText = "Shkarko Përsëri";
             btn.disabled = false;
         }, 3000);
     } catch (err) {
-        alert("Provoni përsëri.");
-        btn.innerText = "PROVO PERSERI";
+        btn.innerText = "GABIM!";
         btn.disabled = false;
+        console.error("Capture Error:", err);
     }
 }
 
-// FIX FINAL PËR SAVE (E garantuar të funksionojë)
-async function downloadCardImage() {
-    const card = document.getElementById('fatura-card-capture');
-    const btn = document.getElementById('save-card-btn');
-    
-    btn.innerText = "DUKE PROCESUAR...";
-    btn.disabled = true;
-
-    try {
-        // Përdorim html2canvas me parametra specifikë për cilësi maksimale
-        const canvas = await html2canvas(card, {
-            scale: 3, // Rezolucion i lartë
-            useCORS: true, // Lejon ngarkimin e ikonave/fotove nga servera tjerë
-            backgroundColor: null,
-            borderRadius: 24,
-            logging: false
-        });
-
-        const image = canvas.toDataURL("image/png", 1.0);
-        const link = document.createElement('a');
-        
-        // Emri i skedarit me timestamp unik
-        link.download = `FaturaIME-Elite-Card-${Date.now()}.png`;
-        link.href = image;
-        
-        // Kjo pjesë e detyron shkarkimin në Mobile/PWA
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        btn.innerText = "©";
-        setTimeout(() => {
-            btn.innerText = "Shkarko si Foto";
-            btn.disabled = false;
-        }, 3000);
-    } catch (err) {
-        console.error("Gabim gjatë shkarkimit:", err);
-        alert("Shkarkimi dështoi. Sigurohu që ke instaluar html2canvas.");
-        btn.disabled = false;
-        btn.innerText = "PROVO PËRSËRI";
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
 
 
 </script>
