@@ -29,7 +29,58 @@
 
 
     <style>
+/* AUTO-SWITCH: MOBILE APP -> DESKTOP WEB */
+@media (min-width: 1024px) {
+    /* 1. E bëjmë modalin të dukshëm gjithmonë dhe pa efektet e overlay-it */
+    #id-card-modal {
+        display: flex !important;
+        position: relative !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        inset: auto !important;
+        padding: 40px 20px !important;
+        width: 100% !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
 
+    /* 2. Hiqim sfondin e zi dhe butonin e mbylljes në desktop */
+    #id-card-modal .absolute.inset-0.bg-black\/95, 
+    #id-card-modal button[onclick*="close"] { 
+        display: none !important; 
+    }
+
+    /* 3. Shndërrojmë përmbajtjen në Web Dashboard (2 Kolona) */
+    #card-modal-content {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* Karta majtas, Kontrollet djathtas */
+        gap: 50px !important;
+        max-width: 1200px !important;
+        margin: 0 auto !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+    
+    /* Sigurohemi që karta të qëndrojë fiks ndërsa lëvizim faqen */
+    #card-modal-content > div:first-child {
+        position: sticky;
+        top: 20px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+        
 
 
 #fatura-card-capture {
@@ -1568,7 +1619,15 @@ async function downloadCardImage() {
 
 
 
-
+// Aktivizimi automatik në Desktop
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth >= 1024) {
+        // Thirrim funksionin tënd ekzistues që hap modalin
+        if (typeof openPremiumCard === "function") {
+            openPremiumCard();
+        }
+    }
+});
 
 </script>
 </body>
