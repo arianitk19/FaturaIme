@@ -29,68 +29,6 @@
 
 
     <style>
-/* --- GLOBAL ADAPTIVE SYSTEM (MOBILE APP TO WEB DASHBOARD) --- */
-@media (min-width: 1024px) {
-    /* 1. Transformimi i Body: E kthejmë në një ambient Desktop */
-    body {
-        background-color: #050505 !important;
-        overflow-y: auto !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
-        padding: 40px 0 !important;
-    }
-
-    /* 2. Kontejneri Kryesor: Nga një kolonë e ngushtë, në një faqe të gjerë */
-    main, .app-container, .max-w-md { 
-        max-width: 1400px !important; 
-        width: 95% !important;
-        margin: 0 auto !important;
-    }
-
-    /* 3. MODALET (Ky është thelbi): I kthejmë nga Pop-up në Layout faqeje */
-    div[id*="modal"], #id-card-modal {
-        position: relative !important;
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        inset: auto !important;
-        background: transparent !important;
-        backdrop-filter: none !important;
-        width: 100% !important;
-        padding: 0 !important;
-        margin-top: 20px !important;
-        z-index: 1 !important;
-    }
-
-    /* 4. STRUKTURA E BRENDSHME: Çdo gjë që ishte "njëra pas tjetrës" bëhet "anash njëra-tjetrës" */
-    #card-modal-content, .modal-inner-content {
-        display: grid !important;
-        grid-template-columns: 1.2fr 0.8fr !important; /* Raporti i përsosur Web */
-        gap: 60px !important;
-        background: rgba(255,255,255,0.02) !important;
-        border: 1px solid rgba(255,255,255,0.05) !important;
-        border-radius: 60px !important;
-        padding: 60px !important;
-        box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5) !important;
-        align-items: center !important;
-    }
-
-    /* 5. Hiqim elementet që shërbejnë vetëm për Mobile (si butonat e mbylljes ose handle-s) */
-    button[onclick*="close"], .w-12.h-1\.5.bg-white\/20, .absolute.inset-0.bg-black\/95 {
-        display: none !important;
-    }
-
-    /* 6. Fix për Kartën: E mbajmë fiks në ekran gjatë lëvizjes (Sticky) */
-    #fatura-card-capture {
-        position: sticky !important;
-        top: 100px !important;
-        z-index: 10 !important;
-    }
-}
-
-
-
 
 
 
@@ -548,14 +486,14 @@ body {
                 <button id="curr-EUR" onclick="changeSystemCurrency('EUR', '€')" class="cur-btn py-3 rounded-xl text-[10px] font-black transition-all">EUR</button>
                 <button id="curr-USD" onclick="changeSystemCurrency('USD', '$')" class="cur-btn py-3 rounded-xl text-[10px] font-black transition-all">USD</button>
                 <button id="curr-CHF" onclick="changeSystemCurrency('CHF', 'Fr')" class="cur-btn py-3 rounded-xl text-[10px] font-black transition-all">CHF</button>
-                <button id="curr-ALL" onclick="changeSystemCurrency('AL', 'L')" class="cur-btn py-3 rounded-xl text-[10px] font-black transition-all">LEK</button>
+                <button id="curr-ALL" onclick="changeSystemCurrency('ALL', 'L')" class="cur-btn py-3 rounded-xl text-[10px] font-black transition-all">LEK</button>
             </div>
         </section>
 
 
 
 <section class="space-y-4">
-    <span class="text-[10px] text-white/20 font-black uppercase tracking-[0.4em] ml-2">Konfigurimi i Identitetit</span>
+    <span class="text-[10px] text-white/20 font-black uppercase tracking-[0.4em] ml-2">faturaIME ID</span>
     
     <div class="relative group">
         <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-600/20 rounded-[32px] blur-xl opacity-0 group-hover:opacity-100 transition-all duration-1000"></div>
@@ -574,7 +512,7 @@ body {
                     <div class="text-left">
                         <span class="text-[14px] font-black text-white uppercase tracking-widest block">Krijo Kartën</span>
                         <div class="flex items-center gap-1.5">
-                            <span class="text-[8px] text-indigo-400 font-black uppercase tracking-[0.2em]">Edition Titanium</span>
+                            <span class="text-[8px] text-indigo-400 font-black uppercase tracking-[0.2em]"></span>
                             <div class="w-1 h-1 rounded-full bg-indigo-500 animate-pulse"></div>
                         </div>
                     </div>
@@ -1632,35 +1570,6 @@ async function downloadCardImage() {
 
 
 
-
-
-
-/* --- AUTO-DETECTION & LAYOUT INITIALIZER --- */
-function initializeAdaptiveLayout() {
-    const isDesktop = window.innerWidth >= 1024;
-    
-    if (isDesktop) {
-        // Thirren automatikisht funksionet që zakonisht hapen me klikim në Mobile
-        if (typeof openPremiumCard === "function") {
-            openPremiumCard();
-        }
-        
-        // Shto këtu çdo ID tjetër që dëshiron të jetë e hapur automatikisht në Desktop
-        document.body.classList.add('desktop-mode');
-    }
-}
-
-// Ekzekutohet sapo të ngarkohet faqja
-window.addEventListener('DOMContentLoaded', initializeAdaptiveLayout);
-
-// Ekzekutohet nëse përdoruesi ndryshon madhësinë e dritares (Resize)
-window.addEventListener('resize', () => {
-    if (window.innerWidth >= 1024) {
-        initializeAdaptiveLayout();
-    } else {
-        location.reload(); // Rifreskon faqen për t'u kthyer në mode-in Mobile pastër
-    }
-});
 
 </script>
 </body>
