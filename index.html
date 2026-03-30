@@ -29,49 +29,65 @@
 
 
     <style>
-/* AUTO-SWITCH: MOBILE APP -> DESKTOP WEB */
+/* --- GLOBAL ADAPTIVE SYSTEM (MOBILE APP TO WEB DASHBOARD) --- */
 @media (min-width: 1024px) {
-    /* 1. E bëjmë modalin të dukshëm gjithmonë dhe pa efektet e overlay-it */
-    #id-card-modal {
+    /* 1. Transformimi i Body: E kthejmë në një ambient Desktop */
+    body {
+        background-color: #050505 !important;
+        overflow-y: auto !important;
         display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        padding: 40px 0 !important;
+    }
+
+    /* 2. Kontejneri Kryesor: Nga një kolonë e ngushtë, në një faqe të gjerë */
+    main, .app-container, .max-w-md { 
+        max-width: 1400px !important; 
+        width: 95% !important;
+        margin: 0 auto !important;
+    }
+
+    /* 3. MODALET (Ky është thelbi): I kthejmë nga Pop-up në Layout faqeje */
+    div[id*="modal"], #id-card-modal {
         position: relative !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        inset: auto !important;
         background: transparent !important;
         backdrop-filter: none !important;
-        inset: auto !important;
-        padding: 40px 20px !important;
         width: 100% !important;
-        opacity: 1 !important;
-        visibility: visible !important;
+        padding: 0 !important;
+        margin-top: 20px !important;
+        z-index: 1 !important;
     }
 
-    /* 2. Hiqim sfondin e zi dhe butonin e mbylljes në desktop */
-    #id-card-modal .absolute.inset-0.bg-black\/95, 
-    #id-card-modal button[onclick*="close"] { 
-        display: none !important; 
-    }
-
-    /* 3. Shndërrojmë përmbajtjen në Web Dashboard (2 Kolona) */
-    #card-modal-content {
+    /* 4. STRUKTURA E BRENDSHME: Çdo gjë që ishte "njëra pas tjetrës" bëhet "anash njëra-tjetrës" */
+    #card-modal-content, .modal-inner-content {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* Karta majtas, Kontrollet djathtas */
-        gap: 50px !important;
-        max-width: 1200px !important;
-        margin: 0 auto !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        transform: none !important;
+        grid-template-columns: 1.2fr 0.8fr !important; /* Raporti i përsosur Web */
+        gap: 60px !important;
+        background: rgba(255,255,255,0.02) !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+        border-radius: 60px !important;
+        padding: 60px !important;
+        box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5) !important;
+        align-items: center !important;
     }
-    
-    /* Sigurohemi që karta të qëndrojë fiks ndërsa lëvizim faqen */
-    #card-modal-content > div:first-child {
-        position: sticky;
-        top: 20px;
+
+    /* 5. Hiqim elementet që shërbejnë vetëm për Mobile (si butonat e mbylljes ose handle-s) */
+    button[onclick*="close"], .w-12.h-1\.5.bg-white\/20, .absolute.inset-0.bg-black\/95 {
+        display: none !important;
+    }
+
+    /* 6. Fix për Kartën: E mbajmë fiks në ekran gjatë lëvizjes (Sticky) */
+    #fatura-card-capture {
+        position: sticky !important;
+        top: 100px !important;
+        z-index: 10 !important;
     }
 }
-
-
-
 
 
 
@@ -1619,13 +1635,30 @@ async function downloadCardImage() {
 
 
 
-// Aktivizimi automatik në Desktop
-window.addEventListener('DOMContentLoaded', () => {
-    if (window.innerWidth >= 1024) {
-        // Thirrim funksionin tënd ekzistues që hap modalin
+/* --- AUTO-DETECTION & LAYOUT INITIALIZER --- */
+function initializeAdaptiveLayout() {
+    const isDesktop = window.innerWidth >= 1024;
+    
+    if (isDesktop) {
+        // Thirren automatikisht funksionet që zakonisht hapen me klikim në Mobile
         if (typeof openPremiumCard === "function") {
             openPremiumCard();
         }
+        
+        // Shto këtu çdo ID tjetër që dëshiron të jetë e hapur automatikisht në Desktop
+        document.body.classList.add('desktop-mode');
+    }
+}
+
+// Ekzekutohet sapo të ngarkohet faqja
+window.addEventListener('DOMContentLoaded', initializeAdaptiveLayout);
+
+// Ekzekutohet nëse përdoruesi ndryshon madhësinë e dritares (Resize)
+window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) {
+        initializeAdaptiveLayout();
+    } else {
+        location.reload(); // Rifreskon faqen për t'u kthyer në mode-in Mobile pastër
     }
 });
 
