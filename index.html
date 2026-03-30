@@ -34,30 +34,31 @@
 
 #fatura-card-capture {
     position: relative;
-    background: linear-gradient(145deg, #050505, #0a0a0a);
+    background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.7);
 }
 
-/* Tekstura e Metalit të Gdhendur (Brushed Titanium) */
+/* Tekstura e Metalit të Gdhendur (Brushed Metal) */
 #fatura-card-capture::before {
     content: "";
     position: absolute;
     inset: 0;
     background-image: repeating-linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0.01) 0px,
-        rgba(255, 255, 255, 0.01) 1px,
+        rgba(255, 255, 255, 0.015) 0px,
+        rgba(255, 255, 255, 0.015) 1px,
         transparent 1px,
-        transparent 8px
+        transparent 10px
     );
     pointer-events: none;
-    mask-image: radial-gradient(circle at center, black, transparent 80%);
+    /* Maskimi radial e bën teksturën të zbehet në anët e kartës */
+    -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
 }
 
-/* Reflektimi "Silk" që lëviz */
+/* Shkëlqimi Premium (Silk Shine) */
 #fatura-card-capture::after {
     content: "";
     position: absolute;
@@ -68,29 +69,21 @@
     background: linear-gradient(
         65deg,
         transparent 45%,
-        rgba(255, 255, 255, 0.03) 48%,
+        rgba(255, 255, 255, 0.03) 47%,
         rgba(255, 255, 255, 0.12) 50%,
-        rgba(255, 255, 255, 0.03) 52%,
+        rgba(255, 255, 255, 0.03) 53%,
         transparent 55%
     );
-    filter: blur(30px); /* Ky bën diferencën midis plastikës dhe metalit */
-    animation: premiumShine 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    filter: blur(35px); /* Ky krijon efektin e dritës organike */
+    animation: premiumShine 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     pointer-events: none;
 }
 
 @keyframes premiumShine {
-    0% { transform: translate(-20%, -20%) rotate(0deg); }
-    50% { transform: translate(10%, 10%) rotate(2deg); }
-    100% { transform: translate(-20%, -20%) rotate(0deg); }
+    0% { transform: translate(-10%, -10%) rotate(0deg); }
+    50% { transform: translate(5%, 5%) rotate(3deg); }
+    100% { transform: translate(-10%, -10%) rotate(0deg); }
 }
-
-/* Efekti i animacionit kur karta hapet */
-.card-active {
-    transform: scale(1.02) translateY(-5px);
-    border-color: rgba(99, 102, 241, 0.3);
-}
-
-
 
 
 
@@ -495,16 +488,16 @@ body {
 
 
 <section class="space-y-4">
-    <span class="text-[10px] text-white/20 font-black uppercase tracking-[0.4em] ml-2">Dizajni i Identitetit</span>
+    <span class="text-[10px] text-white/20 font-black uppercase tracking-[0.4em] ml-2">Konfigurimi i Identitetit</span>
     
     <div class="relative group">
-        <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-600/20 rounded-[32px] blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+        <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-600/20 rounded-[32px] blur-xl opacity-0 group-hover:opacity-100 transition-all duration-1000"></div>
         
-        <div class="relative bg-[#050505] rounded-[30px] border border-white/5 overflow-hidden p-1.5 backdrop-blur-3xl">
-            <button onclick="openPremiumCard()" class="w-full flex items-center justify-between gap-4 p-4 hover:bg-white/[0.02] transition-all duration-500 rounded-[24px] group/btn">
+        <div class="relative bg-white/[0.02] rounded-[30px] border border-white/5 overflow-hidden p-1.5 backdrop-blur-3xl">
+            <button onclick="openPremiumCard()" class="w-full flex items-center justify-between gap-4 p-4 hover:bg-white/[0.03] transition-all duration-500 rounded-[24px] group/btn">
                 
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow-[0_10px_25px_-5px_rgba(79,70,229,0.4)] group-hover/btn:scale-110 group-hover/btn:rotate-3 transition-all duration-500">
+                    <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.5)] group-hover/btn:scale-110 group-hover/btn:rotate-3 transition-all duration-500">
                         <svg class="w-6 h-6 drop-shadow-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1"></path>
@@ -512,16 +505,16 @@ body {
                     </div>
                     
                     <div class="text-left">
-                        <span class="text-[13px] font-black text-white uppercase tracking-widest block">Krijo Kartën</span>
+                        <span class="text-[14px] font-black text-white uppercase tracking-widest block">Krijo Kartën</span>
                         <div class="flex items-center gap-1.5">
-                            <span class="text-[8px] text-indigo-400 font-black uppercase tracking-widest">Elite Edition</span>
+                            <span class="text-[8px] text-indigo-400 font-black uppercase tracking-[0.2em]">Edition Titanium</span>
                             <div class="w-1 h-1 rounded-full bg-indigo-500 animate-pulse"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mr-2 opacity-30 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all duration-500">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                <div class="mr-2 opacity-20 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all duration-500">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                 </div>
             </button>
         </div>
