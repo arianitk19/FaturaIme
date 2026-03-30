@@ -571,36 +571,29 @@ body {
 
 </div>
 
-<section class="space-y-3 relative z-10">
-    <span class="text-[9px] text-white/20 font-black uppercase tracking-[0.3em] ml-2">Konfigurimi</span>
-    
-    <div class="bg-white/[0.02] rounded-[32px] border border-white/5 p-4 backdrop-blur-md hover:bg-white/[0.04] transition-all duration-500">
-        <div class="flex items-center justify-between">
-            
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
-                    </svg>
+ <section class="space-y-3">
+
+            <span class="text-[9px] text-white/30 font-black uppercase tracking-widest ml-2">Personalizimi</span>
+
+            <div class="bg-white/[0.03] rounded-[28px] border border-white/5 p-4 space-y-5">
+
+                <div class="flex items-center justify-between">
+
+                    <span class="text-xs font-bold text-white/70">-</span>
+
+                    <button onclick="updateAppTheme()" class="w-12 h-6 bg-white/10 rounded-full relative p-1">
+
+                        <div id="theme-ball" class="w-4 h-4 bg-indigo-500 rounded-full transition-all duration-300"></div>
+
+                    </button>
+
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black text-white uppercase tracking-widest">Modi Vizual</span>
-                    <span class="text-[8px] text-white/30 font-bold uppercase tracking-tight">E dritë / E errët</span>
-                </div>
+
             </div>
 
-            <div class="flex items-center justify-center">
-                <button onclick="updateAppTheme()" 
-                        class="relative w-12 h-6 bg-white/5 rounded-full border border-white/10 transition-all duration-300 hover:border-indigo-500/40 active:scale-95 group/btn overflow-hidden">
-                    <div id="theme-ball" 
-                         class="absolute top-1 left-1 w-4 h-4 bg-indigo-500 rounded-full transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] shadow-[0_0_12px_rgba(99,102,241,0.6)]">
-                    </div>
-                </button>
-            </div>
+        </section>
 
-        </div>
     </div>
-</section>
 
 
        
@@ -1544,15 +1537,7 @@ async function downloadCardImage() {
 
 
 
-function updateAppTheme() {
-    const ball = document.getElementById('theme-ball');
-    const isRight = ball.style.transform === 'translateX(24px)';
-    
-    // Lëvizja e butë 24px djathtas
-    ball.style.transform = isRight ? 'translateX(0px)' : 'translateX(24px)';
-    
-    // Këtu shto logjikën tënde të ndryshimit të ngjyrave...
-}
+
 
 
 </script>
