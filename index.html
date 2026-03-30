@@ -1573,24 +1573,30 @@ async function downloadCardImage() {
 
 
 
+// Funksioni kryesor
 function triggerAppWelcome() {
     const notify = document.getElementById('app-notification');
     
-    // Prisni 1.5 sekonda pas ngarkimit që përdoruesi të shohë fillimisht UI-në
-    setTimeout(() => {
-        if (notify) {
+    if (notify) {
+        console.log("Sistemi: Njoftimi u gjet dhe do të shfaqet pas 3 sekondave...");
+        
+        setTimeout(() => {
             notify.style.opacity = '1';
             notify.style.transform = 'translateX(-50%) translateY(0px)';
             notify.style.pointerEvents = 'auto';
+            console.log("Sistemi: Njoftimi u shfaq me sukses!");
             
-            // Largimi automatik pas 7 sekondave
+            // Zhduket automatikisht pas 8 sekondave
             setTimeout(() => {
                 closeAppNotification();
-            }, 7000);
-        }
-    }, 1500);
+            }, 8000);
+        }, 3000); // Këtu është vonesa 3 sekonda
+    } else {
+        console.error("Sistemi: Gabim! Elementi 'app-notification' nuk u gjet në HTML.");
+    }
 }
 
+// Funksioni për mbyllje
 function closeAppNotification() {
     const notify = document.getElementById('app-notification');
     if (notify) {
@@ -1600,39 +1606,45 @@ function closeAppNotification() {
     }
 }
 
-// Inicializimi
+// METODA 1: Sapo ngarkohet DOM
 window.addEventListener('DOMContentLoaded', triggerAppWelcome);
+
+// METODA 2: Sapo ngarkohen të gjitha resurset (si siguri shtesë)
+window.addEventListener('load', () => {
+    // Nëse metoda 1 dështon, kjo e thërret përsëri
+    if(document.getElementById('app-notification').style.opacity !== '1') {
+        triggerAppWelcome();
+    }
+});
+
+// METODA 3: Ekzekutim i menjëhershëm si test (Brute force)
+setTimeout(triggerAppWelcome, 1000);
 
 </script>
 
-    <div id="app-notification" class="fixed top-14 left-1/2 -translate-x-1/2 z-[10000] w-[92%] max-w-[420px] pointer-events-none opacity-0 translate-y-[-30px] transition-all duration-700 cubic-bezier(0.17, 0.76, 0.3, 0.88)">
-    <div class="bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 p-5 rounded-[35px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] flex items-center gap-5">
-        
+   <div id="app-notification" class="fixed top-14 left-1/2 -translate-x-1/2 z-[10000] w-[92%] max-w-[420px] pointer-events-none opacity-0 translate-y-[-30px] transition-all duration-700 ease-out">
+    <div class="bg-[#0a0a0a]/90 backdrop-blur-2xl border border-white/10 p-5 rounded-[35px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] flex items-center gap-5">
         <div class="relative flex-shrink-0">
-            <div class="w-12 h-12 rounded-[20px] bg-indigo-600/10 flex items-center justify-center border border-indigo-500/20 shadow-inner">
+            <div class="w-12 h-12 rounded-[20px] bg-indigo-600/10 flex items-center justify-center border border-indigo-500/20">
                 <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                 </svg>
             </div>
             <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-indigo-500 rounded-full border-[3px] border-[#0a0a0a] animate-pulse"></div>
         </div>
-
         <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-0.5">
                 <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em]">fatura<span class="text-indigo-500">IME</span> AI</h4>
-                <span class="text-[7px] bg-white/5 text-white/40 px-2 py-0.5 rounded-full border border-white/5 font-bold uppercase italic tracking-tighter">v.2.0.4</span>
+                <span class="text-[7px] bg-white/5 text-white/40 px-2 py-0.5 rounded-full border border-white/5 font-bold uppercase tracking-tighter italic">v.2.0.4</span>
             </div>
             <p class="text-[11px] text-white/60 leading-snug font-medium truncate">
                 Përditësim i ri: Optimizim i shpejtësisë <span class="text-indigo-400 font-bold">Titanium</span>.
             </p>
         </div>
-
         <button onclick="closeAppNotification()" class="pointer-events-auto p-2 hover:bg-white/5 rounded-full transition-all opacity-40 hover:opacity-100">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
     </div>
 </div>
-       
-    
 </body>
 </html>
