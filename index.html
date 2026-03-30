@@ -568,34 +568,37 @@ body {
         </button>
     </div>
 
-
 </div>
 
-<section class="space-y-3">
-    <span class="text-[9px] text-white/20 font-black uppercase tracking-[0.4em] ml-2">Ambienti Vizual</span>
+        
+  <section class="space-y-3">
+            <span class="text-[9px] text-white/30 font-black uppercase tracking-widest ml-2">Personalizimi</span>
 
-    <div class="bg-white/[0.02] rounded-[30px] border border-white/5 p-5 backdrop-blur-xl">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
-                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black text-white uppercase tracking-widest">Modi i Natës</span>
-                    <span class="text-[7px] text-white/20 font-bold uppercase tracking-tight">Aktivizo hije të errëta</span>
+            <div class="bg-white/[0.03] rounded-[28px] border border-white/5 p-4 space-y-5">
+
+                <div class="flex items-center justify-between">
+
+                    <span class="text-xs font-bold text-white/70">
+
+                        <div class="flex items-center gap-3">
+    <svg class="w-4 h-4 text-indigo-400 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+    </svg>
+    <span class="text-[11px] font-black text-white/70 uppercase tracking-widest">Modi Vizual</span>
+</div>
+                    </span>
+
+                    <button onclick="updateAppTheme()" class="w-12 h-6 bg-white/10 rounded-full relative p-1">
+
+                        <div id="theme-ball" class="w-4 h-4 bg-indigo-500 rounded-full transition-all duration-300"></div>
+
+                    </button>
                 </div>
             </div>
-
-            <button onclick="updateAppTheme()" class="w-12 h-6 bg-white/5 rounded-full relative p-1 border border-white/10 transition-all hover:border-indigo-500/30">
-                <div id="theme-ball" class="w-4 h-4 bg-indigo-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(99,102,241,0.4)]"></div>
-            </button>
-        </div>
+        </section>
     </div>
-</section>
 
-       
+    
     <div class="mt-auto pt-4">
         <button onclick="clearAll()" class="w-full py-4 bg-red-500/5 hover:bg-red-500/10 text-red-500 text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all border border-red-500/10">
             Fshi të dhënat
