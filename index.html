@@ -571,30 +571,29 @@ body {
 
 </div>
 
- <section class="space-y-3">
+<section class="space-y-3">
+    <span class="text-[9px] text-white/20 font-black uppercase tracking-[0.4em] ml-2">Ambienti Vizual</span>
 
-            <span class="text-[9px] text-white/30 font-black uppercase tracking-widest ml-2">Personalizimi</span>
-
-            <div class="bg-white/[0.03] rounded-[28px] border border-white/5 p-4 space-y-5">
-
-                <div class="flex items-center justify-between">
-
-                    <span class="text-xs font-bold text-white/70">-</span>
-
-                    <button onclick="updateAppTheme()" class="w-12 h-6 bg-white/10 rounded-full relative p-1">
-
-                        <div id="theme-ball" class="w-4 h-4 bg-indigo-500 rounded-full transition-all duration-300"></div>
-
-                    </button>
-
+    <div class="bg-white/[0.02] rounded-[30px] border border-white/5 p-5 backdrop-blur-xl">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
                 </div>
-
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black text-white uppercase tracking-widest">Modi i Natës</span>
+                    <span class="text-[7px] text-white/20 font-bold uppercase tracking-tight">Aktivizo hije të errëta</span>
+                </div>
             </div>
 
-        </section>
-
+            <button onclick="updateAppTheme()" class="w-12 h-6 bg-white/5 rounded-full relative p-1 border border-white/10 transition-all hover:border-indigo-500/30">
+                <div id="theme-ball" class="w-4 h-4 bg-indigo-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(99,102,241,0.4)]"></div>
+            </button>
+        </div>
     </div>
-
+</section>
 
        
     <div class="mt-auto pt-4">
