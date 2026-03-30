@@ -1573,76 +1573,60 @@ async function downloadCardImage() {
 
 
 
-// Funksioni kryesor
-function triggerAppWelcome() {
+function forceShowNotification() {
     const notify = document.getElementById('app-notification');
     
     if (notify) {
-        console.log("Sistemi: Njoftimi u gjet dhe do të shfaqet pas 3 sekondave...");
-        
+        // Vonesa 2.5 sekonda sapo hyni në app
         setTimeout(() => {
-            notify.style.opacity = '1';
-            notify.style.transform = 'translateX(-50%) translateY(0px)';
-            notify.style.pointerEvents = 'auto';
-            console.log("Sistemi: Njoftimi u shfaq me sukses!");
+            notify.classList.remove('opacity-0', '-translate-y-10');
+            notify.classList.add('opacity-100', 'translate-y-0');
             
-            // Zhduket automatikisht pas 8 sekondave
-            setTimeout(() => {
-                closeAppNotification();
-            }, 8000);
-        }, 3000); // Këtu është vonesa 3 sekonda
-    } else {
-        console.error("Sistemi: Gabim! Elementi 'app-notification' nuk u gjet në HTML.");
+            // Auto-close pas 8 sekondave
+            setTimeout(closeAppNotification, 8000);
+        }, 2500);
     }
 }
 
-// Funksioni për mbyllje
 function closeAppNotification() {
     const notify = document.getElementById('app-notification');
     if (notify) {
-        notify.style.opacity = '0';
-        notify.style.transform = 'translateX(-50%) translateY(-30px)';
-        notify.style.pointerEvents = 'none';
+        notify.classList.remove('opacity-100', 'translate-y-0');
+        notify.classList.add('opacity-0', '-translate-y-10');
     }
 }
 
-// METODA 1: Sapo ngarkohet DOM
-window.addEventListener('DOMContentLoaded', triggerAppWelcome);
-
-// METODA 2: Sapo ngarkohen të gjitha resurset (si siguri shtesë)
-window.addEventListener('load', () => {
-    // Nëse metoda 1 dështon, kjo e thërret përsëri
-    if(document.getElementById('app-notification').style.opacity !== '1') {
-        triggerAppWelcome();
-    }
-});
-
-// METODA 3: Ekzekutim i menjëhershëm si test (Brute force)
-setTimeout(triggerAppWelcome, 1000);
+// Ekzekutimi i garantuar
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', forceShowNotification);
+} else {
+    forceShowNotification();
+}
 
 </script>
 
-   <div id="app-notification" class="fixed top-14 left-1/2 -translate-x-1/2 z-[10000] w-[92%] max-w-[420px] pointer-events-none opacity-0 translate-y-[-30px] transition-all duration-700 ease-out">
-    <div class="bg-[#0a0a0a]/90 backdrop-blur-2xl border border-white/10 p-5 rounded-[35px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] flex items-center gap-5">
+   <div id="notification-layer" class="fixed inset-x-0 top-0 z-[99999] flex justify-center pointer-events-none p-4">
+    <div id="app-notification" 
+         class="w-full max-w-[400px] bg-[#0a0a0a]/90 backdrop-blur-3xl border border-white/10 p-5 rounded-[35px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] flex items-center gap-4 opacity-0 -translate-y-10 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)]">
+        
         <div class="relative flex-shrink-0">
-            <div class="w-12 h-12 rounded-[20px] bg-indigo-600/10 flex items-center justify-center border border-indigo-500/20">
-                <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            <div class="w-11 h-11 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-indigo-500 rounded-full border-[3px] border-[#0a0a0a] animate-pulse"></div>
+            <div class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-indigo-500 rounded-full border-2 border-[#0a0a0a] animate-pulse"></div>
         </div>
+
         <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-0.5">
-                <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em]">fatura<span class="text-indigo-500">IME</span> AI</h4>
-                <span class="text-[7px] bg-white/5 text-white/40 px-2 py-0.5 rounded-full border border-white/5 font-bold uppercase tracking-tighter italic">v.2.0.4</span>
-            </div>
-            <p class="text-[11px] text-white/60 leading-snug font-medium truncate">
-                Përditësim i ri: Optimizim i shpejtësisë <span class="text-indigo-400 font-bold">Titanium</span>.
+            <h4 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-0.5">Sistemi fatura<span class="text-indigo-500">IME</span></h4>
+            <p class="text-[11px] text-white/50 leading-snug font-medium">
+                Përditësim i ri në proces: Optimizim <span class="text-indigo-400">Titanium</span> aktiv.
             </p>
         </div>
-        <button onclick="closeAppNotification()" class="pointer-events-auto p-2 hover:bg-white/5 rounded-full transition-all opacity-40 hover:opacity-100">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+
+        <button onclick="closeAppNotification()" class="pointer-events-auto p-2 opacity-30 hover:opacity-100 transition-opacity">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
     </div>
 </div>
