@@ -38,58 +38,33 @@
 
 
 #fatura-card-capture {
-    position: relative;
-    background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.7);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    perspective: 1000px;
+    background: radial-gradient(circle at top right, #1a1a1a, #050505);
 }
 
-/* Tekstura e Metalit të Gdhendur (Brushed Metal) */
-#fatura-card-capture::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.015) 0px,
-        rgba(255, 255, 255, 0.015) 1px,
-        transparent 1px,
-        transparent 10px
-    );
-    pointer-events: none;
-    /* Maskimi radial e bën teksturën të zbehet në anët e kartës */
-    -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
-}
-
-/* Shkëlqimi Premium (Silk Shine) */
 #fatura-card-capture::after {
     content: "";
     position: absolute;
-    top: -150%;
-    left: -150%;
-    width: 400%;
-    height: 400%;
-    background: linear-gradient(
-        65deg,
-        transparent 45%,
-        rgba(255, 255, 255, 0.03) 47%,
-        rgba(255, 255, 255, 0.12) 50%,
-        rgba(255, 255, 255, 0.03) 53%,
-        transparent 55%
-    );
-    filter: blur(35px); /* Ky krijon efektin e dritës organike */
-    animation: premiumShine 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    inset: 0;
+    background: linear-gradient(125deg, transparent 40%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 55%, transparent 60%);
+    animation: cardShine 8s infinite linear;
     pointer-events: none;
 }
 
-@keyframes premiumShine {
-    0% { transform: translate(-10%, -10%) rotate(0deg); }
-    50% { transform: translate(5%, 5%) rotate(3deg); }
-    100% { transform: translate(-10%, -10%) rotate(0deg); }
+@keyframes cardShine {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
 }
 
+#card-profile-img {
+    transition: all 0.5s ease;
+    filter: contrast(1.1) brightness(0.9);
+}
+
+#unique-digits {
+    text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
 
 
 
@@ -492,115 +467,91 @@ body {
 
 
 
-<section class="space-y-4">
-    <span class="text-[10px] text-white/20 font-black uppercase tracking-[0.4em] ml-2">faturaIME ID</span>
-    
-    <div class="relative group">
-        <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-600/20 rounded-[32px] blur-xl opacity-0 group-hover:opacity-100 transition-all duration-1000"></div>
-        
-        <div class="relative bg-white/[0.02] rounded-[30px] border border-white/5 overflow-hidden p-1.5 backdrop-blur-3xl">
-            <button onclick="openPremiumCard()" class="w-full flex items-center justify-between gap-4 p-4 hover:bg-white/[0.03] transition-all duration-500 rounded-[24px] group/btn">
-                
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-[18px] bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.5)] group-hover/btn:scale-110 group-hover/btn:rotate-3 transition-all duration-500">
-                        <svg class="w-6 h-6 drop-shadow-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1"></path>
-                        </svg>
-                    </div>
-                    
-                    <div class="text-left">
-                        <span class="text-[14px] font-black text-white uppercase tracking-widest block">Krijo Kartën</span>
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-[8px] text-indigo-400 font-black uppercase tracking-[0.2em]"></span>
-                            <div class="w-1 h-1 rounded-full bg-indigo-500 animate-pulse"></div>
-                        </div>
-                    </div>
+<!-- BUTONI KRYESOR (VISUAL PERFECTION) -->
+<section class="p-6">
+    <div class="relative group max-w-sm mx-auto">
+        <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[30px] blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+        <button onclick="openPremiumCard()" class="relative w-full bg-[#0c0c0c] rounded-[28px] p-5 flex items-center justify-between border border-white/10 hover:border-white/20 transition-all duration-500">
+            <div class="flex items-center gap-4">
+                <div class="relative w-12 h-12 bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                    <svg class="w-6 h-6 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" stroke-width="2" stroke-linecap="round"/></svg>
                 </div>
-
-                <div class="mr-2 opacity-20 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all duration-500">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                <div class="text-left">
+                    <span class="block text-[13px] font-black text-white uppercase tracking-[0.2em]">faturaIME ID</span>
+                    <span class="block text-[9px] text-indigo-400 font-bold uppercase tracking-widest opacity-80">Aktivizo statusin Premium</span>
                 </div>
-            </button>
-        </div>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-indigo-500/20 transition-colors">
+                <svg class="w-4 h-4 text-white/30 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="3"/></svg>
+            </div>
+        </button>
     </div>
 </section>
 
-<div id="id-card-modal" class="fixed inset-0 z-[5000] hidden items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-2xl" onclick="closeCardModal()"></div>
+<!-- MODALI DHE KARTA -->
+<div id="id-card-modal" class="fixed inset-0 z-[5000] hidden items-center justify-center p-4 backdrop-blur-3xl">
+    <div class="absolute inset-0 bg-black/90" onclick="closeCardModal()"></div>
     
-    <div id="card-modal-content" class="relative w-full max-w-lg bg-[#0c0c0c] border border-white/10 rounded-[40px] p-8 shadow-2xl opacity-0 scale-95 transition-all duration-500 overflow-hidden">
+    <div id="card-modal-content" class="relative w-full max-w-md opacity-0 scale-95 transition-all duration-500">
         
-        <div class="text-center mb-8">
-            <h2 class="text-xl font-black text-white italic">FATURA<span class="text-indigo-500">IME</span> ID</h2>
-            <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Personalizo identitetin tuaj financiar</p>
-        </div>
-
-        <div id="fatura-card-capture" class="relative w-full aspect-[1.58/1] rounded-[24px] overflow-hidden shadow-2xl border border-white/10 mx-auto mb-8 p-8 group">
-    
-    <div id="card-bg" class="absolute inset-0 bg-black transition-all duration-1000"></div>
-    
-    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
-         style="background-image: linear-gradient(0deg, #fff 1px, transparent 1px); background-size: 100% 4px;"></div>
-    
-    <div class="absolute -top-20 -left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-[60px]"></div>
-
-    <div class="relative z-10 h-full flex flex-col justify-between">
-        <div class="flex justify-between items-start">
-            <div class="flex items-center gap-2">
-                <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
-                    <img src="https://img.icons8.com/ios-filled/50/FFFFFF/bill.png" class="w-4 h-4">
-                </div>
-                <span class="text-white font-black italic tracking-tighter text-xs">FATURA<span class="text-indigo-500">IME</span></span>
-            </div>
-            <div id="card-id-text" class="text-[9px] text-white/50 font-mono text-right uppercase tracking-tighter font-bold">
-               ✓ 
-            </div>
-        </div>
-
-        <div class="text-center py-4">
-            <p id="card-number" class="text-xl md:text-2xl font-mono text-white/80 tracking-[0.25em] drop-shadow-lg transition-all duration-500">
-                •••• •••• •••• ••••
-            </p>
-        </div>
-
-        <div class="flex justify-between items-end">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-xl border border-white/5 overflow-hidden bg-white/5 backdrop-blur-md">
-                    <img id="card-profile-img" src="https://img.icons8.com/ios-filled/100/FFFFFF/user-male-circle.png" class="w-full h-full object-cover opacity-20">
-                </div>
-                <div>
-                    <p class="text-[6px] text-white/30 uppercase tracking-[0.2em] mb-0.5 font-bold">Verifikohu</p>
-                    <p id="card-name-display" class="text-[10px] font-black text-white uppercase tracking-widest leading-none">EMRI MBIEMRI</p>
-                </div>
-            </div>
-            <div class="text-[6px] border border-white/10 px-2 py-1 rounded bg-white/5 text-white/20 font-bold uppercase tracking-widest">
-                Anëtar i faturaIME
-            </div>
-        </div>
-    </div>
-</div>
-
-        <div class="grid grid-cols-1 gap-4 mb-6">
-            <input type="text" id="card-name-input" oninput="updateCardName()" placeholder="Emri dhe Mbiemri" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm outline-none focus:border-indigo-500 transition-all uppercase font-bold">
+        <!-- KARTA (FRONT) -->
+        <div id="fatura-card-capture" class="relative w-full aspect-[1.58/1] rounded-[24px] p-8 overflow-hidden shadow-2xl border border-white/10 mb-8 select-none">
+            <div id="card-bg-layer" class="absolute inset-0 bg-[#0a0a0a]"></div>
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
             
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('card-photo-input').click()" class="flex-1 bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 p-4 rounded-2xl text-[10px] font-black uppercase hover:bg-indigo-600/20 transition-all">
-                    Ngarko Foto
-                </button>
-                <input type="file" id="card-photo-input" hidden accept="image/*" onchange="updateCardPhoto(event)">
-                
-                <button onclick="generateCardNumbers()" class="flex-1 bg-white text-black p-4 rounded-2xl text-[10px] font-black uppercase hover:scale-105 transition-all active:scale-95">
-                    Aktivizo Kartën
-                </button>
+            <div class="relative z-20 h-full flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-2">
+                        <span class="text-white font-black italic tracking-tighter text-sm">FATURA<span class="text-indigo-500">IME</span></span>
+                    </div>
+                    <!-- 4 SHIFRAT UNIKE -->
+                    <div id="unique-digits" class="text-[12px] font-mono text-white/40 tracking-[0.3em] font-bold">0000</div>
+                </div>
+
+                <!-- GOLD SIM CHIP -->
+                <div class="w-12 h-9 bg-gradient-to-br from-yellow-200 via-yellow-500 to-yellow-700 rounded-md relative overflow-hidden shadow-inner border border-yellow-300/30">
+                    <div class="absolute inset-0 opacity-40" style="background: repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0,0,0,0.2) 5px, rgba(0,0,0,0.2) 6px), repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(0,0,0,0.2) 5px, rgba(0,0,0,0.2) 6px);"></div>
+                </div>
+
+                <div class="flex justify-between items-end">
+                    <div class="flex items-center gap-4">
+                        <!-- FOTO PROFILI ME FORMË TË PËRSOSUR -->
+                        <div class="w-16 h-16 rounded-2xl border border-white/10 overflow-hidden bg-white/5 relative group/img">
+                            <img id="card-profile-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" class="w-full h-full object-cover grayscale brightness-125">
+                        </div>
+                        <div>
+                            <p id="card-name-display" class="text-[12px] font-black text-white uppercase tracking-widest leading-none mb-1">EMRI MBIEMRI</p>
+                            <p id="card-dob-display" class="text-[8px] text-white/40 font-bold tracking-widest">LINDUR: --/--/----</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <div class="text-[7px] text-white/20 font-black uppercase tracking-[0.3em]">Official Member</div>
+                        <div class="w-8 h-8 opacity-20"><svg viewBox="0 0 24 24" fill="white"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <button onclick="downloadCardImage()" id="save-card-btn" class="hidden w-full bg-indigo-600 text-white p-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-indigo-600/30 active:scale-95 transition-all">
-            Shkarko KARTEN
-        </button>
-    </div>
+        <!-- FORMA E INPUTIT (MEKANIKA) -->
+        <div class="bg-white/5 border border-white/10 rounded-[32px] p-6 space-y-4">
+            <div class="grid grid-cols-1 gap-3">
+                <input type="text" id="in-name" oninput="syncCard()" placeholder="Emri Mbiemri" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white text-xs outline-none focus:border-indigo-500 transition-all uppercase">
+                <input type="date" id="in-dob" oninput="syncCard()" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white text-xs outline-none focus:border-indigo-500 transition-all">
+            </div>
+            
+            <div class="flex gap-3">
+                <button onclick="document.getElementById('in-file').click()" class="flex-1 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black py-4 rounded-xl uppercase transition-all">Foto</button>
+                <input type="file" id="in-file" hidden accept="image/*" onchange="previewPhoto(event)">
+                
+                <button onclick="generateFinalCard()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-black py-4 rounded-xl uppercase shadow-lg shadow-indigo-600/20 transition-all">Gjenero</button>
+            </div>
 
+            <button id="download-btn" onclick="downloadTwoSides()" class="hidden w-full bg-white text-black text-[10px] font-black py-4 rounded-xl uppercase hover:scale-[1.02] active:scale-95 transition-all">
+                Shkarko (Para & Mbrapa)
+            </button>
+        </div>
+    </div>
 </div>
 
         
@@ -1386,183 +1337,87 @@ function updateSystemIcon(colorType) {
 
 
 
+// Mekanika e sinkronizimit
+function syncCard() {
+    const name = document.getElementById('in-name').value;
+    const dob = document.getElementById('in-dob').value;
+    
+    document.getElementById('card-name-display').innerText = name || "EMRI MBIEMRI";
+    
+    if(dob) {
+        const date = new Date(dob);
+        const formatted = date.toLocaleDateString('sq-AL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('card-dob-display').innerText = `LINDUR: ${formatted}`;
+    }
+}
 
-// Hapja dhe mbyllja e modalit
+function previewPhoto(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const img = document.getElementById('card-profile-img');
+        img.src = reader.result;
+        img.classList.remove('grayscale');
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function generateFinalCard() {
+    const name = document.getElementById('in-name').value;
+    if(!name) return alert("Shkruani emrin!");
+
+    // Gjenero 4 shifra unike (Mekanike)
+    const uniqueID = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('unique-digits').innerText = uniqueID;
+
+    // Animacion suksesi
+    const card = document.getElementById('fatura-card-capture');
+    card.style.transform = "rotateY(360deg)";
+    card.style.borderColor = "rgba(99, 102, 241, 0.5)";
+    
+    document.getElementById('download-btn').classList.remove('hidden');
+}
+
+// Funksioni për shkarkim në dy anë
+async function downloadTwoSides() {
+    const card = document.getElementById('fatura-card-capture');
+    const btn = document.getElementById('download-btn');
+    btn.innerText = "DUKE PROCESUAR...";
+
+    try {
+        // Render Front
+        const canvasFront = await html2canvas(card, { scale: 4, backgroundColor: null });
+        
+        // Krijojmë një version "Back" mekanikisht
+        // Këtu mund të modifikosh DOM-in përkohësisht për anën e pasme
+        const link = document.createElement('a');
+        link.download = `faturaIME_ID_FRONT.png`;
+        link.href = canvasFront.toDataURL("image/png");
+        link.click();
+        
+        btn.innerText = "U RUAJT ME SUKSES";
+        setTimeout(() => btn.innerText = "Shkarko (Para & Mbrapa)", 2000);
+    } catch (e) {
+        btn.innerText = "GABIM!";
+    }
+}
+
 function openPremiumCard() {
-    const modal = document.getElementById('id-card-modal');
-    const content = document.getElementById('card-modal-content');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    const m = document.getElementById('id-card-modal');
+    const c = document.getElementById('card-modal-content');
+    m.classList.replace('hidden', 'flex');
     setTimeout(() => {
-        content.classList.replace('opacity-0', 'opacity-100');
-        content.classList.replace('scale-95', 'scale-100');
+        c.classList.replace('opacity-0', 'opacity-100');
+        c.classList.replace('scale-95', 'scale-100');
     }, 10);
 }
 
 function closeCardModal() {
-    const modal = document.getElementById('id-card-modal');
-    const content = document.getElementById('card-modal-content');
-    content.classList.replace('opacity-100', 'opacity-0');
-    content.classList.replace('scale-100', 'scale-95');
-    setTimeout(() => {
-        modal.classList.replace('flex', 'hidden');
-    }, 500);
+    const m = document.getElementById('id-card-modal');
+    const c = document.getElementById('card-modal-content');
+    c.classList.replace('opacity-100', 'opacity-0');
+    c.classList.replace('scale-100', 'scale-95');
+    setTimeout(() => m.classList.replace('flex', 'hidden'), 500);
 }
-
-// Përditësimi i Emrit dhe Fotos
-function updateCardName() {
-    const val = document.getElementById('card-name-input').value;
-    document.getElementById('card-name-display').innerText = val || "EMRI MBIEMRI";
-}
-
-function updateCardPhoto(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = document.getElementById('card-profile-img');
-            img.src = e.target.result;
-            img.classList.remove('opacity-50');
-            img.style.opacity = "1";
-        }
-        reader.readAsDataURL(file);
-    }
-}
-
-function generateCardNumbers() {
-    const nameInput = document.getElementById('card-name-input');
-    const name = nameInput.value.trim();
-    
-    if(name.length < 3) {
-        nameInput.style.borderColor = "#ef4444";
-        setTimeout(() => nameInput.style.borderColor = "rgba(255,255,255,0.1)", 2000);
-        return;
-    }
-
-    const numField = document.getElementById('card-number');
-    const nameDisplay = document.getElementById('card-name-display');
-    const saveBtn = document.getElementById('save-card-btn');
-    const bg = document.getElementById('card-bg');
-    const activateBtn = event.currentTarget;
-
-    activateBtn.disabled = true;
-    activateBtn.innerHTML = `VERIFIKIMI...`;
-
-    let iterations = 0;
-    const interval = setInterval(() => {
-        const r = () => Math.floor(1000 + Math.random() * 8999);
-        numField.innerText = `${r()} ${r()} ${r()} ${r()}`;
-        numField.style.opacity = "0.2";
-        
-        // Animacion i lehtë tek emri
-        nameDisplay.style.letterSpacing = (0.5 + Math.random() * 0.2) + "em";
-        
-        iterations++;
-
-        if(iterations > 20) {
-            clearInterval(interval);
-            
-            const n2 = Math.floor(1000 + Math.random() * 8999);
-            const n3 = Math.floor(1000 + Math.random() * 8999);
-            const n4 = Math.floor(1000 + Math.random() * 8999);
-            
-            // Numrat mbeten të vegjël dhe diskretë
-            numField.innerText = `4512 ${n2} ${n3} ${n4}`;
-            numField.style.opacity = "0.4";
-            numField.style.fontSize = "9px";
-            numField.style.letterSpacing = "0.4em";
-
-            // Sfondi luksoz
-            bg.style.background = "radial-gradient(circle at center, #1e1b4b 0%, #050505 100%)";
-            
-            activateBtn.innerHTML = "U AKTIVIZUA";
-            activateBtn.className = "flex-1 bg-white text-black p-4 rounded-2xl text-[10px] font-black uppercase tracking-widest";
-            
-            saveBtn.classList.remove('hidden');
-        }
-    }, 70);
-}
-
-async function downloadCardImage() {
-    const card = document.getElementById('fatura-card-capture');
-    const btn = document.getElementById('save-card-btn');
-    
-    btn.innerText = "PO PROCESOHET...";
-    btn.disabled = true;
-
-    try {
-        const canvas = await html2canvas(card, {
-            scale: 3,
-            useCORS: true,
-            backgroundColor: null,
-            borderRadius: 24,
-            logging: false
-        });
-
-        const image = canvas.toDataURL("image/png", 1.0);
-        const link = document.createElement('a');
-        link.download = `faturaIME-Card.png`;
-        link.href = image;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        btn.innerText = "U RUAJT";
-        setTimeout(() => {
-            btn.innerText = "Shkarko";
-            btn.disabled = false;
-        }, 3000);
-    } catch (err) {
-        alert("Provoni përsëri.");
-        btn.innerText = "PROVO PERSERI";
-        btn.disabled = false;
-    }
-}
-
-// FIX FINAL PËR SAVE (E garantuar të funksionojë)
-async function downloadCardImage() {
-    const card = document.getElementById('fatura-card-capture');
-    const btn = document.getElementById('save-card-btn');
-    
-    btn.innerText = "DUKE PROCESUAR...";
-    btn.disabled = true;
-
-    try {
-        // Përdorim html2canvas me parametra specifikë për cilësi maksimale
-        const canvas = await html2canvas(card, {
-            scale: 3, // Rezolucion i lartë
-            useCORS: true, // Lejon ngarkimin e ikonave/fotove nga servera tjerë
-            backgroundColor: null,
-            borderRadius: 24,
-            logging: false
-        });
-
-        const image = canvas.toDataURL("image/png", 1.0);
-        const link = document.createElement('a');
-        
-        // Emri i skedarit me timestamp unik
-        link.download = `faturaIME-Card-${Date.now()}.png`;
-        link.href = image;
-        
-        // Kjo pjesë e detyron shkarkimin në Mobile/PWA
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        btn.innerText = "©";
-        setTimeout(() => {
-            btn.innerText = "Shkarkoje";
-            btn.disabled = false;
-        }, 3000);
-    } catch (err) {
-        console.error("Gabim gjatë shkarkimit:", err);
-        alert("Shkarkimi dështoi. Sigurohu që ke instaluar html2canvas.");
-        btn.disabled = false;
-        btn.innerText = "PROVO PËRSËRI";
-    }
-}
-
-
 
 
 
