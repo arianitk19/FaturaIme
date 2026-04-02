@@ -438,27 +438,35 @@ body {
 
 
 
-<section class="p-4">
-    <div class="bg-custom-glass rounded-[28px] p-5 flex items-center justify-between">
+<section class="p-4 relative z-[999]">
+    <div class="bg-[#ffffff08] backdrop-blur-md rounded-[28px] border border-white/10 p-5 flex items-center justify-between shadow-2xl">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center">
-                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h.293m1.617-7.406a10 10 0 11-12.93 14.175" />
+            <div class="w-9 h-9 rounded-xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 0H7a18.015 18.015 0 01-4.815 11M14.5 21l-3.5-7 3.5-7" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             <div class="flex flex-col">
-                <span class="text-[11px] font-black uppercase tracking-widest" data-i18n="app-language">Gjuha e App</span>
-                <span id="lang-status" class="text-[8px] font-bold opacity-40 uppercase">Shqip</span>
+                <span class="text-[11px] font-black uppercase tracking-[0.2em] text-white/90" data-i18n="lang-title">Gjuha e Sistemit</span>
+                <span id="active-lang-text" class="text-[9px] font-bold text-indigo-400 uppercase tracking-widest">Shqip</span>
             </div>
         </div>
 
-        <button onclick="toggleLanguage()" class="flex items-center bg-white/5 rounded-xl p-1 border border-white/5 cursor-pointer">
-            <div id="lang-sq" class="px-4 py-1.5 rounded-lg text-[10px] font-black transition-all">SQ</div>
-            <div id="lang-en" class="px-4 py-1.5 rounded-lg text-[10px] font-black transition-all">EN</div>
-        </button>
+        <div onclick="toggleLanguage()" class="relative flex items-center bg-black/40 rounded-2xl p-1 border border-white/5 cursor-pointer hover:border-indigo-500/50 transition-all group w-28">
+            <div id="lang-indicator" class="absolute inset-1 w-[50px] bg-indigo-600 rounded-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_15px_rgba(79,70,229,0.4)]"></div>
+            <div class="relative z-10 flex w-full justify-between px-2">
+                <span class="text-[10px] font-black w-10 text-center py-2 text-white transition-colors duration-300">SQ</span>
+                <span class="text-[10px] font-black w-10 text-center py-2 text-white transition-colors duration-300">EN</span>
+            </div>
+        </div>
     </div>
 </section>
-      
+
+<div class="px-6 space-y-4">
+    <h2 data-i18n="welcome-msg" class="text-xl font-black text-white uppercase tracking-tighter">Mirësevini</h2>
+    <input type="text" id="in-name" data-i18n-placeholder="name-input" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-indigo-500 transition-all">
+    <button data-i18n="save-btn" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl uppercase tracking-widest">Ruaj Faturën</button>
+</div>
 
 
         
@@ -1245,84 +1253,87 @@ function updateSystemIcon(colorType) {
 
 
 
-// 1. San fjalori i përkthimeve
-const translations = {
+// 1. Fjalori Gjithëpërfshirës
+const i18nData = {
     sq: {
-        "app-language": "Gjuha e App",
-        "personalization": "Personalizimi",
-        "visual-mode": "Modi Vizual",
-        "verified-id": "ID e Verifikuar",
-        "activate-btn": "Aktivizo",
-        "download-btn": "Shkarko",
-        "name-placeholder": "Emri Mbiemri",
-        "digital-id": "Identiteti Digjital"
+        "lang-title": "Gjuha e Sistemit",
+        "welcome-msg": "Mirësevini në faturaIME",
+        "save-btn": "Ruaj Faturën",
+        "name-input": "Shkruaj Emrin Mbiemrin...",
+        "digital-id": "IDENTITETI DIGJITAL",
+        "verified": "I VERIFIKUAR",
+        "premium": "ANËTAR PREMIUM",
+        "lang-name": "Shqip"
     },
     en: {
-        "app-language": "App Language",
-        "personalization": "Personalization",
-        "visual-mode": "Visual Mode",
-        "verified-id": "Verified ID",
-        "activate-btn": "Activate",
-        "download-btn": "Download",
-        "name-placeholder": "Full Name",
-        "digital-id": "Digital Identity"
+        "lang-title": "System Language",
+        "welcome-msg": "Welcome to faturaIME",
+        "save-btn": "Save Invoice",
+        "name-input": "Type Full Name...",
+        "digital-id": "DIGITAL IDENTITY",
+        "verified": "VERIFIED",
+        "premium": "PREMIUM MEMBER",
+        "lang-name": "English"
     }
 };
 
-// 2. Variabla globale për gjuhën aktuale
-let currentLang = localStorage.getItem('fatura-lang') || 'sq';
+// 2. Variabla e Gjendjes
+let currentLang = localStorage.getItem('fatura_lang_pref') || 'sq';
 
-// 3. Funksioni për ndërrimin e gjuhës (Toggle)
+// 3. Funksioni Kryesor i Ndërrimit
 function toggleLanguage() {
     currentLang = (currentLang === 'sq') ? 'en' : 'sq';
-    localStorage.setItem('fatura-lang', currentLang);
-    applyLanguage(currentLang);
     
-    // Feedback vibrimi (opsionale për mobile)
-    if (navigator.vibrate) navigator.vibrate(10);
+    // Ruaj në memorie
+    localStorage.setItem('fatura_lang_pref', currentLang);
+    
+    // Eksporti i menjëhershëm
+    runTranslation();
+    
+    // Feedback vizual dhe haptik
+    if (navigator.vibrate) navigator.vibrate(15);
 }
 
-// 4. Funksioni kryesor që aplikon përkthimin
-function applyLanguage(lang) {
-    // Përkthe të gjitha elementet me atributin data-i18n
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        if (translations[lang][key]) {
-            element.innerText = translations[lang][key];
-        }
+// 4. Motori i Përkthimit
+function runTranslation() {
+    const lang = currentLang;
+    const data = i18nData[lang];
+
+    // Përkthe të gjitha tekstet normale (data-i18n)
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (data[key]) el.innerText = data[key];
     });
 
-    // Përditëso Placeholder-at e inputeve (nese ekzistojne)
-    const nameInput = document.getElementById('in-name');
-    if (nameInput) {
-        nameInput.placeholder = translations[lang]['name-placeholder'];
-    }
+    // Përkthe të gjithë Placeholder-at (data-i18n-placeholder)
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (data[key]) el.placeholder = data[key];
+    });
 
-    // Përditëso UI-në e butonit (Statusi vizual)
-    const btnSq = document.getElementById('lang-sq');
-    const btnEn = document.getElementById('lang-en');
-    const statusLabel = document.getElementById('lang-status');
-
+    // Përditëso UI-në e Switch-it
+    const indicator = document.getElementById('lang-indicator');
+    const statusLabel = document.getElementById('active-lang-text');
+    
     if (lang === 'sq') {
-        btnSq.className = "px-4 py-1.5 rounded-lg text-[10px] font-black bg-indigo-600 text-white shadow-lg shadow-indigo-600/20";
-        btnEn.className = "px-4 py-1.5 rounded-lg text-[10px] font-black text-indigo-500/50";
-        statusLabel.innerText = "Shqip";
+        indicator.style.transform = 'translateX(0px)';
+        statusLabel.innerText = data["lang-name"];
     } else {
-        btnEn.className = "px-4 py-1.5 rounded-lg text-[10px] font-black bg-indigo-600 text-white shadow-lg shadow-indigo-600/20";
-        btnSq.className = "px-4 py-1.5 rounded-lg text-[10px] font-black text-indigo-500/50";
-        statusLabel.innerText = "English";
+        indicator.style.transform = 'translateX(48px)';
+        statusLabel.innerText = data["lang-name"];
     }
 
-    // Ndrysho tekstet brenda kartës nëse është e nevojshme
+    // Përkthe tekstet specifike brenda Kartës ID (nëse ekzistojnë)
     const cardStatus = document.getElementById('card-status-label');
-    if (cardStatus) {
-        cardStatus.innerText = translations[lang]['digital-id'];
-    }
+    if (cardStatus) cardStatus.innerText = data["digital-id"];
+    
+    const verifiedBadge = document.getElementById('verified-badge-text');
+    if (verifiedBadge) verifiedBadge.innerText = data["verified"];
 }
 
-// 5. Ekzekutimi automatik sapo ngarkohet faqja
+// 5. Startimi automatik
 document.addEventListener('DOMContentLoaded', () => {
-    applyLanguage(currentLang);
+    runTranslation();
 });
 
 
