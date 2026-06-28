@@ -1,0 +1,3000 @@
+<!DOCTYPE html>
+<html lang="sq" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<meta name="theme-color" content="#0b0b0f" />
+<title>FaturaIME — Premium Finance</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM2MzY2ZjEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGI1Y2Y2Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPHJhZGlhbEdyYWRpZW50IGlkPSJoIiBjeD0iMC41IiBjeT0iMC4zIiByPSIwLjciPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMC4yMiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTYiIGZpbGw9InVybCgjZykiLz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNiIgZmlsbD0idXJsKCNoKSIvPgogIDx0ZXh0IHg9IjI1NiIgeT0iMjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZm9udC1zaXplPSIxMDQiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC45IiBsZXR0ZXItc3BhY2luZz0iLTMiPmZhdHVyYTwvdGV4dD4KICA8dGV4dCB4PSIyNTYiIHk9IjM5MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZvbnQtc2l6ZT0iMTc2IiBmaWxsPSIjZmZmZmZmIiBsZXR0ZXItc3BhY2luZz0iLTQiPklNRTwvdGV4dD4KPC9zdmc+Cg==" />
+<style>
+:root{
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;--s-6:24px;--s-8:32px;--s-10:40px;--s-12:48px;
+  --r-sm:10px;--r-md:16px;--r-lg:24px;--r-xl:32px;--r-full:999px;
+  --font:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  --fs-xs:12px;--fs-sm:14px;--fs-md:16px;--fs-lg:20px;--fs-xl:28px;--fs-2xl:36px;--fs-hero:clamp(40px,12vw,56px);
+  --accent:#6366f1;--accent-2:#8b5cf6;--accent-3:#d946ef;
+  --accent-grad:linear-gradient(135deg,#6366f1,#8b5cf6 55%,#d946ef);
+  --accent-grad-soft:linear-gradient(135deg,#6366f1,#a855f7);
+  --accent-glow:rgba(99,102,241,0.45);
+  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#38bdf8;--blur:22px;
+  --ease-ios:cubic-bezier(0.32,0.72,0,1);--ease-spring:cubic-bezier(0.16,1,0.3,1);
+  --t-fast:0.18s;--t-med:0.32s;--t-slow:0.5s;
+  --maxw:720px;--nav-h:72px;--safe-b:env(safe-area-inset-bottom,0px);
+}
+[data-theme="dark"]{
+  --bg:#0b0b0f;--bg-elev:#131318;--bg-elev-2:#1b1b22;
+  --surface:rgba(255,255,255,0.04);--surface-2:rgba(255,255,255,0.07);--surface-3:rgba(255,255,255,0.10);
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text:#ffffff;--text-muted:rgba(255,255,255,0.58);--text-dim:rgba(255,255,255,0.36);
+  --shadow:0 12px 40px rgba(0,0,0,0.5);--shadow-sm:0 4px 16px rgba(0,0,0,0.35);color-scheme:dark;
+}
+[data-theme="light"]{
+  --bg:#f4f4f7;--bg-elev:#ffffff;--bg-elev-2:#fafafb;
+  --surface:rgba(0,0,0,0.035);--surface-2:rgba(0,0,0,0.06);--surface-3:rgba(0,0,0,0.09);
+  --border:rgba(0,0,0,0.09);--border-strong:rgba(0,0,0,0.16);
+  --text:#0f172a;--text-muted:rgba(15,23,42,0.62);--text-dim:rgba(15,23,42,0.38);
+  --shadow:0 12px 40px rgba(15,23,42,0.12);--shadow-sm:0 4px 16px rgba(15,23,42,0.08);color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:var(--fs-md);line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;overscroll-behavior-y:none;transition:background var(--t-med) var(--ease-ios),color var(--t-med) var(--ease-ios);}
+body::before{content:'';position:fixed;inset:-20% -20% auto -20%;height:80vh;z-index:-1;background:radial-gradient(40% 50% at 20% 15%,rgba(99,102,241,0.30),transparent 70%),radial-gradient(38% 48% at 85% 10%,rgba(217,70,239,0.22),transparent 70%),radial-gradient(45% 50% at 60% 35%,rgba(139,92,246,0.22),transparent 72%);filter:blur(20px);opacity:0.9;pointer-events:none;animation:aurora 16s var(--ease-ios) infinite alternate;}
+[data-theme="light"] body::before{opacity:0.5;}
+@keyframes aurora{0%{transform:translate3d(0,0,0) scale(1);}50%{transform:translate3d(-4%,3%,0) scale(1.08);}100%{transform:translate3d(5%,-2%,0) scale(1.04);}}
+button,input,select,textarea{font:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+button:active:not(:disabled){transform:scale(0.96);}
+button,a{transition:transform var(--t-fast) var(--ease-spring);}
+a{color:var(--accent);text-decoration:none;}
+ul{list-style:none;}
+input,textarea,select{outline:none;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:var(--r-full);}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important;}}
+#app{min-height:100vh;}
+.screen{max-width:var(--maxw);margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + var(--s-5)) var(--s-4) calc(var(--nav-h) + var(--safe-b) + var(--s-8));}
+.muted{color:var(--text-muted);}
+.dim{color:var(--text-dim);}
+.row{display:flex;align-items:center;gap:var(--s-3);}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);}
+.col{display:flex;flex-direction:column;}
+.grow{flex:1;}
+.center{display:flex;align-items:center;justify-content:center;}
+.gap-2{gap:var(--s-2);}.gap-3{gap:var(--s-3);}.gap-4{gap:var(--s-4);}
+.mt-4{margin-top:var(--s-4);}.mt-6{margin-top:var(--s-6);}
+.text-success{color:var(--success);}.text-danger{color:var(--danger);}.text-warning{color:var(--warning);}
+.hidden{display:none!important;}
+.card{position:relative;background:color-mix(in srgb,var(--bg-elev) 80%,transparent);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-5);box-shadow:var(--shadow-sm);transition:transform var(--t-med) var(--ease-spring),box-shadow var(--t-med) var(--ease-spring),border-color var(--t-med);}
+.card::before{content:'';position:absolute;inset:0 0 auto 0;height:1px;border-radius:inherit;background:linear-gradient(90deg,transparent,var(--border-strong),transparent);opacity:0.6;}
+.card--glass{background:var(--surface-2);}
+.card + .card{margin-top:var(--s-4);}
+.card.tappable:active{transform:scale(0.99);}
+.section-title{font-size:var(--fs-sm);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--s-3);}
+.view-enter > *{animation:blockIn 0.5s var(--ease-ios) both;}
+.view-enter > *:nth-child(1){animation-delay:.02s}
+.view-enter > *:nth-child(2){animation-delay:.06s}
+.view-enter > *:nth-child(3){animation-delay:.10s}
+.view-enter > *:nth-child(4){animation-delay:.14s}
+.view-enter > *:nth-child(5){animation-delay:.18s}
+.view-enter > *:nth-child(6){animation-delay:.22s}
+.view-enter > *:nth-child(7){animation-delay:.26s}
+@keyframes blockIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);padding:var(--s-3) var(--s-5);border-radius:var(--r-full);font-weight:600;font-size:var(--fs-sm);background:var(--surface-2);color:var(--text);white-space:nowrap;}
+.btn--primary{background:var(--accent-grad);background-size:160% 160%;color:#fff;box-shadow:0 8px 24px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,0.25);transition:background-position var(--t-slow) var(--ease-ios),transform var(--t-fast) var(--ease-spring);}
+.btn--primary:hover{background-position:100% 100%;}
+.btn--ghost{background:var(--surface);}
+.btn--danger{background:rgba(239,68,68,0.14);color:var(--danger);}
+.btn--block{display:flex;width:100%;}
+.btn--sm{padding:var(--s-2) var(--s-3);font-size:var(--fs-xs);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;}
+.chip{padding:var(--s-2) var(--s-4);border-radius:var(--r-full);font-size:var(--fs-sm);font-weight:500;background:var(--surface);color:var(--text-muted);border:1px solid transparent;transition:transform var(--t-fast) var(--ease-spring),background var(--t-fast),color var(--t-fast);}
+.chip:active{transform:scale(0.94);}
+.chip.is-active{background:var(--accent-grad);color:#fff;border-color:transparent;box-shadow:0 6px 16px var(--accent-glow);}
+.seg{display:inline-flex;background:var(--surface);border-radius:var(--r-full);padding:var(--s-1);gap:var(--s-1);}
+.seg button{padding:var(--s-2) var(--s-4);border-radius:var(--r-full);font-size:var(--fs-sm);font-weight:600;color:var(--text-muted);}
+.seg button.is-active{background:var(--accent-grad);color:#fff;}
+.field{display:flex;flex-direction:column;gap:var(--s-2);margin-bottom:var(--s-4);}
+.field label{font-size:var(--fs-sm);color:var(--text-muted);font-weight:500;}
+.input{width:100%;padding:var(--s-3) var(--s-4);border-radius:var(--r-md);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-size:var(--fs-md);transition:border-color var(--t-fast),box-shadow var(--t-fast);}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.amount-input{font-size:var(--fs-2xl);font-weight:700;text-align:center;letter-spacing:-1px;background:transparent;border:none;width:100%;}
+.icon-badge{width:44px;height:44px;border-radius:32%;display:grid;place-items:center;flex:0 0 auto;position:relative;overflow:hidden;}
+.icon-badge::after{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(60% 60% at 30% 20%,rgba(255,255,255,0.35),transparent 60%);}
+.icon-badge svg{position:relative;z-index:1;}
+.bar{height:8px;border-radius:var(--r-full);background:var(--surface-3);overflow:hidden;}
+.bar > i{display:block;height:100%;border-radius:inherit;background:var(--accent-grad);transition:width var(--t-slow) var(--ease-ios);}
+.bar.is-over > i{background:linear-gradient(135deg,#ef4444,#f59e0b);}
+.ring{transform:rotate(-90deg);}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round;}
+.ring .track{stroke:var(--surface-3);}
+.ring .fill{stroke:url(#ringGrad);transition:stroke-dashoffset var(--t-slow) var(--ease-ios);}
+.list{display:flex;flex-direction:column;}
+.list-row{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-2);margin:0 calc(-1 * var(--s-2));border-radius:var(--r-md);border-bottom:1px solid var(--border);transition:background var(--t-fast);}
+.list-row:last-child{border-bottom:none;}
+.list-row:active{background:var(--surface-2);}
+.list-row .meta{flex:1;min-width:0;}
+.list-row .title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-row .sub{font-size:var(--fs-xs);color:var(--text-dim);}
+.list-row .amt{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.empty{text-align:center;padding:var(--s-10) var(--s-4);color:var(--text-muted);}
+.empty svg{opacity:0.5;margin-bottom:var(--s-3);}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;height:calc(var(--nav-h) + var(--safe-b));padding-bottom:var(--safe-b);display:flex;align-items:stretch;justify-content:space-around;background:color-mix(in srgb,var(--bg-elev) 86%,transparent);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);}
+.bottom-nav a{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-dim);font-size:10px;font-weight:600;transition:color var(--t-fast);}
+.bottom-nav a svg{transition:transform var(--t-med) var(--ease-spring);}
+.bottom-nav a.is-active{color:var(--accent);}
+.bottom-nav a.is-active svg{transform:translateY(-2px) scale(1.12);filter:drop-shadow(0 4px 12px var(--accent-glow));}
+.bottom-nav a.is-active::before{content:'';position:absolute;top:8px;width:40px;height:30px;border-radius:var(--r-full);background:var(--accent-grad);opacity:0.16;filter:blur(2px);animation:pillIn var(--t-med) var(--ease-spring);}
+@keyframes pillIn{from{transform:scale(0.6);opacity:0;}to{opacity:0.16;}}
+.fab{position:fixed;right:var(--s-5);bottom:calc(var(--nav-h) + var(--safe-b) + var(--s-4));z-index:41;width:62px;height:62px;border-radius:var(--r-full);background:var(--accent-grad);color:#fff;display:grid;place-items:center;box-shadow:0 14px 34px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,0.3);transition:transform var(--t-med) var(--ease-spring),box-shadow var(--t-med);}
+.fab::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 var(--accent-glow);animation:fabPulse 2.6s var(--ease-ios) infinite;}
+.fab:hover{transform:translateY(-2px) scale(1.05);}
+.fab:active{transform:scale(0.9);}
+@keyframes fabPulse{0%{box-shadow:0 0 0 0 var(--accent-glow);}70%,100%{box-shadow:0 0 0 16px transparent;}}
+.sheet-backdrop{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;animation:fade var(--t-fast) ease;backdrop-filter:blur(3px);}
+.sheet{width:100%;max-width:var(--maxw);max-height:92vh;overflow-y:auto;background:var(--bg-elev);border-radius:var(--r-xl) var(--r-xl) 0 0;padding:var(--s-5) var(--s-5) calc(var(--s-8) + var(--safe-b));box-shadow:var(--shadow);animation:sheetUp var(--t-med) var(--ease-ios);}
+@media (min-width:640px){.sheet-backdrop{align-items:center;}.sheet{border-radius:var(--r-xl);margin:var(--s-4);}}
+.sheet .grabber{width:40px;height:4px;border-radius:var(--r-full);background:var(--surface-3);margin:0 auto var(--s-4);}
+@keyframes sheetUp{from{transform:translateY(100%);}to{transform:none;}}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+.toast-wrap{position:fixed;left:0;right:0;bottom:calc(var(--nav-h) + var(--safe-b) + var(--s-4));z-index:60;display:flex;flex-direction:column;align-items:center;gap:var(--s-2);pointer-events:none;}
+.toast{pointer-events:auto;display:flex;align-items:center;gap:var(--s-3);background:var(--bg-elev-2);color:var(--text);border:1px solid var(--border-strong);padding:var(--s-3) var(--s-4);border-radius:var(--r-full);box-shadow:var(--shadow);animation:toastIn var(--t-med) var(--ease-spring);max-width:90vw;}
+.toast button{color:var(--accent);font-weight:700;font-size:var(--fs-sm);}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+.skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--surface-2) 37%,var(--surface) 63%);background-size:400% 100%;animation:shimmer 1.4s infinite;border-radius:var(--r-md);}
+@keyframes shimmer{from{background-position:100% 0;}to{background-position:-100% 0;}}
+.view-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-5);}
+.view-head h1{font-size:var(--fs-xl);font-weight:700;letter-spacing:-0.5px;}
+.brand{display:flex;align-items:baseline;gap:2px;font-weight:800;letter-spacing:-0.5px;}
+.brand .a{font-family:Georgia,serif;font-style:italic;font-weight:500;background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.brand .b{color:var(--accent-2);}
+.balance-card{background:var(--accent-grad);color:#fff;border:none;position:relative;overflow:hidden;box-shadow:0 18px 44px var(--accent-glow);}
+.balance-card::before{display:none;}
+.balance-card::after{content:'';position:absolute;inset:0;background:radial-gradient(40% 60% at 85% -10%,rgba(255,255,255,0.30),transparent 60%),radial-gradient(30% 40% at 10% 120%,rgba(255,255,255,0.18),transparent 60%);}
+.balance-card .label{opacity:0.9;font-size:var(--fs-sm);font-weight:500;letter-spacing:0.02em;}
+.balance-card .value{position:relative;overflow:hidden;font-size:var(--fs-hero);font-weight:700;letter-spacing:-2px;line-height:1.05;margin-top:var(--s-2);font-variant-numeric:tabular-nums;}
+.balance-card .value::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.35),transparent);transform:skewX(-18deg);animation:sweep 4.5s var(--ease-ios) 0.6s infinite;}
+@keyframes sweep{0%{left:-60%;}35%,100%{left:130%;}}
+.balance-card .legs{display:flex;gap:var(--s-6);margin-top:var(--s-4);position:relative;}
+.balance-card .legs .leg span{display:block;opacity:0.85;font-size:var(--fs-xs);}
+.balance-card .legs .leg b{font-size:var(--fs-lg);}
+.eye{position:absolute;top:var(--s-5);right:var(--s-5);opacity:0.85;z-index:2;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);}
+.insight{display:flex;gap:var(--s-3);align-items:flex-start;padding:var(--s-3) 0;border-bottom:1px solid var(--border);}
+.insight:last-child{border-bottom:none;}
+.insight .dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:0 0 auto;box-shadow:0 0 8px currentColor;}
+.insight.good .dot{background:var(--success);color:var(--success);}
+.insight.warning .dot{background:var(--warning);color:var(--warning);}
+.insight.danger .dot{background:var(--danger);color:var(--danger);}
+.insight.info .dot{background:var(--info);color:var(--info);}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3);}
+.cat-cell{display:flex;flex-direction:column;align-items:center;gap:var(--s-2);padding:var(--s-3) var(--s-2);border-radius:var(--r-md);background:var(--surface);border:1px solid transparent;transition:transform var(--t-fast) var(--ease-spring),border-color var(--t-fast),background var(--t-fast);}
+.cat-cell:active{transform:scale(0.94);}
+.cat-cell.is-active{border-color:var(--accent);background:var(--surface-2);box-shadow:0 6px 18px var(--accent-glow);transform:translateY(-2px);}
+.cat-cell span{font-size:11px;color:var(--text-muted);text-align:center;}
+.cat-cell.is-active span{color:var(--text);}
+.amount-entry{text-align:center;padding:var(--s-4) 0 var(--s-2);}
+.amount-entry .cur{font-size:var(--fs-lg);color:var(--text-muted);}
+.period-bar{display:flex;gap:var(--s-2);margin-bottom:var(--s-4);overflow-x:auto;}
+.chart-box{width:100%;}
+.donut-wrap{display:flex;align-items:center;gap:var(--s-5);flex-wrap:wrap;}
+.legend{display:flex;flex-direction:column;gap:var(--s-2);flex:1;min-width:160px;}
+.legend .li{display:flex;align-items:center;gap:var(--s-2);font-size:var(--fs-sm);}
+.legend .sw{width:10px;height:10px;border-radius:3px;}
+.legend .lv{margin-left:auto;font-weight:600;}
+.chat{display:flex;flex-direction:column;gap:var(--s-3);padding-bottom:var(--s-4);}
+.bubble{max-width:84%;padding:var(--s-3) var(--s-4);border-radius:var(--r-lg);white-space:pre-wrap;line-height:1.45;font-size:var(--fs-sm);animation:blockIn 0.35s var(--ease-ios) both;}
+.bubble.ai{align-self:flex-start;background:var(--surface-2);border-bottom-left-radius:var(--s-1);}
+.bubble.me{align-self:flex-end;background:var(--accent-grad);color:#fff;border-bottom-right-radius:var(--s-1);box-shadow:0 8px 20px var(--accent-glow);}
+.chat-input{position:fixed;left:0;right:0;bottom:calc(var(--nav-h) + var(--safe-b));z-index:30;padding:var(--s-3) var(--s-4);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(20px);border-top:1px solid var(--border);}
+.chat-input .inner{max-width:var(--maxw);margin:0 auto;display:flex;gap:var(--s-2);}
+.suggest-row{display:flex;gap:var(--s-2);flex-wrap:wrap;margin-bottom:var(--s-3);}
+.set-group{margin-bottom:var(--s-5);}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);padding:var(--s-3) 0;border-bottom:1px solid var(--border);}
+.set-row:last-child{border-bottom:none;}
+.switch{width:48px;height:28px;border-radius:var(--r-full);background:var(--surface-3);position:relative;transition:background var(--t-fast);flex:0 0 auto;}
+.switch.on{background:var(--accent);box-shadow:0 0 12px var(--accent-glow);}
+.switch i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform var(--t-fast) var(--ease-spring);}
+.switch.on i{transform:translateX(20px);}
+.lock{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-5);padding:var(--s-6);}
+.pin-dots{display:flex;gap:var(--s-3);}
+.pin-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--border-strong);transition:background var(--t-fast),border-color var(--t-fast);}
+.pin-dots i.on{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px var(--accent-glow);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:var(--s-4);}
+.pin-pad button{height:72px;border-radius:50%;background:var(--surface-2);font-size:var(--fs-xl);font-weight:600;}
+.shake{animation:shake 0.4s;}
+@keyframes shake{0%,100%{transform:none}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+</style>
+</head>
+<body>
+<div id="app" aria-live="polite"></div>
+<div id="overlay-root"></div>
+<script>(() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __esm = (fn, res, err) => function __init() {
+    if (err) throw err[0];
+    try {
+      return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+    } catch (e) {
+      throw err = [e], e;
+    }
+  };
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+
+  // faturaime/src/data/crypto.js
+  async function deriveKey(secret, saltB64) {
+    const salt = fromB64(saltB64);
+    const base = await crypto.subtle.importKey("raw", enc.encode(secret), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey(
+      { name: "PBKDF2", salt, iterations: 1e5, hash: "SHA-256" },
+      base,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt", "decrypt"]
+    );
+  }
+  async function initCrypto({ pin = null, salt = null } = {}) {
+    if (pin && salt) {
+      cryptoKey = await deriveKey(pin, salt);
+      return;
+    }
+    let dk = localStorage.getItem(DEVICE_KEY);
+    if (!dk) {
+      dk = b64(crypto.getRandomValues(new Uint8Array(32)));
+      localStorage.setItem(DEVICE_KEY, dk);
+    }
+    const fixedSalt = b64(enc.encode("faturaime-device-salt-v1"));
+    cryptoKey = await deriveKey(dk, fixedSalt);
+  }
+  async function hashPin(pin, saltB64) {
+    const salt = fromB64(saltB64);
+    const base = await crypto.subtle.importKey("raw", enc.encode(pin), "PBKDF2", false, ["deriveBits"]);
+    const bits = await crypto.subtle.deriveBits(
+      { name: "PBKDF2", salt, iterations: 1e5, hash: "SHA-256" },
+      base,
+      256
+    );
+    return b64(bits);
+  }
+  async function encrypt(obj) {
+    if (!cryptoKey) throw new Error("crypto jo i inicializuar");
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const data = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, cryptoKey, enc.encode(JSON.stringify(obj)));
+    return { iv: b64(iv), data: b64(data) };
+  }
+  async function decrypt(rec) {
+    if (!cryptoKey) throw new Error("crypto jo i inicializuar");
+    const iv = fromB64(rec.iv);
+    const data = fromB64(rec.data);
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, cryptoKey, data);
+    return JSON.parse(dec.decode(plain));
+  }
+  var enc, dec, DEVICE_KEY, cryptoKey, b64, fromB64, newSalt;
+  var init_crypto = __esm({
+    "faturaime/src/data/crypto.js"() {
+      enc = new TextEncoder();
+      dec = new TextDecoder();
+      DEVICE_KEY = "faturaime.devicekey";
+      cryptoKey = null;
+      b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+      fromB64 = (str) => Uint8Array.from(atob(str), (c) => c.charCodeAt(0));
+      newSalt = () => b64(crypto.getRandomValues(new Uint8Array(16)));
+    }
+  });
+
+  // faturaime/src/core/store.js
+  function createStore(rootReducer2, initialState) {
+    let state = initialState;
+    const subs = /* @__PURE__ */ new Set();
+    const getState = () => state;
+    const dispatch = (action) => {
+      const next = rootReducer2(state, action);
+      if (next !== state) {
+        state = next;
+        subs.forEach((fn) => fn(state, action));
+      }
+      return action;
+    };
+    const subscribe = (fn) => {
+      subs.add(fn);
+      return () => subs.delete(fn);
+    };
+    const select = (selector, fn, { immediate = true } = {}) => {
+      let prev = selector(state);
+      if (immediate) fn(prev, state);
+      return subscribe((s) => {
+        const v = selector(s);
+        if (!shallowEqual(v, prev)) {
+          prev = v;
+          fn(v, s);
+        }
+      });
+    };
+    return { getState, dispatch, subscribe, select };
+  }
+  function combineReducers(slices) {
+    const keys = Object.keys(slices);
+    return (state = {}, action) => {
+      let changed = false;
+      const next = {};
+      for (const k of keys) {
+        const prev = state[k];
+        const res = slices[k](prev, action);
+        next[k] = res;
+        if (res !== prev) changed = true;
+      }
+      return changed ? next : state;
+    };
+  }
+  function shallowEqual(a, b) {
+    if (Object.is(a, b)) return true;
+    if (typeof a !== "object" || typeof b !== "object" || !a || !b) return false;
+    const ka = Object.keys(a), kb = Object.keys(b);
+    if (ka.length !== kb.length) return false;
+    return ka.every((k) => Object.is(a[k], b[k]));
+  }
+  var init_store = __esm({
+    "faturaime/src/core/store.js"() {
+    }
+  });
+
+  // faturaime/src/state/actions.js
+  var actions_exports = {};
+  __export(actions_exports, {
+    A: () => A,
+    act: () => act
+  });
+  var A, act;
+  var init_actions = __esm({
+    "faturaime/src/state/actions.js"() {
+      A = Object.freeze({
+        HYDRATE: "hydrate",
+        TX_SET: "tx/set",
+        TX_UPSERT: "tx/upsert",
+        TX_REMOVE: "tx/remove",
+        BUDGET_SET: "budget/set",
+        BUDGET_UPSERT: "budget/upsert",
+        BUDGET_REMOVE: "budget/remove",
+        GOAL_SET: "goal/set",
+        GOAL_UPSERT: "goal/upsert",
+        GOAL_REMOVE: "goal/remove",
+        SETTINGS_PATCH: "settings/patch",
+        UI_PATCH: "ui/patch"
+      });
+      act = (type, payload) => ({ type, payload });
+    }
+  });
+
+  // faturaime/src/state/slices/tx.slice.js
+  function txSlice(state = [], action) {
+    switch (action.type) {
+      case A.HYDRATE:
+        return action.payload.tx ?? state;
+      case A.TX_SET:
+        return action.payload;
+      case A.TX_UPSERT: {
+        const i = state.findIndex((t2) => t2.id === action.payload.id);
+        if (i === -1) return [action.payload, ...state];
+        const next = state.slice();
+        next[i] = action.payload;
+        return next;
+      }
+      case A.TX_REMOVE:
+        return state.filter((t2) => t2.id !== action.payload);
+      default:
+        return state;
+    }
+  }
+  var init_tx_slice = __esm({
+    "faturaime/src/state/slices/tx.slice.js"() {
+      init_actions();
+    }
+  });
+
+  // faturaime/src/state/slices/budgets.slice.js
+  function budgetsSlice(state = [], action) {
+    switch (action.type) {
+      case A.HYDRATE:
+        return action.payload.budgets ?? state;
+      case A.BUDGET_SET:
+        return action.payload;
+      case A.BUDGET_UPSERT: {
+        const i = state.findIndex((b) => b.id === action.payload.id);
+        if (i === -1) return [...state, action.payload];
+        const next = state.slice();
+        next[i] = action.payload;
+        return next;
+      }
+      case A.BUDGET_REMOVE:
+        return state.filter((b) => b.id !== action.payload);
+      default:
+        return state;
+    }
+  }
+  var init_budgets_slice = __esm({
+    "faturaime/src/state/slices/budgets.slice.js"() {
+      init_actions();
+    }
+  });
+
+  // faturaime/src/state/slices/goals.slice.js
+  function goalsSlice(state = [], action) {
+    switch (action.type) {
+      case A.HYDRATE:
+        return action.payload.goals ?? state;
+      case A.GOAL_SET:
+        return action.payload;
+      case A.GOAL_UPSERT: {
+        const i = state.findIndex((g) => g.id === action.payload.id);
+        if (i === -1) return [...state, action.payload];
+        const next = state.slice();
+        next[i] = action.payload;
+        return next;
+      }
+      case A.GOAL_REMOVE:
+        return state.filter((g) => g.id !== action.payload);
+      default:
+        return state;
+    }
+  }
+  var init_goals_slice = __esm({
+    "faturaime/src/state/slices/goals.slice.js"() {
+      init_actions();
+    }
+  });
+
+  // faturaime/src/config/constants.js
+  var APP, CURRENCIES, PAYMENT_METHODS, PRIORITIES, PERIODS, DEFAULTS;
+  var init_constants = __esm({
+    "faturaime/src/config/constants.js"() {
+      APP = Object.freeze({
+        name: "FaturaIME",
+        version: "1.0.0",
+        dbName: "faturaime",
+        dbVersion: 1
+      });
+      CURRENCIES = Object.freeze({
+        EUR: { code: "EUR", symbol: "\u20AC", rate: 1 },
+        USD: { code: "USD", symbol: "$", rate: 1.08 },
+        CHF: { code: "CHF", symbol: "Fr", rate: 0.96 },
+        ALL: { code: "ALL", symbol: "L", rate: 98.5 },
+        GBP: { code: "GBP", symbol: "\xA3", rate: 0.85 }
+      });
+      PAYMENT_METHODS = Object.freeze([
+        { id: "cash", i18n: "pm.cash" },
+        { id: "card", i18n: "pm.card" },
+        { id: "transfer", i18n: "pm.transfer" },
+        { id: "wallet", i18n: "pm.wallet" }
+      ]);
+      PRIORITIES = Object.freeze([
+        { id: "essential", i18n: "prio.essential", color: "var(--success)" },
+        { id: "needed", i18n: "prio.needed", color: "var(--warning)" },
+        { id: "optional", i18n: "prio.optional", color: "var(--text-dim)" }
+      ]);
+      PERIODS = Object.freeze(["week", "month", "year", "all"]);
+      DEFAULTS = Object.freeze({
+        currency: "EUR",
+        language: "sq",
+        theme: "dark",
+        limit: 500
+      });
+    }
+  });
+
+  // faturaime/src/state/slices/settings.slice.js
+  function settingsSlice(state = initial, action) {
+    switch (action.type) {
+      case A.HYDRATE:
+        return { ...state, ...action.payload.settings || {} };
+      case A.SETTINGS_PATCH:
+        return { ...state, ...action.payload };
+      default:
+        return state;
+    }
+  }
+  var initial;
+  var init_settings_slice = __esm({
+    "faturaime/src/state/slices/settings.slice.js"() {
+      init_actions();
+      init_constants();
+      initial = {
+        theme: DEFAULTS.theme,
+        language: DEFAULTS.language,
+        currency: DEFAULTS.currency,
+        limit: DEFAULTS.limit,
+        privacy: false,
+        rates: {},
+        pin: null,
+        // { hash, salt }
+        pinEnabled: false
+      };
+    }
+  });
+
+  // faturaime/src/state/slices/ui.slice.js
+  function uiSlice(state = initial2, action) {
+    switch (action.type) {
+      case A.UI_PATCH:
+        return { ...state, ...action.payload };
+      default:
+        return state;
+    }
+  }
+  var initial2;
+  var init_ui_slice = __esm({
+    "faturaime/src/state/slices/ui.slice.js"() {
+      init_actions();
+      initial2 = { period: "month", search: "" };
+    }
+  });
+
+  // faturaime/src/state/store.instance.js
+  var rootReducer, store;
+  var init_store_instance = __esm({
+    "faturaime/src/state/store.instance.js"() {
+      init_store();
+      init_tx_slice();
+      init_budgets_slice();
+      init_goals_slice();
+      init_settings_slice();
+      init_ui_slice();
+      rootReducer = combineReducers({
+        tx: txSlice,
+        budgets: budgetsSlice,
+        goals: goalsSlice,
+        settings: settingsSlice,
+        ui: uiSlice
+      });
+      store = createStore(rootReducer, rootReducer(void 0, { type: "@@init" }));
+    }
+  });
+
+  // faturaime/src/data/db.js
+  function openDB() {
+    if (dbp) return dbp;
+    dbp = new Promise((resolve, reject) => {
+      const req = indexedDB.open(APP.dbName, APP.dbVersion);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains("transactions")) {
+          const s = db.createObjectStore("transactions", { keyPath: "id" });
+          s.createIndex("date", "date");
+        }
+        if (!db.objectStoreNames.contains("budgets")) db.createObjectStore("budgets", { keyPath: "id" });
+        if (!db.objectStoreNames.contains("goals")) db.createObjectStore("goals", { keyPath: "id" });
+        if (!db.objectStoreNames.contains("meta")) db.createObjectStore("meta", { keyPath: "key" });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    return dbp;
+  }
+  async function tx(store2, mode, fn) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const t2 = db.transaction(store2, mode);
+      const s = t2.objectStore(store2);
+      const res = fn(s);
+      t2.oncomplete = () => resolve(res?._value ?? res);
+      t2.onerror = () => reject(t2.error);
+      t2.onabort = () => reject(t2.error);
+    });
+  }
+  var dbp, wrap, dbGetAll, dbGet, dbPut, dbDelete, dbClear;
+  var init_db = __esm({
+    "faturaime/src/data/db.js"() {
+      init_constants();
+      dbp = null;
+      wrap = (req) => {
+        const box = { _value: void 0 };
+        req.onsuccess = () => {
+          box._value = req.result;
+        };
+        return box;
+      };
+      dbGetAll = (store2) => tx(store2, "readonly", (s) => wrap(s.getAll()));
+      dbGet = (store2, key) => tx(store2, "readonly", (s) => wrap(s.get(key)));
+      dbPut = (store2, value) => tx(store2, "readwrite", (s) => s.put(value));
+      dbDelete = (store2, key) => tx(store2, "readwrite", (s) => s.delete(key));
+      dbClear = (store2) => tx(store2, "readwrite", (s) => s.clear());
+    }
+  });
+
+  // faturaime/src/data/repositories/prefs.repo.js
+  var KEY, prefsRepo;
+  var init_prefs_repo = __esm({
+    "faturaime/src/data/repositories/prefs.repo.js"() {
+      init_db();
+      KEY = "prefs";
+      prefsRepo = {
+        async get() {
+          const rec = await dbGet("meta", KEY);
+          return rec?.value ?? null;
+        },
+        async set(value) {
+          await dbPut("meta", { key: KEY, value });
+          return value;
+        },
+        async patch(partial) {
+          const cur = await this.get() || {};
+          return this.set({ ...cur, ...partial });
+        }
+      };
+    }
+  });
+
+  // faturaime/src/core/theme.js
+  function applyTheme(theme) {
+    const root = document.documentElement;
+    const resolved = theme === "auto" ? matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark" : theme;
+    root.dataset.theme = resolved;
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = resolved === "light" ? "#f5f5f7" : "#0b0b0f";
+  }
+  var init_theme = __esm({
+    "faturaime/src/core/theme.js"() {
+    }
+  });
+
+  // faturaime/src/core/i18n.js
+  var DICT, lang, setLang, t;
+  var init_i18n = __esm({
+    "faturaime/src/core/i18n.js"() {
+      DICT = {
+        sq: {
+          "nav.dashboard": "Ballina",
+          "nav.expenses": "Shpenzime",
+          "nav.income": "T\xEB ardhura",
+          "nav.budgets": "Buxhete",
+          "nav.goals": "Q\xEBllime",
+          "nav.analytics": "Analitika",
+          "nav.assistant": "Asistenti",
+          "nav.settings": "Cil\xEBsime",
+          "common.add": "Shto",
+          "common.save": "Ruaj",
+          "common.cancel": "Anulo",
+          "common.delete": "Fshi",
+          "common.edit": "Redakto",
+          "common.undo": "Zhb\xEBj",
+          "common.search": "K\xEBrko\u2026",
+          "common.all": "T\xEB gjitha",
+          "common.amount": "Shuma",
+          "common.date": "Data",
+          "common.note": "Sh\xEBnim",
+          "common.category": "Kategoria",
+          "common.expense": "Shpenzim",
+          "common.income": "T\xEB ardhur",
+          "common.none": "Asnj\xEB",
+          "common.recurring": "E p\xEBrs\xEBritur",
+          "common.merchant": "Tregtari",
+          "dash.balance": "Bilanci",
+          "dash.income": "T\xEB ardhura",
+          "dash.spent": "Shpenzuar",
+          "dash.recent": "Aktiviteti i fundit",
+          "dash.budget": "Buxheti i muajit",
+          "dash.goals": "Q\xEBllimet",
+          "dash.insights": "Rekomandime nga FaturaIME AI",
+          "dash.empty": "Ende pa transaksione. Shto t\xEB parin!",
+          "dash.thismonth": "K\xEBt\xEB muaj",
+          "dash.left": "Mbeten",
+          "tx.new": "Transaksion i ri",
+          "tx.editTitle": "Redakto transaksionin",
+          "tx.amountPh": "0.00",
+          "tx.notePh": "Sh\xEBnim (opsional)",
+          "tx.merchantPh": "Tregtari (opsional)",
+          "tx.deleted": "U fshi",
+          "tx.saved": "U ruajt",
+          "tx.priority": "Prioriteti",
+          "tx.payment": "Metoda",
+          "tx.tags": "Etiketa",
+          "tx.empty": "Asnj\xEB transaksion",
+          "tx.method": "Metoda e pages\xEBs",
+          "budget.limit": "Limiti i p\xEBrgjithsh\xEBm",
+          "budget.byCat": "Buxhete sipas kategoris\xEB",
+          "budget.used": "P\xEBrdorur",
+          "budget.of": "nga",
+          "budget.over": "Tejkalim!",
+          "budget.add": "Shto buxhet",
+          "budget.empty": "Pa buxhete. Vendos nj\xEB p\xEBr t\xEB kontrolluar shpenzimet.",
+          "goal.add": "Q\xEBllim i ri",
+          "goal.target": "Shuma cak",
+          "goal.deadline": "Afati",
+          "goal.name": "Emri",
+          "goal.progress": "Progres",
+          "goal.addFunds": "Shto shum\xEB",
+          "goal.namePh": "p.sh. Pushime",
+          "goal.empty": "Pa q\xEBllime. Krijo nj\xEB \xEBnd\xEBrr financiare!",
+          "goal.done": "Arritur! \u{1F389}",
+          "an.trend": "Trendi",
+          "an.byCat": "Sipas kategoris\xEB",
+          "an.compare": "Krahasim",
+          "an.avgDay": "Mesatare/dit\xEB",
+          "an.forecast": "Parashikim fundmuaji",
+          "an.noData": "Pa t\xEB dh\xEBna p\xEBr k\xEBt\xEB periudh\xEB",
+          "period.week": "Jav\xEB",
+          "period.month": "Muaj",
+          "period.year": "Vit",
+          "period.all": "Gjith\xE7ka",
+          "set.appearance": "Pamja",
+          "set.theme": "Tema",
+          "set.language": "Gjuha",
+          "set.currency": "Monedha",
+          "set.privacy": "M\xEBnyra e privat\xEBsis\xEB",
+          "set.security": "Siguria",
+          "set.pin": "Ky\xE7je me PIN",
+          "set.data": "T\xEB dh\xEBnat",
+          "set.export": "Eksporto (JSON)",
+          "set.import": "Importo (JSON)",
+          "set.clear": "Fshi t\xEB gjitha",
+          "set.about": "Rreth",
+          "set.dark": "E err\xEBt",
+          "set.light": "E \xE7el\xEBt",
+          "set.exported": "U eksportua",
+          "set.imported": "U importua",
+          "set.cleared": "U pastruan t\xEB dh\xEBnat",
+          "set.confirmClear": "T\xEB fshihen t\xEB gjitha t\xEB dh\xEBnat? Ky veprim s'kthehet.",
+          "ai.placeholder": 'Pyet FaturaIME AI\u2026 (p.sh. "sa shpenzova k\xEBt\xEB muaj?")',
+          "ai.greeting": "P\xEBrsh\xEBndetje! Jam FaturaIME AI, k\xEBshilltari yt financiar. Si mund t\xEB ndihmoj?",
+          "ai.suggest": "Provo:",
+          "ai.send": "D\xEBrgo",
+          "pin.set": "Vendos nj\xEB PIN",
+          "pin.enter": "Fut PIN-in",
+          "pin.wrong": "PIN i gabuar",
+          "pin.confirm": "Konfirmo PIN-in",
+          "pm.cash": "Para",
+          "pm.card": "Kart\xEB",
+          "pm.transfer": "Transfert\xEB",
+          "pm.wallet": "Portofol",
+          "prio.essential": "I domosdosh\xEBm",
+          "prio.needed": "I nevojsh\xEBm",
+          "prio.optional": "Opsional",
+          "cat.food": "Ushqim",
+          "cat.travel": "Udh\xEBtim",
+          "cat.bill": "Fatura",
+          "cat.style": "Veshje",
+          "cat.health": "Sh\xEBndet",
+          "cat.entertain": "Arg\xEBtim",
+          "cat.home": "Sht\xEBpi",
+          "cat.tech": "Teknologji",
+          "cat.other": "Tjet\xEBr",
+          "cat.salary": "Pag\xEB",
+          "cat.business": "Biznes",
+          "cat.freelance": "Freelance",
+          "cat.investment": "Investim",
+          "cat.gift": "Dhurat\xEB",
+          "cat.refund": "Rimbursim"
+        },
+        en: {
+          "nav.dashboard": "Home",
+          "nav.expenses": "Expenses",
+          "nav.income": "Income",
+          "nav.budgets": "Budgets",
+          "nav.goals": "Goals",
+          "nav.analytics": "Analytics",
+          "nav.assistant": "Assistant",
+          "nav.settings": "Settings",
+          "common.add": "Add",
+          "common.save": "Save",
+          "common.cancel": "Cancel",
+          "common.delete": "Delete",
+          "common.edit": "Edit",
+          "common.undo": "Undo",
+          "common.search": "Search\u2026",
+          "common.all": "All",
+          "common.amount": "Amount",
+          "common.date": "Date",
+          "common.note": "Note",
+          "common.category": "Category",
+          "common.expense": "Expense",
+          "common.income": "Income",
+          "common.none": "None",
+          "common.recurring": "Recurring",
+          "common.merchant": "Merchant",
+          "dash.balance": "Balance",
+          "dash.income": "Income",
+          "dash.spent": "Spent",
+          "dash.recent": "Recent activity",
+          "dash.budget": "Monthly budget",
+          "dash.goals": "Goals",
+          "dash.insights": "Insights from FaturaIME AI",
+          "dash.empty": "No transactions yet. Add your first!",
+          "dash.thismonth": "This month",
+          "dash.left": "Left",
+          "tx.new": "New transaction",
+          "tx.editTitle": "Edit transaction",
+          "tx.amountPh": "0.00",
+          "tx.notePh": "Note (optional)",
+          "tx.merchantPh": "Merchant (optional)",
+          "tx.deleted": "Deleted",
+          "tx.saved": "Saved",
+          "tx.priority": "Priority",
+          "tx.payment": "Method",
+          "tx.tags": "Tags",
+          "tx.empty": "No transactions",
+          "tx.method": "Payment method",
+          "budget.limit": "Overall limit",
+          "budget.byCat": "Budgets by category",
+          "budget.used": "Used",
+          "budget.of": "of",
+          "budget.over": "Over budget!",
+          "budget.add": "Add budget",
+          "budget.empty": "No budgets. Set one to control spending.",
+          "goal.add": "New goal",
+          "goal.target": "Target",
+          "goal.deadline": "Deadline",
+          "goal.name": "Name",
+          "goal.progress": "Progress",
+          "goal.addFunds": "Add funds",
+          "goal.namePh": "e.g. Vacation",
+          "goal.empty": "No goals. Create a financial dream!",
+          "goal.done": "Achieved! \u{1F389}",
+          "an.trend": "Trend",
+          "an.byCat": "By category",
+          "an.compare": "Comparison",
+          "an.avgDay": "Avg/day",
+          "an.forecast": "Month-end forecast",
+          "an.noData": "No data for this period",
+          "period.week": "Week",
+          "period.month": "Month",
+          "period.year": "Year",
+          "period.all": "All",
+          "set.appearance": "Appearance",
+          "set.theme": "Theme",
+          "set.language": "Language",
+          "set.currency": "Currency",
+          "set.privacy": "Privacy mode",
+          "set.security": "Security",
+          "set.pin": "PIN lock",
+          "set.data": "Data",
+          "set.export": "Export (JSON)",
+          "set.import": "Import (JSON)",
+          "set.clear": "Clear all",
+          "set.about": "About",
+          "set.dark": "Dark",
+          "set.light": "Light",
+          "set.exported": "Exported",
+          "set.imported": "Imported",
+          "set.cleared": "Data cleared",
+          "set.confirmClear": "Delete all data? This cannot be undone.",
+          "ai.placeholder": 'Ask FaturaIME AI\u2026 (e.g. "how much did I spend this month?")',
+          "ai.greeting": "Hi! I am FaturaIME AI, your financial advisor. How can I help?",
+          "ai.suggest": "Try:",
+          "ai.send": "Send",
+          "pin.set": "Set a PIN",
+          "pin.enter": "Enter PIN",
+          "pin.wrong": "Wrong PIN",
+          "pin.confirm": "Confirm PIN",
+          "pm.cash": "Cash",
+          "pm.card": "Card",
+          "pm.transfer": "Transfer",
+          "pm.wallet": "Wallet",
+          "prio.essential": "Essential",
+          "prio.needed": "Needed",
+          "prio.optional": "Optional",
+          "cat.food": "Food",
+          "cat.travel": "Travel",
+          "cat.bill": "Bills",
+          "cat.style": "Style",
+          "cat.health": "Health",
+          "cat.entertain": "Fun",
+          "cat.home": "Home",
+          "cat.tech": "Tech",
+          "cat.other": "Other",
+          "cat.salary": "Salary",
+          "cat.business": "Business",
+          "cat.freelance": "Freelance",
+          "cat.investment": "Investment",
+          "cat.gift": "Gift",
+          "cat.refund": "Refund"
+        }
+      };
+      lang = "sq";
+      setLang = (l) => {
+        if (DICT[l]) lang = l;
+        document.documentElement.lang = lang;
+      };
+      t = (key, fallback) => DICT[lang]?.[key] ?? DICT.sq[key] ?? fallback ?? key;
+    }
+  });
+
+  // faturaime/src/services/settings.service.js
+  var settings_service_exports = {};
+  __export(settings_service_exports, {
+    loadPrefs: () => loadPrefs,
+    savePrefs: () => savePrefs,
+    togglePrivacy: () => togglePrivacy,
+    updateSettings: () => updateSettings
+  });
+  async function loadPrefs() {
+    const prefs = await prefsRepo.get();
+    if (prefs) store.dispatch(act(A.HYDRATE, { settings: prefs }));
+    const s = store.getState().settings;
+    applyTheme(s.theme);
+    setLang(s.language);
+    return s;
+  }
+  async function savePrefs() {
+    const s = store.getState().settings;
+    const subset = {};
+    for (const k of PERSIST_KEYS) subset[k] = s[k];
+    await prefsRepo.set(subset);
+  }
+  async function updateSettings(patch) {
+    store.dispatch(act(A.SETTINGS_PATCH, patch));
+    const s = store.getState().settings;
+    if ("theme" in patch) applyTheme(s.theme);
+    if ("language" in patch) setLang(s.language);
+    await savePrefs();
+    return s;
+  }
+  var PERSIST_KEYS, togglePrivacy;
+  var init_settings_service = __esm({
+    "faturaime/src/services/settings.service.js"() {
+      init_store_instance();
+      init_actions();
+      init_prefs_repo();
+      init_theme();
+      init_i18n();
+      PERSIST_KEYS = ["theme", "language", "currency", "limit", "privacy", "rates", "pin", "pinEnabled"];
+      togglePrivacy = () => updateSettings({ privacy: !store.getState().settings.privacy });
+    }
+  });
+
+  // faturaime/src/data/repositories/encrypted.repo.js
+  function createEncryptedRepo(store2) {
+    return {
+      async all() {
+        const rows = await dbGetAll(store2);
+        const out = [];
+        for (const r of rows) {
+          try {
+            out.push(await decrypt(r.enc));
+          } catch {
+          }
+        }
+        return out;
+      },
+      async put(item) {
+        const enc2 = await encrypt(item);
+        await dbPut(store2, { id: item.id, date: item.date, enc: enc2 });
+        return item;
+      },
+      async bulkPut(items) {
+        for (const it of items) await this.put(it);
+      },
+      remove: (id) => dbDelete(store2, id),
+      clear: () => dbClear(store2)
+    };
+  }
+  var init_encrypted_repo = __esm({
+    "faturaime/src/data/repositories/encrypted.repo.js"() {
+      init_db();
+      init_crypto();
+    }
+  });
+
+  // faturaime/src/data/repositories/tx.repo.js
+  var txRepo;
+  var init_tx_repo = __esm({
+    "faturaime/src/data/repositories/tx.repo.js"() {
+      init_encrypted_repo();
+      txRepo = createEncryptedRepo("transactions");
+    }
+  });
+
+  // faturaime/src/lib/id.js
+  var uid;
+  var init_id = __esm({
+    "faturaime/src/lib/id.js"() {
+      uid = () => crypto.randomUUID && crypto.randomUUID() || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+  });
+
+  // faturaime/src/lib/date.js
+  function periodStart(period, ref = /* @__PURE__ */ new Date()) {
+    switch (period) {
+      case "week":
+        return startOfWeek(ref);
+      case "year":
+        return startOfYear(ref);
+      case "all":
+        return /* @__PURE__ */ new Date(0);
+      case "month":
+      default:
+        return startOfMonth(ref);
+    }
+  }
+  var pad, isoDate, parseISO, startOfMonth, startOfWeek, startOfYear, isSameMonth, daysInMonth, dayOfMonth, monthsBetween, MONTHS_SQ, fmtDateShort;
+  var init_date = __esm({
+    "faturaime/src/lib/date.js"() {
+      pad = (n) => String(n).padStart(2, "0");
+      isoDate = (d = /* @__PURE__ */ new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      parseISO = (s) => {
+        const [y, m, d] = String(s).split("-").map(Number);
+        return new Date(y, (m || 1) - 1, d || 1);
+      };
+      startOfMonth = (d = /* @__PURE__ */ new Date()) => new Date(d.getFullYear(), d.getMonth(), 1);
+      startOfWeek = (d = /* @__PURE__ */ new Date()) => {
+        const x = new Date(d);
+        const day = (x.getDay() + 6) % 7;
+        x.setDate(x.getDate() - day);
+        x.setHours(0, 0, 0, 0);
+        return x;
+      };
+      startOfYear = (d = /* @__PURE__ */ new Date()) => new Date(d.getFullYear(), 0, 1);
+      isSameMonth = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+      daysInMonth = (d = /* @__PURE__ */ new Date()) => new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      dayOfMonth = (d = /* @__PURE__ */ new Date()) => d.getDate();
+      monthsBetween = (a, b) => (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+      MONTHS_SQ = ["Jan", "Shk", "Mar", "Pri", "Maj", "Qer", "Korr", "Gusht", "Sht", "Tet", "N\xEBn", "Dhj"];
+      fmtDateShort = (s) => {
+        const d = parseISO(s);
+        return `${d.getDate()} ${MONTHS_SQ[d.getMonth()]}`;
+      };
+    }
+  });
+
+  // faturaime/src/core/events.js
+  var map, on, emit;
+  var init_events = __esm({
+    "faturaime/src/core/events.js"() {
+      map = /* @__PURE__ */ new Map();
+      on = (type, fn) => {
+        if (!map.has(type)) map.set(type, /* @__PURE__ */ new Set());
+        map.get(type).add(fn);
+        return () => map.get(type)?.delete(fn);
+      };
+      emit = (type, payload) => {
+        map.get(type)?.forEach((fn) => {
+          try {
+            fn(payload);
+          } catch (err) {
+            console.error(`[events] ${type}`, err);
+          }
+        });
+      };
+    }
+  });
+
+  // faturaime/src/services/transactions.service.js
+  function normalize(input) {
+    const amount = Math.abs(parseFloat(input.amount) || 0);
+    return {
+      id: input.id || uid(),
+      type: input.type === "income" ? "income" : "expense",
+      amount,
+      categoryId: input.categoryId || (input.type === "income" ? "salary" : "other"),
+      merchant: (input.merchant || "").trim(),
+      note: (input.note || "").trim(),
+      date: input.date || isoDate(),
+      recurring: !!input.recurring,
+      priority: input.priority || null,
+      method: input.method || null,
+      tags: Array.isArray(input.tags) ? input.tags : [],
+      createdAt: input.createdAt || Date.now()
+    };
+  }
+  async function loadTransactions() {
+    const rows = await txRepo.all();
+    rows.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt);
+    store.dispatch(act(A.TX_SET, rows));
+    return rows;
+  }
+  async function saveTransaction(input) {
+    if (!input.amount || parseFloat(input.amount) <= 0) throw new Error("Shuma duhet t\xEB jet\xEB > 0");
+    const tx2 = normalize(input);
+    await txRepo.put(tx2);
+    store.dispatch(act(A.TX_UPSERT, tx2));
+    emit(input.id ? "tx:updated" : "tx:created", tx2);
+    return tx2;
+  }
+  async function deleteTransaction(id) {
+    const prev = store.getState().tx.find((t2) => t2.id === id);
+    await txRepo.remove(id);
+    store.dispatch(act(A.TX_REMOVE, id));
+    emit("tx:deleted", prev);
+    return prev;
+  }
+  async function restoreTransaction(tx2) {
+    if (!tx2) return;
+    await txRepo.put(tx2);
+    store.dispatch(act(A.TX_UPSERT, tx2));
+  }
+  var init_transactions_service = __esm({
+    "faturaime/src/services/transactions.service.js"() {
+      init_store_instance();
+      init_actions();
+      init_tx_repo();
+      init_id();
+      init_date();
+      init_events();
+    }
+  });
+
+  // faturaime/src/data/repositories/budget.repo.js
+  var budgetRepo;
+  var init_budget_repo = __esm({
+    "faturaime/src/data/repositories/budget.repo.js"() {
+      init_encrypted_repo();
+      budgetRepo = createEncryptedRepo("budgets");
+    }
+  });
+
+  // faturaime/src/config/categories.js
+  var CATEGORIES, byId, getCategory, categoriesByKind;
+  var init_categories = __esm({
+    "faturaime/src/config/categories.js"() {
+      CATEGORIES = Object.freeze([
+        // ---- Shpenzime ----
+        { id: "food", kind: "expense", i18n: "cat.food", color: "#f97316", svg: "M21 7.5l-9-4.5-9 4.5M3 7.5v9l9 4.5 9-4.5v-9M12 3v18M3 7.5l9 4.5 9-4.5" },
+        { id: "travel", kind: "expense", i18n: "cat.travel", color: "#06b6d4", svg: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8" },
+        { id: "bill", kind: "expense", i18n: "cat.bill", color: "#facc15", svg: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+        { id: "style", kind: "expense", i18n: "cat.style", color: "#ec4899", svg: "M9 10V6a3 3 0 016 0v4M4.5 10h15l1 11H3.5l1-11z" },
+        { id: "health", kind: "expense", i18n: "cat.health", color: "#10b981", svg: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" },
+        { id: "entertain", kind: "expense", i18n: "cat.entertain", color: "#a855f7", svg: "M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+        { id: "home", kind: "expense", i18n: "cat.home", color: "#f43f5e", svg: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
+        { id: "tech", kind: "expense", i18n: "cat.tech", color: "#14b8a6", svg: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+        { id: "other", kind: "expense", i18n: "cat.other", color: "#94a3b8", svg: "M4 6h16M4 12h16M4 18h16" },
+        // ---- Të ardhura ----
+        { id: "salary", kind: "income", i18n: "cat.salary", color: "#10b981", svg: "M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" },
+        { id: "business", kind: "income", i18n: "cat.business", color: "#6366f1", svg: "M3 7h18v12H3zM3 7l3-4h12l3 4M9 12h6" },
+        { id: "freelance", kind: "income", i18n: "cat.freelance", color: "#8b5cf6", svg: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" },
+        { id: "investment", kind: "income", i18n: "cat.investment", color: "#06b6d4", svg: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" },
+        { id: "gift", kind: "income", i18n: "cat.gift", color: "#facc15", svg: "M12 8v13m0-13a4 4 0 10-4-4 4 4 0 004 4zm0 0a4 4 0 114-4 4 4 0 01-4 4zM5 12h14v9H5zM3 8h18v4H3z" },
+        { id: "refund", kind: "income", i18n: "cat.refund", color: "#f97316", svg: "M4 4v5h5M20 20v-5h-5M5.05 19A9 9 0 0019.95 11.05M18.95 5A9 9 0 004.05 12.95" }
+      ]);
+      byId = new Map(CATEGORIES.map((c) => [c.id, c]));
+      getCategory = (id) => byId.get(id) || byId.get("other");
+      categoriesByKind = (kind) => CATEGORIES.filter((c) => c.kind === kind);
+    }
+  });
+
+  // faturaime/src/state/selectors.js
+  function totals(tx2, period) {
+    const inP = txInPeriod(tx2, period);
+    const income = sum(inP, "income");
+    const expense = sum(inP, "expense");
+    return { income, expense, net: income - expense };
+  }
+  function spendByCategory(tx2, period) {
+    const inP = txInPeriod(tx2, period).filter((t2) => t2.type === "expense");
+    const map2 = /* @__PURE__ */ new Map();
+    for (const t2 of inP) map2.set(t2.categoryId, (map2.get(t2.categoryId) || 0) + t2.amount);
+    return [...map2.entries()].map(([id, value]) => ({ id, value, category: getCategory(id) })).sort((a, b) => b.value - a.value);
+  }
+  var txInPeriod, sum, balance, spentThisMonth, spentThisMonthByCat;
+  var init_selectors = __esm({
+    "faturaime/src/state/selectors.js"() {
+      init_date();
+      init_categories();
+      txInPeriod = (tx2, period, ref = /* @__PURE__ */ new Date()) => {
+        const start = periodStart(period, ref);
+        return tx2.filter((t2) => parseISO(t2.date) >= start);
+      };
+      sum = (tx2, type) => tx2.filter((t2) => t2.type === type).reduce((a, t2) => a + t2.amount, 0);
+      balance = (tx2) => sum(tx2, "income") - sum(tx2, "expense");
+      spentThisMonth = (tx2) => tx2.filter((t2) => t2.type === "expense" && isSameMonth(parseISO(t2.date), /* @__PURE__ */ new Date())).reduce((a, t2) => a + t2.amount, 0);
+      spentThisMonthByCat = (tx2, categoryId) => tx2.filter((t2) => t2.type === "expense" && t2.categoryId === categoryId && isSameMonth(parseISO(t2.date), /* @__PURE__ */ new Date())).reduce((a, t2) => a + t2.amount, 0);
+    }
+  });
+
+  // faturaime/src/services/budgets.service.js
+  async function loadBudgets() {
+    const rows = await budgetRepo.all();
+    store.dispatch(act(A.BUDGET_SET, rows));
+    return rows;
+  }
+  async function saveBudget({ id, categoryId, amount }) {
+    const budget = { id: id || uid(), categoryId, amount: Math.abs(parseFloat(amount) || 0) };
+    await budgetRepo.put(budget);
+    store.dispatch(act(A.BUDGET_UPSERT, budget));
+    return budget;
+  }
+  async function deleteBudget(id) {
+    await budgetRepo.remove(id);
+    store.dispatch(act(A.BUDGET_REMOVE, id));
+  }
+  async function setLimit(limit) {
+    const value = Math.abs(parseFloat(limit) || 0);
+    store.dispatch(act(A.SETTINGS_PATCH, { limit: value }));
+    const { savePrefs: savePrefs2 } = await Promise.resolve().then(() => (init_settings_service(), settings_service_exports));
+    await savePrefs2();
+    return value;
+  }
+  function budgetProgress(budget, tx2) {
+    const used = spentThisMonthByCat(tx2, budget.categoryId);
+    const pct2 = budget.amount ? Math.min(100, used / budget.amount * 100) : 0;
+    return { used, amount: budget.amount, pct: pct2, over: used > budget.amount };
+  }
+  function limitProgress(tx2, limit) {
+    const used = spentThisMonth(tx2);
+    const pct2 = limit ? Math.min(100, used / limit * 100) : 0;
+    return { used, limit, pct: pct2, over: used > limit, remaining: Math.max(0, limit - used) };
+  }
+  var init_budgets_service = __esm({
+    "faturaime/src/services/budgets.service.js"() {
+      init_store_instance();
+      init_actions();
+      init_budget_repo();
+      init_id();
+      init_selectors();
+    }
+  });
+
+  // faturaime/src/data/repositories/goal.repo.js
+  var goalRepo;
+  var init_goal_repo = __esm({
+    "faturaime/src/data/repositories/goal.repo.js"() {
+      init_encrypted_repo();
+      goalRepo = createEncryptedRepo("goals");
+    }
+  });
+
+  // faturaime/src/services/goals.service.js
+  async function loadGoals() {
+    const rows = await goalRepo.all();
+    store.dispatch(act(A.GOAL_SET, rows));
+    return rows;
+  }
+  async function saveGoal({ id, name, target, deadline, current = 0 }) {
+    const goal = {
+      id: id || uid(),
+      name: (name || "").trim() || "Q\xEBllim",
+      target: Math.abs(parseFloat(target) || 0),
+      current: Math.abs(parseFloat(current) || 0),
+      deadline: deadline || null,
+      createdAt: Date.now()
+    };
+    await goalRepo.put(goal);
+    store.dispatch(act(A.GOAL_UPSERT, goal));
+    return goal;
+  }
+  async function addFunds(id, amount) {
+    const goal = store.getState().goals.find((g) => g.id === id);
+    if (!goal) return;
+    const updated = { ...goal, current: goal.current + Math.abs(parseFloat(amount) || 0) };
+    await goalRepo.put(updated);
+    store.dispatch(act(A.GOAL_UPSERT, updated));
+    return updated;
+  }
+  async function deleteGoal(id) {
+    await goalRepo.remove(id);
+    store.dispatch(act(A.GOAL_REMOVE, id));
+  }
+  function goalForecast(goal) {
+    const remaining = Math.max(0, goal.target - goal.current);
+    const pct2 = goal.target ? Math.min(100, goal.current / goal.target * 100) : 0;
+    let perMonth = null, months = null;
+    if (goal.deadline) {
+      months = Math.max(1, monthsBetween(/* @__PURE__ */ new Date(), parseISO(goal.deadline)) + 1);
+      perMonth = remaining / months;
+    }
+    return { remaining, pct: pct2, perMonth, months, done: goal.current >= goal.target };
+  }
+  var init_goals_service = __esm({
+    "faturaime/src/services/goals.service.js"() {
+      init_store_instance();
+      init_actions();
+      init_goal_repo();
+      init_id();
+      init_date();
+    }
+  });
+
+  // faturaime/src/services/security.service.js
+  async function setupPin(pin) {
+    const salt = newSalt();
+    const hash = await hashPin(pin, salt);
+    await updateSettings({ pin: { hash, salt }, pinEnabled: true });
+  }
+  async function removePin() {
+    await updateSettings({ pin: null, pinEnabled: false });
+  }
+  async function verifyPin(pin) {
+    const cfg = store.getState().settings.pin;
+    if (!cfg) return true;
+    const hash = await hashPin(pin, cfg.salt);
+    return hash === cfg.hash;
+  }
+  var isLockEnabled;
+  var init_security_service = __esm({
+    "faturaime/src/services/security.service.js"() {
+      init_crypto();
+      init_settings_service();
+      init_store_instance();
+      isLockEnabled = () => !!store.getState().settings.pinEnabled;
+    }
+  });
+
+  // faturaime/src/lib/dom.js
+  function h(tag, props = {}, children = []) {
+    const [name, ...classes] = tag.split(".");
+    const el2 = document.createElement(name || "div");
+    if (classes.length) el2.classList.add(...classes);
+    for (const [k, v] of Object.entries(props || {})) {
+      if (v == null || v === false) continue;
+      if (k === "class") el2.className = v;
+      else if (k === "style" && typeof v === "object") Object.assign(el2.style, v);
+      else if (k === "dataset") Object.assign(el2.dataset, v);
+      else if (k === "html") el2.innerHTML = v;
+      else if (k.startsWith("on") && typeof v === "function") el2.addEventListener(k.slice(2).toLowerCase(), v);
+      else if (k in el2 && k !== "list") {
+        try {
+          el2[k] = v;
+        } catch {
+          el2.setAttribute(k, v);
+        }
+      } else el2.setAttribute(k, v);
+    }
+    appendChildren(el2, children);
+    return el2;
+  }
+  function appendChildren(el2, children) {
+    const arr = Array.isArray(children) ? children : [children];
+    for (const c of arr) {
+      if (c == null || c === false || c === true) continue;
+      if (Array.isArray(c)) appendChildren(el2, c);
+      else el2.append(c.nodeType ? c : document.createTextNode(String(c)));
+    }
+  }
+  function icon(path, { size = 22, stroke = "currentColor", fill = "none", width = 2 } = {}) {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.setAttribute("fill", fill);
+    svg.setAttribute("stroke", stroke);
+    svg.setAttribute("stroke-width", width);
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    const p = document.createElementNS(ns, "path");
+    p.setAttribute("d", path);
+    svg.appendChild(p);
+    return svg;
+  }
+  var clear;
+  var init_dom = __esm({
+    "faturaime/src/lib/dom.js"() {
+      clear = (node) => {
+        while (node.firstChild) node.removeChild(node.firstChild);
+      };
+    }
+  });
+
+  // faturaime/src/lib/money.js
+  function fmtMoney(amountEur, { code = "EUR", rates = {}, hidden = false, sign = false } = {}) {
+    if (hidden) return "\u2022\u2022\u2022\u2022";
+    const sym = CURRENCIES[code]?.symbol ?? "";
+    const val = toCurrency(amountEur, code, rates);
+    const abs = Math.abs(val);
+    const fixed = abs >= 1e3 ? abs.toLocaleString("de-DE", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : abs.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const prefix = sign ? val < 0 ? "\u2212" : "+" : val < 0 ? "\u2212" : "";
+    return `${prefix}${sym}${fixed}`;
+  }
+  var toCurrency;
+  var init_money = __esm({
+    "faturaime/src/lib/money.js"() {
+      init_constants();
+      toCurrency = (amountEur, code, rates = {}) => {
+        const rate = rates[code] ?? CURRENCIES[code]?.rate ?? 1;
+        return amountEur * rate;
+      };
+    }
+  });
+
+  // faturaime/src/ui/views/_shared.js
+  function money(eur, opts = {}) {
+    const s = store.getState().settings;
+    return fmtMoney(eur, { code: s.currency, rates: s.rates, hidden: s.privacy && !opts.force, ...opts });
+  }
+  function screen(render) {
+    const root = h("div.screen.view-enter");
+    const draw = () => {
+      root.replaceChildren(...render());
+    };
+    draw();
+    const unsub = store.subscribe(draw);
+    const obs = new MutationObserver(() => {
+      if (!root.isConnected) {
+        unsub();
+        obs.disconnect();
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    return root;
+  }
+  function head(title, right) {
+    return h("header.view-head", {}, [
+      typeof title === "string" ? h("h1", {}, title) : title,
+      right || null
+    ]);
+  }
+  var brand;
+  var init_shared = __esm({
+    "faturaime/src/ui/views/_shared.js"() {
+      init_dom();
+      init_store_instance();
+      init_money();
+      brand = () => h("div.brand", {}, [
+        h("span.a", {}, "fatura"),
+        h("span.b", {}, "IME")
+      ]);
+    }
+  });
+
+  // faturaime/src/services/analytics.service.js
+  function trendSeries(tx2, period) {
+    const start = periodStart(period);
+    const exp = tx2.filter((t2) => t2.type === "expense" && parseISO(t2.date) >= start);
+    const buckets = /* @__PURE__ */ new Map();
+    if (period === "year" || period === "all") {
+      for (const t2 of exp) {
+        const d = parseISO(t2.date);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+        buckets.set(key, (buckets.get(key) || 0) + t2.amount);
+      }
+    } else {
+      for (const t2 of exp) buckets.set(t2.date, (buckets.get(t2.date) || 0) + t2.amount);
+    }
+    return [...buckets.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([label, value]) => ({ label, value }));
+  }
+  function avgPerDay(tx2) {
+    const start = startOfMonth();
+    const exp = tx2.filter((t2) => t2.type === "expense" && parseISO(t2.date) >= start);
+    const total = exp.reduce((a, t2) => a + t2.amount, 0);
+    return total / Math.max(1, dayOfMonth());
+  }
+  function monthForecast(tx2) {
+    const avg = avgPerDay(tx2);
+    return avg * daysInMonth();
+  }
+  function monthOverMonth(tx2) {
+    const now = /* @__PURE__ */ new Date();
+    const thisStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const inRange = (t2, a, b) => {
+      const d = parseISO(t2.date);
+      return d >= a && d < b;
+    };
+    const cur = tx2.filter((t2) => t2.type === "expense" && parseISO(t2.date) >= thisStart).reduce((a, t2) => a + t2.amount, 0);
+    const prev = tx2.filter((t2) => t2.type === "expense" && inRange(t2, lastStart, thisStart)).reduce((a, t2) => a + t2.amount, 0);
+    const delta = prev ? (cur - prev) / prev * 100 : 0;
+    return { current: cur, previous: prev, deltaPct: delta };
+  }
+  var init_analytics_service = __esm({
+    "faturaime/src/services/analytics.service.js"() {
+      init_date();
+    }
+  });
+
+  // faturaime/src/services/ai/persona.js
+  var money2, pct, pick, persona;
+  var init_persona = __esm({
+    "faturaime/src/services/ai/persona.js"() {
+      init_money();
+      init_store_instance();
+      money2 = (eur, opts = {}) => {
+        const s = store.getState().settings;
+        return fmtMoney(eur, { code: s.currency, rates: s.rates, ...opts });
+      };
+      pct = (part, whole) => whole ? Math.round(part / whole * 100) : 0;
+      pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+      persona = {
+        greet: () => pick([
+          "P\xEBrsh\xEBndetje! Si mund t\xEB ndihmoj me financat sot?",
+          "\xC7'kemi! Pyetm\xEB \xE7far\xEB t\xEB duash p\xEBr shpenzimet, buxhetin ose q\xEBllimet."
+        ]),
+        empathize: () => pick(["E kuptoj. ", "Mir\xEB. ", ""]),
+        encourage: () => pick(["Vazhdo k\xEBshtu! \u{1F44F}", "Po ec\xEBn shum\xEB mir\xEB.", "Pun\xEB e mbar\xEB!"]),
+        unknown: () => pick([
+          "Nuk jam i sigurt p\xEBr k\xEBt\xEB. Provo t\xEB pyes\xEBsh p\xEBr shpenzime, buxhet, q\xEBllime ose kursime.",
+          `S'e kapa mir\xEB. Mund t\xEB pyes\xEBsh p.sh. "sa shpenzova k\xEBt\xEB muaj?" ose "si po shkon buxheti?".`
+        ])
+      };
+    }
+  });
+
+  // faturaime/src/services/ai/rules.js
+  function getInsights(max = 3) {
+    const s = store.getState();
+    const out = [];
+    for (const r of RULES) {
+      const res = r.eval(s);
+      if (res) out.push({ id: r.id, ...res });
+      if (out.length >= max) break;
+    }
+    if (!out.length && s.tx.length) out.push({ id: "ok", tone: "good", text: "Gjith\xE7ka duket n\xEB rregull. Vazhdo k\xEBshtu! \u{1F44F}" });
+    return out;
+  }
+  var RULES;
+  var init_rules = __esm({
+    "faturaime/src/services/ai/rules.js"() {
+      init_store_instance();
+      init_selectors();
+      init_analytics_service();
+      init_goals_service();
+      init_date();
+      init_categories();
+      init_i18n();
+      init_persona();
+      RULES = [
+        {
+          id: "limit_pace",
+          eval: (s) => {
+            const limit = s.settings.limit;
+            if (!limit) return null;
+            const used = spentThisMonth(s.tx);
+            const dayRatio = dayOfMonth() / daysInMonth();
+            if (used > limit) return { tone: "danger", text: `Ke tejkaluar limitin mujor (${money2(used)} / ${money2(limit)}).` };
+            if (used / limit > 0.8 && dayRatio < 0.75) return { tone: "warning", text: `Ke p\xEBrdorur ${pct(used, limit)}% t\xEB limitit dhe muaji s'ka mbaruar. Ngadal\xEBso pak.` };
+            return null;
+          }
+        },
+        {
+          id: "spending_spike",
+          eval: (s) => {
+            const mom = monthOverMonth(s.tx);
+            if (mom.previous && mom.deltaPct > 25) return { tone: "warning", text: `Shpenzimet u rrit\xEBn ${Math.round(mom.deltaPct)}% krahasuar me muajin e kaluar.` };
+            if (mom.previous && mom.deltaPct < -15) return { tone: "good", text: `Bravo! Shpenzove ${Math.abs(Math.round(mom.deltaPct))}% m\xEB pak se muajin e kaluar.` };
+            return null;
+          }
+        },
+        {
+          id: "subscriptions",
+          eval: (s) => {
+            const rec = s.tx.filter((x) => x.recurring && x.type === "expense");
+            if (rec.length >= 3) {
+              const total = rec.reduce((a, x) => a + x.amount, 0);
+              return { tone: "info", text: `Ke ${rec.length} pagesa t\xEB p\xEBrs\xEBritura (~${money2(total)}). Rishikoji n\xEBse t\xEB duhen t\xEB gjitha.` };
+            }
+            return null;
+          }
+        },
+        {
+          id: "top_category",
+          eval: (s) => {
+            const rows = spendByCategory(s.tx, "month");
+            if (rows.length && rows[0].value > 0) {
+              const top = rows[0];
+              return { tone: "info", text: `Kategoria m\xEB e madhe k\xEBt\xEB muaj: ${t(top.category.i18n)} (${money2(top.value)}).` };
+            }
+            return null;
+          }
+        },
+        {
+          id: "goal_behind",
+          eval: (s) => {
+            for (const g of s.goals) {
+              const f = goalForecast(g);
+              if (!f.done && f.perMonth && f.months && f.months <= 2) {
+                return { tone: "info", text: `Q\xEBllimi \xAB${g.name}\xBB \xEBsht\xEB af\xEBr afatit \u2014 kurse ${money2(f.perMonth)}/muaj.` };
+              }
+            }
+            return null;
+          }
+        }
+      ];
+    }
+  });
+
+  // faturaime/src/ui/components/widgets.js
+  function catBadge(categoryId, size = 44) {
+    const c = getCategory(categoryId);
+    const badge = h("div.icon-badge", {
+      style: {
+        width: size + "px",
+        height: size + "px",
+        background: `linear-gradient(140deg, ${c.color}, ${shade(c.color, -28)})`,
+        boxShadow: `0 6px 16px ${c.color}44, inset 0 1px 0 rgba(255,255,255,0.35)`
+      }
+    });
+    badge.append(icon(c.svg, { size: size * 0.5, stroke: "#fff", width: 2.1 }));
+    return badge;
+  }
+  function shade(hex, pct2) {
+    const n = parseInt(hex.slice(1), 16);
+    const f = (c) => Math.max(0, Math.min(255, Math.round(c + c * pct2 / 100)));
+    const r = f(n >> 16 & 255), g = f(n >> 8 & 255), b = f(n & 255);
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+  function progressBar(pct2, over = false) {
+    const bar = h(`div.bar${over ? ".is-over" : ""}`);
+    bar.append(h("i", { style: { width: Math.min(100, pct2) + "%" } }));
+    return bar;
+  }
+  function progressRing(pct2, { size = 64, label } = {}) {
+    const r = (size - 8) / 2;
+    const circ = 2 * Math.PI * r;
+    const off = circ * (1 - Math.min(100, pct2) / 100);
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.setAttribute("viewBox", `0 0 ${size} ${size}`);
+    svg.classList.add("ring");
+    svg.innerHTML = `
+    <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient></defs>
+    <circle class="track" cx="${size / 2}" cy="${size / 2}" r="${r}"></circle>
+    <circle class="fill" cx="${size / 2}" cy="${size / 2}" r="${r}"
+      stroke-dasharray="${circ}" stroke-dashoffset="${off}"></circle>`;
+    const wrap3 = h("div", { style: { position: "relative", width: size + "px", height: size + "px" } }, [svg]);
+    if (label != null) wrap3.append(h("div", {
+      style: { position: "absolute", inset: "0", display: "grid", placeItems: "center", fontWeight: "700", fontSize: "var(--fs-sm)" }
+    }, label));
+    return wrap3;
+  }
+  function emptyState(message, { iconPath, action } = {}) {
+    return h("div.empty", {}, [
+      iconPath && icon(iconPath, { size: 48, stroke: "currentColor" }),
+      h("p", {}, message),
+      action
+    ]);
+  }
+  var card, sectionTitle;
+  var init_widgets = __esm({
+    "faturaime/src/ui/components/widgets.js"() {
+      init_dom();
+      init_categories();
+      card = (children, cls = "") => h(`div.card${cls ? "." + cls : ""}`, {}, children);
+      sectionTitle = (txt) => h("div.section-title", {}, txt);
+    }
+  });
+
+  // faturaime/src/ui/components/sheet.js
+  function openSheet(buildContent, { title } = {}) {
+    const root = document.getElementById("overlay-root");
+    const sheet = h("div.sheet");
+    sheet.append(h("div.grabber"));
+    if (title) sheet.append(h("div.row-between", { style: { marginBottom: "var(--s-4)" } }, [
+      h("h2", { style: { fontSize: "var(--fs-lg)", fontWeight: "700" } }, title),
+      h("button.btn.btn--ghost.btn--sm", { onClick: () => close() }, "\u2715")
+    ]));
+    const body = h("div");
+    sheet.append(body);
+    const backdrop = h("div.sheet-backdrop", {
+      onClick: (e) => {
+        if (e.target === backdrop) close();
+      }
+    }, [sheet]);
+    function close() {
+      sheet.style.animation = "none";
+      backdrop.style.transition = "opacity .2s";
+      backdrop.style.opacity = "0";
+      setTimeout(() => backdrop.remove(), 200);
+    }
+    const content = buildContent({ close });
+    clear(body);
+    if (content) body.append(content);
+    root.append(backdrop);
+    return close;
+  }
+  function confirmDialog({ title, message, confirmLabel = "OK", danger = false }) {
+    return new Promise((resolve) => {
+      openSheet(({ close }) => h("div", {}, [
+        h("p", { style: { marginBottom: "var(--s-5)", color: "var(--text-muted)" } }, message),
+        h("div.row", { style: { gap: "var(--s-3)" } }, [
+          h("button.btn.btn--ghost.grow", { onClick: () => {
+            close();
+            resolve(false);
+          } }, "Anulo"),
+          h(`button.btn.${danger ? "btn--danger" : "btn--primary"}.grow`, { onClick: () => {
+            close();
+            resolve(true);
+          } }, confirmLabel)
+        ])
+      ]), { title });
+    });
+  }
+  var init_sheet = __esm({
+    "faturaime/src/ui/components/sheet.js"() {
+      init_dom();
+    }
+  });
+
+  // faturaime/src/ui/components/toast.js
+  function ensure() {
+    if (!wrap2) {
+      wrap2 = h("div.toast-wrap");
+      document.getElementById("overlay-root").append(wrap2);
+    }
+    return wrap2;
+  }
+  function toast(message, { action, onAction, duration = 3200 } = {}) {
+    const el2 = h("div.toast", {}, [
+      h("span", {}, message),
+      action && h("button", { onClick: () => {
+        onAction?.();
+        dismiss();
+      } }, action)
+    ]);
+    ensure().append(el2);
+    let to = setTimeout(dismiss, duration);
+    function dismiss() {
+      clearTimeout(to);
+      el2.style.transition = "opacity .2s, transform .2s";
+      el2.style.opacity = "0";
+      el2.style.transform = "translateY(10px)";
+      setTimeout(() => el2.remove(), 220);
+    }
+    return dismiss;
+  }
+  var wrap2;
+  var init_toast = __esm({
+    "faturaime/src/ui/components/toast.js"() {
+      init_dom();
+      init_events();
+      on("toast", (p) => toast(p.message || p, p));
+    }
+  });
+
+  // faturaime/src/ui/views/Transactions.js
+  function makeView(type) {
+    return function({ query }) {
+      if (query?.new) setTimeout(() => openTxEditor({ type }), 60);
+      return screen(() => {
+        const search = store.getState().ui.search?.toLowerCase() || "";
+        let list = store.getState().tx.filter((tr) => tr.type === type);
+        if (search) list = list.filter((tr) => (tr.merchant || "").toLowerCase().includes(search) || t(getCategory(tr.categoryId).i18n).toLowerCase().includes(search));
+        const title = type === "expense" ? t("nav.expenses") : t("nav.income");
+        const blocks = [head(title, h("button.btn.btn--primary.btn--sm", { onClick: () => openTxEditor({ type }) }, "\uFF0B"))];
+        const searchEl = h("input.input", {
+          type: "search",
+          placeholder: t("common.search"),
+          value: store.getState().ui.search || "",
+          style: { marginBottom: "var(--s-4)" },
+          oninput: (e) => {
+            Promise.resolve().then(() => (init_actions(), actions_exports)).then(({ A: A2, act: act2 }) => store.dispatch(act2(A2.UI_PATCH, { search: e.target.value })));
+          }
+        });
+        blocks.push(searchEl);
+        if (!list.length) {
+          blocks.push(card(emptyState(t("tx.empty"), { iconPath: "M9 14l2 2 4-4" })));
+          return blocks;
+        }
+        blocks.push(card(h("div.list", {}, list.map((tr) => {
+          const c = getCategory(tr.categoryId);
+          return h("div.list-row", { onClick: () => openTxEditor(tr) }, [
+            catBadge(tr.categoryId, 42),
+            h("div.meta", {}, [
+              h("div.title", {}, tr.merchant || t(c.i18n)),
+              h("div.sub", {}, `${t(c.i18n)} \xB7 ${fmtDateShort(tr.date)}${tr.recurring ? " \xB7 \u21BB" : ""}`)
+            ]),
+            h(
+              "div.amt",
+              { style: { color: type === "income" ? "var(--success)" : "var(--text)" } },
+              (type === "income" ? "+" : "\u2212") + money(tr.amount)
+            )
+          ]);
+        }))));
+        return blocks;
+      });
+    };
+  }
+  function openTxEditor(initial3 = {}) {
+    const editing = !!initial3.id;
+    const state = {
+      type: initial3.type || "expense",
+      amount: initial3.amount || "",
+      categoryId: initial3.categoryId || null,
+      merchant: initial3.merchant || "",
+      note: initial3.note || "",
+      date: initial3.date || isoDate(),
+      recurring: !!initial3.recurring,
+      priority: initial3.priority || null,
+      method: initial3.method || null,
+      id: initial3.id,
+      createdAt: initial3.createdAt
+    };
+    openSheet(({ close }) => {
+      const body = h("div");
+      const rerender = () => body.replaceChildren(buildForm());
+      function buildForm() {
+        const cats = categoriesByKind(state.type);
+        if (!state.categoryId) state.categoryId = cats[0].id;
+        const typeSeg = h("div.seg", { style: { width: "100%", marginBottom: "var(--s-4)" } }, [
+          h(`button${state.type === "expense" ? ".is-active" : ""}`, { style: { flex: "1" }, onClick: () => {
+            state.type = "expense";
+            state.categoryId = null;
+            rerender();
+          } }, t("common.expense")),
+          h(`button${state.type === "income" ? ".is-active" : ""}`, { style: { flex: "1" }, onClick: () => {
+            state.type = "income";
+            state.categoryId = null;
+            rerender();
+          } }, t("common.income"))
+        ]);
+        const amountEl = h("input.amount-input", { type: "number", inputmode: "decimal", placeholder: t("tx.amountPh"), value: state.amount, oninput: (e) => {
+          state.amount = e.target.value;
+        } });
+        const amount = h("div.amount-entry", {}, [h("span.cur", {}, store.getState().settings.currency + " "), amountEl]);
+        const grid = h("div.cat-grid", {}, cats.map((c) => {
+          const cell = h(`div.cat-cell${state.categoryId === c.id ? ".is-active" : ""}`, { onClick: () => {
+            state.categoryId = c.id;
+            rerender();
+          } }, [
+            catBadge(c.id, 40),
+            h("span", {}, t(c.i18n))
+          ]);
+          return cell;
+        }));
+        const fields = h("div", { style: { marginTop: "var(--s-4)" } }, [
+          field(t("common.merchant"), h("input.input", { value: state.merchant, placeholder: t("tx.merchantPh"), oninput: (e) => state.merchant = e.target.value })),
+          field(t("common.date"), h("input.input", { type: "date", value: state.date, oninput: (e) => state.date = e.target.value })),
+          state.type === "expense" ? field(t("tx.method"), chipRow(PAYMENT_METHODS.map((p) => ({ id: p.id, label: t(p.i18n) })), state.method, (id) => {
+            state.method = id;
+            rerender();
+          })) : null,
+          state.type === "expense" ? field(t("tx.priority"), chipRow(PRIORITIES.map((p) => ({ id: p.id, label: t(p.i18n) })), state.priority, (id) => {
+            state.priority = id;
+            rerender();
+          })) : null,
+          field(t("common.note"), h("input.input", { value: state.note, placeholder: t("tx.notePh"), oninput: (e) => state.note = e.target.value })),
+          h("label.set-row", { style: { cursor: "pointer" } }, [
+            h("span", {}, t("common.recurring")),
+            toggle(state.recurring, () => {
+              state.recurring = !state.recurring;
+              rerender();
+            })
+          ])
+        ]);
+        const actions = h("div.row", { style: { gap: "var(--s-3)", marginTop: "var(--s-5)" } }, [
+          editing && h("button.btn.btn--danger", { onClick: async () => {
+            const ok = await confirmDialog({ title: t("common.delete"), message: "?", confirmLabel: t("common.delete"), danger: true });
+            if (!ok) return;
+            const removed = await deleteTransaction(state.id);
+            close();
+            toast(t("tx.deleted"), { action: t("common.undo"), onAction: () => restoreTransaction(removed) });
+          } }, [icon("M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14", { size: 18 })]),
+          h("button.btn.btn--primary.grow", { onClick: save }, t("common.save"))
+        ]);
+        async function save() {
+          try {
+            await saveTransaction(state);
+            close();
+            toast(t("tx.saved"));
+          } catch (err) {
+            toast(err.message || "Gabim");
+          }
+        }
+        return h("div", {}, [typeSeg, amount, grid, fields, actions]);
+      }
+      rerender();
+      return body;
+    }, { title: editing ? t("tx.editTitle") : t("tx.new") });
+  }
+  function field(label, control) {
+    return h("div.field", {}, [h("label", {}, label), control]);
+  }
+  function chipRow(items, active, onPick) {
+    return h("div.row", { style: { gap: "var(--s-2)", flexWrap: "wrap" } }, items.map((it) => h(`button.chip${active === it.id ? ".is-active" : ""}`, { onClick: () => onPick(it.id) }, it.label)));
+  }
+  function toggle(on2, onClick) {
+    return h(`div.switch${on2 ? ".on" : ""}`, { onClick }, [h("i")]);
+  }
+  var ExpensesView, IncomeView;
+  var init_Transactions = __esm({
+    "faturaime/src/ui/views/Transactions.js"() {
+      init_dom();
+      init_i18n();
+      init_store_instance();
+      init_categories();
+      init_constants();
+      init_transactions_service();
+      init_date();
+      init_widgets();
+      init_sheet();
+      init_toast();
+      init_shared();
+      ExpensesView = makeView("expense");
+      IncomeView = makeView("income");
+    }
+  });
+
+  // faturaime/src/lib/animate.js
+  function countUp(el2, to, format, duration = 700) {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el2.textContent = format(to);
+      return;
+    }
+    const from = 0;
+    const start = performance.now();
+    function frame(now) {
+      const p = Math.min(1, (now - start) / duration);
+      el2.textContent = format(from + (to - from) * easeOut(p));
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  var easeOut;
+  var init_animate = __esm({
+    "faturaime/src/lib/animate.js"() {
+      easeOut = (t2) => 1 - Math.pow(1 - t2, 3);
+    }
+  });
+
+  // faturaime/src/ui/views/Dashboard.js
+  var Dashboard_exports = {};
+  __export(Dashboard_exports, {
+    default: () => Dashboard
+  });
+  function Dashboard({ navigate }) {
+    return screen(() => {
+      const s = store.getState();
+      const tx2 = s.tx;
+      const m = totals(tx2, "month");
+      const bal = balance(tx2);
+      const blocks = [];
+      blocks.push(h("header.row-between", { style: { marginBottom: "var(--s-5)" } }, [
+        brand(),
+        h("button.btn.btn--ghost.btn--sm", { onClick: () => navigate("/assistant") }, ["\u{1F4AC} AI"])
+      ]));
+      const eyeBtn = h(
+        "button.eye",
+        { onClick: togglePrivacy, "aria-label": "Privat\xEBsi" },
+        [icon(s.settings.privacy ? "M17.94 17.94A10 10 0 0112 20C5 20 1 12 1 12a18 18 0 015-6M1 1l22 22M9.9 4.24A10 10 0 0112 4c7 0 11 8 11 8a18 18 0 01-2.16 3.19" : "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z M12 15a3 3 0 100-6 3 3 0 000 6z", { size: 20 })]
+      );
+      const valueEl = h("div.value", {}, money(bal));
+      if (!s.settings.privacy) countUp(valueEl, bal, (n) => money(n, { force: true }));
+      blocks.push(h("div.card.balance-card", {}, [
+        eyeBtn,
+        h("div.label", {}, t("dash.balance")),
+        valueEl,
+        h("div.legs", {}, [
+          h("div.leg", {}, [h("span", {}, "\u2191 " + t("dash.income")), h("b", {}, money(m.income))]),
+          h("div.leg", {}, [h("span", {}, "\u2193 " + t("dash.spent")), h("b", {}, money(m.expense))])
+        ])
+      ]));
+      if (!tx2.length) {
+        blocks.push(card(emptyState(t("dash.empty"), {
+          iconPath: "M3 3v18h18M7 14l4-4 4 4 4-6",
+          action: h("button.btn.btn--primary.mt-4", { onClick: () => openTxEditor({ type: "expense" }) }, t("common.add"))
+        })));
+        return blocks;
+      }
+      const lp = limitProgress(tx2, s.settings.limit);
+      blocks.push(card([
+        h("div.row-between", {}, [sectionTitle(t("dash.budget")), h("span.muted", { style: { fontSize: "var(--fs-xs)" } }, money(lp.used) + " / " + money(lp.limit))]),
+        progressBar(lp.pct, lp.over),
+        h(
+          "div.dim",
+          { style: { fontSize: "var(--fs-xs)", marginTop: "var(--s-2)" } },
+          lp.over ? t("budget.over") : `${t("dash.left")}: ${money(lp.remaining)}`
+        )
+      ]));
+      const ins = getInsights(3);
+      if (ins.length) blocks.push(card([
+        sectionTitle("\u{1F916} " + t("dash.insights")),
+        ...ins.map((i) => h(`div.insight.${i.tone}`, {}, [h("span.dot"), h("span", {}, i.text)]))
+      ]));
+      if (s.goals.length) {
+        const g = s.goals[0];
+        const f = goalForecast(g);
+        blocks.push(card([
+          sectionTitle(t("dash.goals")),
+          h("div.row", { style: { gap: "var(--s-4)" } }, [
+            progressRing(f.pct, { size: 64, label: f.pct + "%" }),
+            h("div.grow", {}, [
+              h("div", { style: { fontWeight: "600" } }, g.name),
+              h("div.dim", { style: { fontSize: "var(--fs-xs)" } }, `${money(g.current)} / ${money(g.target)}`)
+            ])
+          ])
+        ]));
+      }
+      const recent = tx2.slice(0, 6);
+      blocks.push(card([
+        h("div.row-between", {}, [sectionTitle(t("dash.recent")), h("a", { href: "#/expenses", style: { fontSize: "var(--fs-xs)" } }, t("common.all"))]),
+        h("div.list", {}, recent.map((tr) => {
+          const c = getCategory(tr.categoryId);
+          return h("div.list-row", { onClick: () => openTxEditor(tr) }, [
+            catBadge(tr.categoryId, 40),
+            h("div.meta", {}, [
+              h("div.title", {}, tr.merchant || t(c.i18n)),
+              h("div.sub", {}, `${t(c.i18n)} \xB7 ${fmtDateShort(tr.date)}`)
+            ]),
+            h(
+              "div.amt",
+              { style: { color: tr.type === "income" ? "var(--success)" : "var(--text)" } },
+              (tr.type === "income" ? "+" : "\u2212") + money(tr.amount)
+            )
+          ]);
+        }))
+      ]));
+      return blocks;
+    });
+  }
+  var init_Dashboard = __esm({
+    "faturaime/src/ui/views/Dashboard.js"() {
+      init_dom();
+      init_i18n();
+      init_store_instance();
+      init_selectors();
+      init_rules();
+      init_settings_service();
+      init_budgets_service();
+      init_goals_service();
+      init_categories();
+      init_date();
+      init_widgets();
+      init_shared();
+      init_Transactions();
+      init_animate();
+    }
+  });
+
+  // faturaime/src/ui/views/Expenses.js
+  var Expenses_exports = {};
+  __export(Expenses_exports, {
+    default: () => ExpensesView
+  });
+  var init_Expenses = __esm({
+    "faturaime/src/ui/views/Expenses.js"() {
+      init_Transactions();
+    }
+  });
+
+  // faturaime/src/ui/views/Income.js
+  var Income_exports = {};
+  __export(Income_exports, {
+    default: () => IncomeView
+  });
+  var init_Income = __esm({
+    "faturaime/src/ui/views/Income.js"() {
+      init_Transactions();
+    }
+  });
+
+  // faturaime/src/ui/views/Budgets.js
+  var Budgets_exports = {};
+  __export(Budgets_exports, {
+    default: () => Budgets
+  });
+  function Budgets() {
+    return screen(() => {
+      const s = store.getState();
+      const blocks = [head(t("nav.budgets"))];
+      const lp = limitProgress(s.tx, s.settings.limit);
+      blocks.push(card([
+        h("div.row-between", {}, [sectionTitle(t("budget.limit")), h("button.btn.btn--ghost.btn--sm", { onClick: limitSheet }, t("common.edit"))]),
+        h("div", { style: { fontSize: "var(--fs-xl)", fontWeight: "700", marginBottom: "var(--s-3)" } }, money(s.settings.limit)),
+        progressBar(lp.pct, lp.over),
+        h(
+          "div.dim",
+          { style: { fontSize: "var(--fs-xs)", marginTop: "var(--s-2)" } },
+          `${t("budget.used")} ${money(lp.used)} \xB7 ${lp.over ? t("budget.over") : t("dash.left") + " " + money(lp.remaining)}`
+        )
+      ]));
+      blocks.push(card([
+        h("div.row-between", {}, [sectionTitle(t("budget.byCat")), h("button.btn.btn--primary.btn--sm", { onClick: () => budgetSheet() }, "\uFF0B")]),
+        s.budgets.length ? h("div.list", {}, s.budgets.map((b) => {
+          const p = budgetProgress(b, s.tx);
+          const c = getCategory(b.categoryId);
+          return h("div", { style: { padding: "var(--s-3) 0", borderBottom: "1px solid var(--border)" } }, [
+            h("div.row", { style: { marginBottom: "var(--s-2)" } }, [
+              catBadge(b.categoryId, 36),
+              h("div.grow", {}, [
+                h("div", { style: { fontWeight: "600" } }, t(c.i18n)),
+                h("div.dim", { style: { fontSize: "var(--fs-xs)" } }, `${money(p.used)} ${t("budget.of")} ${money(b.amount)}`)
+              ]),
+              h("button.btn.btn--ghost.btn--sm", { onClick: () => budgetSheet(b) }, "\u22EF")
+            ]),
+            progressBar(p.pct, p.over)
+          ]);
+        })) : emptyState(t("budget.empty"), { iconPath: "M3 7h18v12H3z" })
+      ]));
+      return blocks;
+    });
+  }
+  function limitSheet() {
+    openSheet(({ close }) => {
+      let val = store.getState().settings.limit;
+      return h("div", {}, [
+        h("div.field", {}, [h("label", {}, t("budget.limit")), h("input.input", { type: "number", value: val, oninput: (e) => val = e.target.value })]),
+        h("button.btn.btn--primary.btn--block", { onClick: async () => {
+          await setLimit(val);
+          close();
+          toast(t("tx.saved"));
+        } }, t("common.save"))
+      ]);
+    }, { title: t("budget.limit") });
+  }
+  function budgetSheet(existing) {
+    openSheet(({ close }) => {
+      let categoryId = existing?.categoryId || categoriesByKind("expense")[0].id;
+      let amount = existing?.amount || "";
+      const cats = categoriesByKind("expense");
+      const grid = h("div.cat-grid", {}, cats.map((c) => h(`div.cat-cell${categoryId === c.id ? ".is-active" : ""}`, {
+        onClick: (e) => {
+          categoryId = c.id;
+          grid.querySelectorAll(".cat-cell").forEach((x) => x.classList.remove("is-active"));
+          e.currentTarget.classList.add("is-active");
+        }
+      }, [catBadge(c.id, 38), h("span", {}, t(c.i18n))])));
+      return h("div", {}, [
+        grid,
+        h("div.field", { style: { marginTop: "var(--s-4)" } }, [h("label", {}, t("common.amount")), h("input.input", { type: "number", value: amount, oninput: (e) => amount = e.target.value })]),
+        h("div.row", { style: { gap: "var(--s-3)" } }, [
+          existing && h("button.btn.btn--danger", { onClick: async () => {
+            await deleteBudget(existing.id);
+            close();
+            toast(t("tx.deleted"));
+          } }, "\u{1F5D1}"),
+          h("button.btn.btn--primary.grow", { onClick: async () => {
+            if (!amount) return;
+            await saveBudget({ id: existing?.id, categoryId, amount });
+            close();
+            toast(t("tx.saved"));
+          } }, t("common.save"))
+        ])
+      ]);
+    }, { title: existing ? t("common.edit") : t("budget.add") });
+  }
+  var init_Budgets = __esm({
+    "faturaime/src/ui/views/Budgets.js"() {
+      init_dom();
+      init_i18n();
+      init_store_instance();
+      init_categories();
+      init_budgets_service();
+      init_widgets();
+      init_sheet();
+      init_toast();
+      init_shared();
+    }
+  });
+
+  // faturaime/src/ui/views/Goals.js
+  var Goals_exports = {};
+  __export(Goals_exports, {
+    default: () => Goals
+  });
+  function Goals() {
+    return screen(() => {
+      const goals = store.getState().goals;
+      const blocks = [head(t("nav.goals"), h("button.btn.btn--primary.btn--sm", { onClick: () => goalSheet() }, "\uFF0B"))];
+      if (!goals.length) {
+        blocks.push(card(emptyState(t("goal.empty"), { iconPath: "M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 27" })));
+        return blocks;
+      }
+      for (const g of goals) {
+        const f = goalForecast(g);
+        blocks.push(card([
+          h("div.row", { style: { gap: "var(--s-4)" } }, [
+            progressRing(f.pct, { size: 72, label: f.pct + "%" }),
+            h("div.grow", {}, [
+              h("div.row-between", {}, [h("strong", {}, g.name), h("button.btn.btn--ghost.btn--sm", { onClick: () => goalSheet(g) }, "\u22EF")]),
+              h("div.dim", { style: { fontSize: "var(--fs-sm)" } }, `${money(g.current)} / ${money(g.target)}`),
+              g.deadline && h("div.dim", { style: { fontSize: "var(--fs-xs)" } }, `${t("goal.deadline")}: ${fmtDateShort(g.deadline)}`)
+            ])
+          ]),
+          f.done ? h("div.text-success", { style: { marginTop: "var(--s-3)", fontWeight: "600" } }, t("goal.done")) : h("div", { style: { marginTop: "var(--s-3)" } }, [
+            f.perMonth != null && h(
+              "div.muted",
+              { style: { fontSize: "var(--fs-sm)", marginBottom: "var(--s-2)" } },
+              `\u{1F916} ${money(f.perMonth)}/${"muaj"} p\xEBr ${f.months} muaj`
+            ),
+            h("button.btn.btn--primary.btn--block", { onClick: () => addSheet(g) }, "\uFF0B " + t("goal.addFunds"))
+          ])
+        ]));
+      }
+      return blocks;
+    });
+  }
+  function goalSheet(existing) {
+    openSheet(({ close }) => {
+      let name = existing?.name || "", target = existing?.target || "", deadline = existing?.deadline || "";
+      return h("div", {}, [
+        h("div.field", {}, [h("label", {}, t("goal.name")), h("input.input", { value: name, placeholder: t("goal.namePh"), oninput: (e) => name = e.target.value })]),
+        h("div.field", {}, [h("label", {}, t("goal.target")), h("input.input", { type: "number", value: target, oninput: (e) => target = e.target.value })]),
+        h("div.field", {}, [h("label", {}, t("goal.deadline")), h("input.input", { type: "date", value: deadline, oninput: (e) => deadline = e.target.value })]),
+        h("div.row", { style: { gap: "var(--s-3)" } }, [
+          existing && h("button.btn.btn--danger", { onClick: async () => {
+            await deleteGoal(existing.id);
+            close();
+            toast(t("tx.deleted"));
+          } }, "\u{1F5D1}"),
+          h("button.btn.btn--primary.grow", { onClick: async () => {
+            if (!name || !target) return;
+            await saveGoal({ id: existing?.id, name, target, deadline, current: existing?.current });
+            close();
+            toast(t("tx.saved"));
+          } }, t("common.save"))
+        ])
+      ]);
+    }, { title: existing ? t("common.edit") : t("goal.add") });
+  }
+  function addSheet(goal) {
+    openSheet(({ close }) => {
+      let amount = "";
+      return h("div", {}, [
+        h("div.field", {}, [h("label", {}, t("goal.addFunds")), h("input.input", { type: "number", value: amount, oninput: (e) => amount = e.target.value })]),
+        h("button.btn.btn--primary.btn--block", { onClick: async () => {
+          if (!amount) return;
+          await addFunds(goal.id, amount);
+          close();
+          toast(t("tx.saved"));
+        } }, t("common.save"))
+      ]);
+    }, { title: goal.name });
+  }
+  var init_Goals = __esm({
+    "faturaime/src/ui/views/Goals.js"() {
+      init_dom();
+      init_i18n();
+      init_store_instance();
+      init_goals_service();
+      init_widgets();
+      init_sheet();
+      init_toast();
+      init_date();
+      init_shared();
+    }
+  });
+
+  // faturaime/src/ui/components/chart.js
+  function donut(data, { size = 160, thickness = 22 } = {}) {
+    const total = data.reduce((a, d) => a + d.value, 0) || 1;
+    const r = (size - thickness) / 2;
+    const cx = size / 2, cy = size / 2;
+    const circ = 2 * Math.PI * r;
+    const svg = el("svg", { width: size, height: size, viewBox: `0 0 ${size} ${size}` });
+    svg.appendChild(el("circle", { cx, cy, r, fill: "none", stroke: "var(--surface-3)", "stroke-width": thickness }));
+    let offset = 0;
+    data.forEach((d) => {
+      const frac = d.value / total;
+      const seg2 = el("circle", {
+        cx,
+        cy,
+        r,
+        fill: "none",
+        stroke: d.color,
+        "stroke-width": thickness,
+        "stroke-dasharray": `${frac * circ} ${circ}`,
+        "stroke-dashoffset": -offset,
+        transform: `rotate(-90 ${cx} ${cy})`,
+        "stroke-linecap": "butt"
+      });
+      seg2.style.transition = "stroke-dasharray .6s var(--ease-ios)";
+      svg.appendChild(seg2);
+      offset += frac * circ;
+    });
+    return svg;
+  }
+  function lineArea(series, { width = 640, height = 160, pad: pad2 = 8 } = {}) {
+    const svg = el("svg", { viewBox: `0 0 ${width} ${height}`, width: "100%", height, preserveAspectRatio: "none" });
+    if (!series.length) return svg;
+    const max = Math.max(...series.map((s) => s.value), 1);
+    const stepX = series.length > 1 ? (width - pad2 * 2) / (series.length - 1) : 0;
+    const x = (i) => pad2 + i * stepX;
+    const y = (v) => height - pad2 - v / max * (height - pad2 * 2);
+    const pts = series.map((s, i) => `${x(i)},${y(s.value)}`);
+    const defs = el("defs");
+    defs.innerHTML = `<linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#6366f1" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#6366f1" stop-opacity="0"/></linearGradient>`;
+    svg.appendChild(defs);
+    const area = el("path", { d: `M${x(0)},${height - pad2} L${pts.join(" L")} L${x(series.length - 1)},${height - pad2} Z`, fill: "url(#areaGrad)" });
+    const line = el("polyline", { points: pts.join(" "), fill: "none", stroke: "#8b5cf6", "stroke-width": 2.5, "stroke-linejoin": "round", "stroke-linecap": "round" });
+    svg.append(area, line);
+    series.forEach((s, i) => svg.appendChild(el("circle", { cx: x(i), cy: y(s.value), r: 2.5, fill: "#8b5cf6" })));
+    return h("div.chart-box", {}, [svg]);
+  }
+  var NS, el;
+  var init_chart = __esm({
+    "faturaime/src/ui/components/chart.js"() {
+      init_dom();
+      NS = "http://www.w3.org/2000/svg";
+      el = (tag, attrs = {}) => {
+        const n = document.createElementNS(NS, tag);
+        for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+        return n;
+      };
+    }
+  });
+
+  // faturaime/src/ui/views/Analytics.js
+  var Analytics_exports = {};
+  __export(Analytics_exports, {
+    default: () => Analytics
+  });
+  function Analytics() {
+    return screen(() => {
+      const s = store.getState();
+      const period = s.ui.period;
+      const blocks = [head(t("nav.analytics"))];
+      blocks.push(h("div.period-bar", {}, PERIODS.map((p) => h(`button.chip${period === p ? ".is-active" : ""}`, { onClick: () => store.dispatch(act(A.UI_PATCH, { period: p })) }, t("period." + p)))));
+      const tot = totals(s.tx, period);
+      if (!tot.expense && !tot.income) {
+        blocks.push(card(emptyState(t("an.noData"), { iconPath: "M4 19V5" })));
+        return blocks;
+      }
+      const mom = monthOverMonth(s.tx);
+      blocks.push(h("div.stat-grid", {}, [
+        statCard(t("dash.spent"), money(tot.expense)),
+        statCard(t("dash.income"), money(tot.income), "var(--success)"),
+        statCard(t("an.avgDay"), money(avgPerDay(s.tx))),
+        statCard(t("an.forecast"), money(monthForecast(s.tx)))
+      ]));
+      const series = trendSeries(s.tx, period);
+      if (series.length) blocks.push(card([sectionTitle(t("an.trend")), lineArea(series)]));
+      const byCat = spendByCategory(s.tx, period);
+      if (byCat.length) {
+        const data = byCat.map((r) => ({ value: r.value, color: r.category.color, label: t(r.category.i18n) }));
+        const total = byCat.reduce((a, r) => a + r.value, 0);
+        blocks.push(card([
+          sectionTitle(t("an.byCat")),
+          h("div.donut-wrap", {}, [
+            donut(data, { size: 150 }),
+            h("div.legend", {}, byCat.slice(0, 6).map((r) => h("div.li", {}, [
+              h("span.sw", { style: { background: r.category.color } }),
+              h("span", {}, t(r.category.i18n)),
+              h("span.lv", {}, `${Math.round(r.value / total * 100)}%`)
+            ])))
+          ])
+        ]));
+      }
+      if (mom.previous) blocks.push(card([
+        sectionTitle(t("an.compare")),
+        h("div.row-between", {}, [
+          h("span.muted", {}, "Muaji i kaluar"),
+          h("strong", {}, money(mom.previous))
+        ]),
+        h("div.row-between", { style: { marginTop: "var(--s-2)" } }, [
+          h("span.muted", {}, "Ky muaj"),
+          h(
+            "strong",
+            { style: { color: mom.deltaPct <= 0 ? "var(--success)" : "var(--danger)" } },
+            `${money(mom.current)} (${mom.deltaPct > 0 ? "+" : ""}${Math.round(mom.deltaPct)}%)`
+          )
+        ])
+      ]));
+      return blocks;
+    });
+  }
+  function statCard(label, value, color) {
+    return h("div.card", {}, [
+      h("div.muted", { style: { fontSize: "var(--fs-xs)" } }, label),
+      h("div", { style: { fontSize: "var(--fs-lg)", fontWeight: "700", marginTop: "4px", color: color || "var(--text)" } }, value)
+    ]);
+  }
+  var init_Analytics = __esm({
+    "faturaime/src/ui/views/Analytics.js"() {
+      init_dom();
+      init_i18n();
+      init_store_instance();
+      init_actions();
+      init_selectors();
+      init_analytics_service();
+      init_chart();
+      init_widgets();
+      init_constants();
+      init_shared();
+    }
+  });
+
+  // faturaime/src/services/ai/nlu.js
+  function detectPeriod(text) {
+    for (const [p, words] of Object.entries(PERIOD_WORDS)) {
+      if (words.some((w) => text.includes(norm(w)))) return p;
+    }
+    return "month";
+  }
+  function detectCategory(text) {
+    for (const c of CATEGORIES) {
+      const label = norm(t(c.i18n));
+      if (text.includes(label) || text.includes(norm(c.id))) return c.id;
+    }
+    return null;
+  }
+  function understand(message) {
+    const text = norm(message);
+    let best = { id: "unknown", score: 0 };
+    for (const intent of INTENTS) {
+      const score = intent.kw.reduce((a, k) => a + (text.includes(norm(k)) ? 1 : 0), 0);
+      if (score > best.score) best = { id: intent.id, score };
+    }
+    return {
+      intent: best.id,
+      entities: { period: detectPeriod(text), category: detectCategory(text) }
+    };
+  }
+  var norm, PERIOD_WORDS, INTENTS;
+  var init_nlu = __esm({
+    "faturaime/src/services/ai/nlu.js"() {
+      init_categories();
+      init_i18n();
+      norm = (s) => s.toLowerCase().replace(/[ëç]/g, (m) => m === "\xEB" ? "e" : "c").normalize("NFD").replace(/[̀-ͯ]/g, "");
+      PERIOD_WORDS = {
+        week: ["jave", "javen", "kete jave", "week", "this week"],
+        month: ["muaj", "muajin", "kete muaj", "month", "this month"],
+        year: ["vit", "vitin", "kete vit", "year", "this year"],
+        all: ["gjithcka", "gjithe", "total", "all", "overall"]
+      };
+      INTENTS = [
+        { id: "help", kw: ["ndihme", "si funksionon", "si perdoret", "help", "how do", "si te"] },
+        { id: "spend_total", kw: ["sa shpenzova", "shpenzime", "sa harxhova", "how much spend", "spent", "spending"] },
+        { id: "income_total", kw: ["te ardhura", "sa fitova", "income", "earned", "paga"] },
+        { id: "balance", kw: ["bilanc", "gjendja", "sa kam", "balance", "how much do i have"] },
+        { id: "budget", kw: ["buxhet", "limit", "budget"] },
+        { id: "save", kw: ["kursej", "kursim", "si te kursej", "save", "savings", "reduce"] },
+        { id: "goal", kw: ["qellim", "objektiv", "goal"] },
+        { id: "top", kw: ["ku shpenzoj", "me shume", "kategoria", "top", "most", "biggest"] },
+        { id: "forecast", kw: ["parashik", "fund muaji", "forecast", "end of month", "projection"] },
+        { id: "greet", kw: ["pershendetje", "ckemi", "tungjatjeta", "hi", "hello", "hey", "ckemi"] }
+      ];
+    }
+  });
+
+  // faturaime/src/services/ai/insights.js
+  function spendTotal(period = "month", categoryId = null) {
+    const tx2 = store.getState().tx;
+    if (categoryId) {
+      const row2 = spendByCategory(tx2, period).find((r) => r.id === categoryId);
+      const cat = getCategory(categoryId);
+      if (!row2) return `Nuk ke shpenzime p\xEBr ${t(cat.i18n)} ${periodLabel(period)}.`;
+      return `P\xEBr ${t(cat.i18n)} ke shpenzuar ${money2(row2.value)} ${periodLabel(period)}.`;
+    }
+    const { expense } = totals(tx2, period);
+    const mom = monthOverMonth(tx2);
+    const cmp = period === "month" && mom.previous ? ` Kjo \xEBsht\xEB ${Math.abs(Math.round(mom.deltaPct))}% ${mom.deltaPct <= 0 ? "m\xEB pak" : "m\xEB shum\xEB"} se muaji i kaluar.` : "";
+    return `Ke shpenzuar ${money2(expense)} ${periodLabel(period)}.${cmp}`;
+  }
+  function incomeTotal(period = "month") {
+    const { income } = totals(store.getState().tx, period);
+    return `T\xEB ardhurat ${periodLabel(period)} jan\xEB ${money2(income)}.`;
+  }
+  function balanceInfo() {
+    const tx2 = store.getState().tx;
+    const bal = balance(tx2);
+    return `Bilanci yt aktual \xEBsht\xEB ${money2(bal)}. ${bal >= 0 ? persona.encourage() : "Kujdes me shpenzimet."}`;
+  }
+  function topCategories(period = "month") {
+    const rows = spendByCategory(store.getState().tx, period).slice(0, 3);
+    if (!rows.length) return `Nuk ke shpenzime ${periodLabel(period)}.`;
+    const list = rows.map((r, i) => `${i + 1}. ${t(r.category.i18n)} \u2014 ${money2(r.value)}`).join("\n");
+    return `Ku shpenzon m\xEB shum\xEB ${periodLabel(period)}:
+${list}`;
+  }
+  function budgetStatus() {
+    const s = store.getState();
+    const lp = limitProgress(s.tx, s.settings.limit);
+    if (!s.settings.limit) return "Nuk ke vendosur ende nj\xEB limit. Vendos nj\xEB te seksioni Buxhete.";
+    if (lp.over) return `Ke tejkaluar limitin mujor! P\xEBrdorur ${money2(lp.used)} nga ${money2(lp.limit)}.`;
+    return `Ke p\xEBrdorur ${pct(lp.used, lp.limit)}% t\xEB limitit (${money2(lp.used)} / ${money2(lp.limit)}). Mbeten ${money2(lp.remaining)}.`;
+  }
+  function forecastInfo() {
+    const tx2 = store.getState().tx;
+    if (!tx2.length) return "Ende pa t\xEB dh\xEBna p\xEBr parashikim.";
+    const f = monthForecast(tx2);
+    return `Me ritmin aktual, parashikoj ${money2(f)} shpenzime deri n\xEB fund t\xEB muajit.`;
+  }
+  function savingTips() {
+    const tx2 = store.getState().tx;
+    const rows = spendByCategory(tx2, "month");
+    if (!rows.length) return "Shto disa shpenzime q\xEB t\xEB analizoj ku mund t\xEB kursesh.";
+    const top = rows[0];
+    const recurring = tx2.filter((x) => x.recurring).length;
+    let tip = `Kategoria jote m\xEB e madhe \xEBsht\xEB ${t(top.category.i18n)} (${money2(top.value)} k\xEBt\xEB muaj). `;
+    tip += "Provo t\xEB vendos\xEBsh nj\xEB buxhet p\xEBr t\xEB dhe ul\xEB me 10\u201315%. ";
+    if (recurring >= 3) tip += `Ke edhe ${recurring} pagesa t\xEB p\xEBrs\xEBritura \u2014 rishikoji, ndoshta ndonj\xEB s't\xEB duhet.`;
+    return tip.trim();
+  }
+  function goalInfo() {
+    const goals = store.getState().goals;
+    if (!goals.length) return "Nuk ke q\xEBllime ende. Krijo nj\xEB te seksioni Q\xEBllime!";
+    return goals.map((g) => {
+      const f = goalForecast(g);
+      if (f.done) return `\xAB${g.name}\xBB: arritur! \u{1F389}`;
+      const per = f.perMonth != null ? ` Kurse ~${money2(f.perMonth)}/muaj p\xEBr ta arritur n\xEB afat.` : "";
+      return `\xAB${g.name}\xBB: ${f.pct}% (mbeten ${money2(f.remaining)}).${per}`;
+    }).join("\n");
+  }
+  var periodLabel;
+  var init_insights = __esm({
+    "faturaime/src/services/ai/insights.js"() {
+      init_store_instance();
+      init_selectors();
+      init_analytics_service();
+      init_goals_service();
+      init_budgets_service();
+      init_categories();
+      init_i18n();
+      init_persona();
+      periodLabel = (p) => ({ week: "k\xEBt\xEB jav\xEB", month: "k\xEBt\xEB muaj", year: "k\xEBt\xEB vit", all: "gjithsej" })[p] || "k\xEBt\xEB muaj";
+    }
+  });
+
+  // faturaime/src/services/ai/agent.js
+  function ask(message) {
+    const { intent, entities } = understand(message);
+    const { period, category } = entities;
+    switch (intent) {
+      case "greet":
+        return persona.greet();
+      case "help":
+        return HELP;
+      case "spend_total":
+        return spendTotal(period, category);
+      case "income_total":
+        return incomeTotal(period);
+      case "balance":
+        return balanceInfo();
+      case "top":
+        return topCategories(period);
+      case "budget":
+        return budgetStatus();
+      case "save":
+        return savingTips();
+      case "goal":
+        return goalInfo();
+      case "forecast":
+        return forecastInfo();
+      default:
+        return persona.unknown();
+    }
+  }
+  var HELP, SUGGESTIONS;
+  var init_agent = __esm({
+    "faturaime/src/services/ai/agent.js"() {
+      init_nlu();
+      init_persona();
+      init_insights();
+      HELP = `Mund t\xEB t\xEB ndihmoj me:
+\u2022 Shpenzime: "sa shpenzova k\xEBt\xEB muaj?"
+\u2022 T\xEB ardhura: "sa fitova k\xEBt\xEB vit?"
+\u2022 Bilanc: "sa kam gjithsej?"
+\u2022 Buxhet: "si po shkon buxheti?"
+\u2022 Kursime: "si t\xEB kursej?"
+\u2022 Q\xEBllime: "si jan\xEB q\xEBllimet?"
+\u2022 Parashikim: "sa do shpenzoj deri n\xEB fund t\xEB muajit?"`;
+      SUGGESTIONS = [
+        "Sa shpenzova k\xEBt\xEB muaj?",
+        "Ku shpenzoj m\xEB shum\xEB?",
+        "Si po shkon buxheti?",
+        "Si t\xEB kursej?"
+      ];
+    }
+  });
+
+  // faturaime/src/ui/views/Assistant.js
+  var Assistant_exports = {};
+  __export(Assistant_exports, {
+    default: () => Assistant
+  });
+  function Assistant() {
+    const root = h("div.screen.view-enter");
+    const chat = h("div.chat");
+    const messages = [];
+    const scroll = () => requestAnimationFrame(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }));
+    function push(text, who) {
+      messages.push({ text, who });
+      chat.append(h(`div.bubble.${who}`, {}, text));
+      scroll();
+    }
+    function send(text) {
+      const msg = (text || input.value).trim();
+      if (!msg) return;
+      push(msg, "me");
+      input.value = "";
+      setTimeout(() => push(ask(msg), "ai"), 280);
+    }
+    root.append(head(h("div.row", { style: { gap: "var(--s-2)" } }, ["\u{1F916} ", brand(), h("span.muted", { style: { fontSize: "var(--fs-sm)" } }, "AI")])));
+    root.append(h("div.suggest-row", {}, SUGGESTIONS.map((sug) => h("button.chip", { onClick: () => send(sug) }, sug))));
+    root.append(chat);
+    push(t("ai.greeting"), "ai");
+    const input = h("input.input.grow", { placeholder: t("ai.placeholder"), onkeydown: (e) => {
+      if (e.key === "Enter") send();
+    } });
+    const bar = h("div.chat-input", {}, [h("div.inner", {}, [
+      input,
+      h("button.btn.btn--primary", { onClick: () => send() }, "\u27A4")
+    ])]);
+    root.append(bar);
+    const obs = new MutationObserver(() => {
+      if (!root.isConnected) {
+        bar.remove();
+        obs.disconnect();
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    return root;
+  }
+  var init_Assistant = __esm({
+    "faturaime/src/ui/views/Assistant.js"() {
+      init_dom();
+      init_i18n();
+      init_agent();
+      init_shared();
+    }
+  });
+
+  // faturaime/src/services/backup.service.js
+  function exportJSON() {
+    const s = store.getState();
+    const payload = {
+      app: APP.name,
+      version: APP.version,
+      exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      tx: s.tx,
+      budgets: s.budgets,
+      goals: s.goals,
+      settings: s.settings
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `faturaime-backup-${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  async function importJSON(file) {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if (!data || !Array.isArray(data.tx)) throw new Error("Skedar i pavlefsh\xEBm");
+    await txRepo.clear();
+    await budgetRepo.clear();
+    await goalRepo.clear();
+    await txRepo.bulkPut(data.tx);
+    if (Array.isArray(data.budgets)) await budgetRepo.bulkPut(data.budgets);
+    if (Array.isArray(data.goals)) await goalRepo.bulkPut(data.goals);
+    if (data.settings) await prefsRepo.set(data.settings);
+    await Promise.all([loadTransactions(), loadBudgets(), loadGoals(), loadPrefs()]);
+  }
+  async function clearAll() {
+    await txRepo.clear();
+    await budgetRepo.clear();
+    await goalRepo.clear();
+    await Promise.all([loadTransactions(), loadBudgets(), loadGoals()]);
+  }
+  var init_backup_service = __esm({
+    "faturaime/src/services/backup.service.js"() {
+      init_store_instance();
+      init_tx_repo();
+      init_budget_repo();
+      init_goal_repo();
+      init_prefs_repo();
+      init_transactions_service();
+      init_budgets_service();
+      init_goals_service();
+      init_settings_service();
+      init_constants();
+    }
+  });
+
+  // faturaime/src/ui/views/Settings.js
+  var Settings_exports = {};
+  __export(Settings_exports, {
+    default: () => Settings
+  });
+  function Settings() {
+    return screen(() => {
+      const s = store.getState().settings;
+      const blocks = [head(t("nav.settings"))];
+      blocks.push(card([
+        sectionTitle(t("set.appearance")),
+        row(t("set.theme"), seg(["dark", "light", "auto"], s.theme, (v) => updateSettings({ theme: v }), {
+          dark: t("set.dark"),
+          light: t("set.light"),
+          auto: "Auto"
+        })),
+        row(t("set.language"), seg(["sq", "en"], s.language, (v) => updateSettings({ language: v }), { sq: "Shqip", en: "English" })),
+        row(t("set.currency"), seg(Object.keys(CURRENCIES), s.currency, (v) => updateSettings({ currency: v })))
+      ]));
+      blocks.push(card([
+        sectionTitle(t("set.security")),
+        h("label.set-row", { style: { cursor: "pointer" } }, [h("span", {}, t("set.privacy")), toggle2(s.privacy, togglePrivacy)]),
+        h("label.set-row", { style: { cursor: "pointer" } }, [h("span", {}, t("set.pin")), toggle2(s.pinEnabled, async () => {
+          if (s.pinEnabled) {
+            await removePin();
+            toast(t("tx.saved"));
+          } else pinSetupSheet();
+        })])
+      ]));
+      blocks.push(card([
+        sectionTitle(t("set.data")),
+        h("button.set-row", { style: { width: "100%", textAlign: "left" }, onClick: exportJSON }, [h("span", {}, t("set.export")), h("span.dim", {}, "\u2193")]),
+        h("label.set-row", { style: { cursor: "pointer" } }, [
+          h("span", {}, t("set.import")),
+          h("span.dim", {}, "\u2191"),
+          h("input", { type: "file", accept: "application/json", style: { display: "none" }, onchange: async (e) => {
+            try {
+              await importJSON(e.target.files[0]);
+              toast(t("set.imported"));
+            } catch {
+              toast("Gabim");
+            }
+          } })
+        ]),
+        h("button.set-row", { style: { width: "100%", textAlign: "left", color: "var(--danger)" }, onClick: async () => {
+          if (await confirmDialog({ title: t("set.clear"), message: t("set.confirmClear"), confirmLabel: t("common.delete"), danger: true })) {
+            await clearAll();
+            toast(t("set.cleared"));
+          }
+        } }, t("set.clear"))
+      ]));
+      blocks.push(card([
+        sectionTitle(t("set.about")),
+        h("div.row", { style: { gap: "var(--s-3)" } }, [brand(), h("span.dim", {}, "v" + APP.version)]),
+        h("p.dim", { style: { fontSize: "var(--fs-xs)", marginTop: "var(--s-2)" } }, "Offline-first \xB7 IndexedDB e kriptuar \xB7 FaturaIME AI lokal")
+      ]));
+      return blocks;
+    });
+  }
+  function pinSetupSheet() {
+    openSheet(({ close }) => {
+      let first = "";
+      const status = h("div.muted", { style: { textAlign: "center", minHeight: "20px" } }, t("pin.set"));
+      const inp = h("input.input", { type: "tel", inputmode: "numeric", maxlength: 6, placeholder: "\u2022\u2022\u2022\u2022", style: { textAlign: "center", fontSize: "var(--fs-xl)", letterSpacing: "8px" } });
+      const next = h("button.btn.btn--primary.btn--block", { onClick: async () => {
+        const v = inp.value.trim();
+        if (v.length < 4) {
+          status.textContent = "T\xEB pakt\xEBn 4 shifra";
+          return;
+        }
+        if (!first) {
+          first = v;
+          inp.value = "";
+          status.textContent = t("pin.confirm");
+          return;
+        }
+        if (first !== v) {
+          first = "";
+          inp.value = "";
+          status.textContent = t("pin.wrong");
+          return;
+        }
+        await setupPin(v);
+        close();
+        toast(t("tx.saved"));
+      } }, t("common.save"));
+      return h("div.col", { style: { gap: "var(--s-4)" } }, [status, inp, next]);
+    }, { title: t("set.pin") });
+  }
+  function row(label, control) {
+    return h("div.set-row", {}, [h("span", {}, label), control]);
+  }
+  function seg(values, active, onPick, labels = {}) {
+    return h("div.seg", {}, values.map((v) => h(`button${active === v ? ".is-active" : ""}`, { onClick: () => onPick(v) }, labels[v] || v.toUpperCase())));
+  }
+  function toggle2(on2, onClick) {
+    return h(`div.switch${on2 ? ".on" : ""}`, { onClick }, [h("i")]);
+  }
+  var init_Settings = __esm({
+    "faturaime/src/ui/views/Settings.js"() {
+      init_dom();
+      init_i18n();
+      init_store_instance();
+      init_constants();
+      init_settings_service();
+      init_backup_service();
+      init_security_service();
+      init_widgets();
+      init_sheet();
+      init_toast();
+      init_shared();
+    }
+  });
+
+  // faturaime/src/main.js
+  init_crypto();
+  init_settings_service();
+  init_transactions_service();
+  init_budgets_service();
+  init_goals_service();
+  init_security_service();
+
+  // faturaime/src/ui/views/Lock.js
+  init_dom();
+  init_i18n();
+  init_security_service();
+  init_shared();
+  function lockScreen() {
+    return new Promise((resolve) => {
+      const root = document.getElementById("app");
+      let buffer = "";
+      const dots = h("div.pin-dots", {}, Array.from({ length: 4 }, () => h("i")));
+      const status = h("div.muted", {}, t("pin.enter"));
+      const updateDots = () => dots.querySelectorAll("i").forEach((d, i) => d.classList.toggle("on", i < buffer.length));
+      async function press(d) {
+        if (buffer.length >= 4) return;
+        buffer += d;
+        updateDots();
+        if (buffer.length === 4) {
+          if (await verifyPin(buffer)) {
+            screen2.style.opacity = "0";
+            setTimeout(() => resolve(), 220);
+          } else {
+            status.textContent = t("pin.wrong");
+            dots.classList.add("shake");
+            setTimeout(() => {
+              dots.classList.remove("shake");
+              buffer = "";
+              updateDots();
+            }, 450);
+          }
+        }
+      }
+      const pad2 = h("div.pin-pad", {}, [
+        ...["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((d) => h("button", { onClick: () => press(d) }, d)),
+        h("span"),
+        h("button", { onClick: () => press("0") }, "0"),
+        h("button", { onClick: () => {
+          buffer = buffer.slice(0, -1);
+          updateDots();
+        } }, "\u232B")
+      ]);
+      const screen2 = h("div.lock", { style: { transition: "opacity .2s" } }, [
+        h("div", { style: { fontSize: "var(--fs-2xl)" } }, [brand()]),
+        status,
+        dots,
+        pad2
+      ]);
+      root.replaceChildren(screen2);
+    });
+  }
+
+  // faturaime/src/app/App.js
+  init_dom();
+
+  // faturaime/src/core/router.js
+  init_events();
+  function createRouter({ routes: routes2, outlet, fallback = "/", onBefore }) {
+    let current = null;
+    const parse = () => {
+      const raw = location.hash.slice(1) || fallback;
+      const [path, queryStr = ""] = raw.split("?");
+      const query = Object.fromEntries(new URLSearchParams(queryStr));
+      return { path: path || fallback, query };
+    };
+    const match = (path) => routes2.find((r) => r.path === path) || routes2.find((r) => r.path === fallback);
+    async function render() {
+      const { path, query } = parse();
+      const route = match(path);
+      if (!route) return;
+      if (onBefore) {
+        const ok = await onBefore(route, { path, query });
+        if (ok === false) return;
+      }
+      let factory = route._factory;
+      if (!factory) {
+        const mod = await route.view();
+        factory = mod.default || mod.view;
+        route._factory = factory;
+      }
+      const node = await factory({ query, navigate, route });
+      outlet.replaceChildren(node);
+      outlet.scrollTo?.(0, 0);
+      window.scrollTo(0, 0);
+      current = { path, query, route };
+      emit("nav:changed", current);
+    }
+    const navigate = (to, query) => {
+      const qs = query ? "?" + new URLSearchParams(query).toString() : "";
+      if ("#" + to + qs === location.hash) render();
+      else location.hash = to + qs;
+    };
+    const start = () => {
+      window.addEventListener("hashchange", render);
+      render();
+    };
+    return { start, navigate, getCurrent: () => current };
+  }
+
+  // faturaime/src/app/routes.js
+  var routes = [
+    { path: "/", view: () => Promise.resolve().then(() => (init_Dashboard(), Dashboard_exports)) },
+    { path: "/expenses", view: () => Promise.resolve().then(() => (init_Expenses(), Expenses_exports)) },
+    { path: "/income", view: () => Promise.resolve().then(() => (init_Income(), Income_exports)) },
+    { path: "/budgets", view: () => Promise.resolve().then(() => (init_Budgets(), Budgets_exports)) },
+    { path: "/goals", view: () => Promise.resolve().then(() => (init_Goals(), Goals_exports)) },
+    { path: "/analytics", view: () => Promise.resolve().then(() => (init_Analytics(), Analytics_exports)) },
+    { path: "/assistant", view: () => Promise.resolve().then(() => (init_Assistant(), Assistant_exports)) },
+    { path: "/settings", view: () => Promise.resolve().then(() => (init_Settings(), Settings_exports)) }
+  ];
+
+  // faturaime/src/ui/components/nav.js
+  init_dom();
+  init_i18n();
+  init_events();
+  var ITEMS = [
+    { path: "/", i18n: "nav.dashboard", svg: "M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10" },
+    { path: "/analytics", i18n: "nav.analytics", svg: "M4 19V5m4 14v-8m4 8V8m4 11v-5m4 5V4" },
+    { path: "/assistant", i18n: "nav.assistant", svg: "M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" },
+    { path: "/budgets", i18n: "nav.budgets", svg: "M3 7h18v12H3zM3 7l3-4h12l3 4M9 12h6" },
+    { path: "/settings", i18n: "nav.settings", svg: "M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-2.7 1.1V21a2 2 0 11-4 0v-.1A1.6 1.6 0 006 19.4l-.1.1a2 2 0 11-2.8-2.8l.1-.1A1.6 1.6 0 003 13.6a2 2 0 110-4h.1A1.6 1.6 0 004.6 6l-.1-.1a2 2 0 112.8-2.8l.1.1A1.6 1.6 0 0010 3.6V3a2 2 0 114 0v.1A1.6 1.6 0 0019.4 6l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-1.1 2.7H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z" }
+  ];
+  function bottomNav() {
+    const links = ITEMS.map((it) => {
+      const a = h("a", { href: "#" + it.path }, [icon(it.svg, { size: 22 }), h("span", {}, t(it.i18n))]);
+      a.dataset.path = it.path;
+      return a;
+    });
+    const nav = h("nav.bottom-nav", {}, links);
+    const setActive = (path) => links.forEach((a) => a.classList.toggle("is-active", a.dataset.path === path));
+    on("nav:changed", (c) => setActive(c.path));
+    setActive(location.hash.slice(1).split("?")[0] || "/");
+    return nav;
+  }
+
+  // faturaime/src/ui/components/fab.js
+  init_dom();
+  init_sheet();
+  init_Transactions();
+  function fab(navigate) {
+    let timer;
+    const quick = () => openSheet(({ close }) => h("div.col", { style: { gap: "var(--s-3)" } }, [
+      h("button.btn.btn--primary.btn--block", { onClick: () => {
+        close();
+        openTxEditor({ type: "expense" });
+      } }, "\uFF0B  Shto shpenzim"),
+      h("button.btn.btn--ghost.btn--block", { onClick: () => {
+        close();
+        openTxEditor({ type: "income" });
+      } }, "\uFF0B  Shto t\xEB ardhur"),
+      h("button.btn.btn--ghost.btn--block", { onClick: () => {
+        close();
+        navigate("/assistant");
+      } }, "\u{1F4AC}  Pyet FaturaIME AI")
+    ]), { title: "Veprime t\xEB shpejta" });
+    const btn = h("button.fab", {
+      "aria-label": "Shto",
+      onClick: () => openTxEditor({ type: "expense" }),
+      oncontextmenu: (e) => {
+        e.preventDefault();
+        quick();
+      },
+      onpointerdown: () => {
+        timer = setTimeout(quick, 450);
+      },
+      onpointerup: () => clearTimeout(timer),
+      onpointerleave: () => clearTimeout(timer)
+    }, [icon("M12 5v14M5 12h14", { size: 26, width: 2.5 })]);
+    return btn;
+  }
+
+  // faturaime/src/app/App.js
+  function mountApp() {
+    const root = document.getElementById("app");
+    const outlet = h("main", { id: "outlet" });
+    const router = createRouter({ routes, outlet, fallback: "/" });
+    const nav = bottomNav();
+    const action = fab(router.navigate);
+    root.replaceChildren(outlet, action, nav);
+    router.start();
+    return router;
+  }
+
+  // faturaime/src/main.js
+  init_toast();
+  async function boot() {
+    try {
+      await initCrypto();
+      await loadPrefs();
+      await Promise.all([loadTransactions(), loadBudgets(), loadGoals()]);
+      if (isLockEnabled()) await lockScreen();
+      mountApp();
+      registerSW();
+    } catch (err) {
+      console.error("[boot]", err);
+      document.getElementById("app").innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted)">Ndodhi nj\xEB gabim gjat\xEB nisjes. Rifresko faqen.</div>';
+    }
+  }
+  function registerSW() {
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        Promise.reject(0).catch((e) => console.warn("SW:", e));
+      });
+    }
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
